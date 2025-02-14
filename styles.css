@@ -1,0 +1,183 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('./ia.png') no-repeat center center fixed;
+    /* Adiciona a imagem de fundo */
+    background-size: cover;
+    /* Garante que a imagem cubra todo o espaço da tela */
+    color: #333;
+}
+
+header {
+    background-color: rgba(95, 177, 87);
+    /* Torna o cabeçalho semi-transparente */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    animation: slideIn 1s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Distribui espaço entre os itens */
+    position: fixed;
+    /* Torna o cabeçalho fixo */
+    top: 0;
+    /* Fixa no topo da página */
+    width: 100%;
+    /* Ocupa toda a largura da página */
+    z-index: 1000;
+    /* Garante que o cabeçalho fique acima de outros elementos */
+    transition: padding 0.3s ease;
+    /* Adiciona transição suave para o padding */
+}
+
+.header-small {
+    padding: 0px;
+    /* Reduz o padding quando o cabeçalho está recolhido */
+}
+
+.header-img {
+    max-height: 80px;
+    margin-right: 10px;
+    /* Ajusta a margem direita para um valor menor */
+}
+
+header h1 {
+    flex-grow: 1;
+    /* Permite que o h1 ocupe o espaço restante */
+    text-align: center;
+    /* Centraliza o texto dentro do espaço disponível */
+}
+
+main {
+    padding: 20px;
+    margin-top: 120px;
+    /* Ajusta a margem superior para evitar sobreposição com o cabeçalho fixo */
+}
+
+.info-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 200px;/* Aumenta as margens laterais */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.info-section:hover {
+    transform: scale(1.02);
+    background-color: #e0f7fa;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+ol,
+ul {
+    padding-left: 20px;
+    list-style-type: none;
+    /* Remover os pontos */
+}
+
+li {
+    background-color: #ffffff;
+    padding: 15px;
+    margin: 10px 20px;
+    /* Ajusta as margens laterais */
+    border-left: 5px solid #00796b;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+li:hover {
+    background-color: #e0f7fa;
+}
+
+.certo {
+    color: #5FB157;
+    font-weight: bold;
+}
+
+.errado {
+    color: #ED1C24;
+    font-weight: bold;
+}
+
+.dica {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+footer {
+    background-color: rgba(215, 56, 51);/* Torna o rodapé semi-transparente */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    animation: fadeOut 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+button {
+    background-color: #00796b;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+}
