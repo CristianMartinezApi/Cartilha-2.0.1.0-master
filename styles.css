@@ -10,9 +10,17 @@ body {
 }
 
 header {
-    background-color: rgba(95, 177, 87);
+    background-color: rgba(95, 177, 87, 0.7);
     /* Torna o cabeçalho semi-transparente */
-    color: white;
+    background-image: url('./ia2.png');
+    /* Adiciona a imagem de fundo */
+    background-size: cover;
+    /* Garante que a imagem cubra todo o espaço do cabeçalho */
+    background-position: center;
+    /* Centraliza a imagem de fundo */
+    background-repeat: no-repeat;
+    /* Evita que a imagem se repita */
+    color: #231F20;
     padding: 20px;
     text-align: center;
     animation: slideIn 1s ease-in-out;
@@ -46,8 +54,10 @@ header {
 header h1 {
     flex-grow: 1;
     /* Permite que o h1 ocupe o espaço restante */
-    text-align: center;
-    /* Centraliza o texto dentro do espaço disponível */
+    text-align: left;
+    /* Alinha o texto à esquerda */
+    margin-left: 50px;
+    /* Adiciona uma margem à esquerda */
 }
 
 main {
@@ -57,35 +67,26 @@ main {
 }
 
 .info-section {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Torna o fundo da seção de informações semi-transparente */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px 200px;/* Aumenta as margens laterais */
+    margin: 20px 200px;
+    /* Aumenta as margens laterais */
     transition: transform 0.3s ease, background-color 0.3s ease;
     animation: fadeIn 0.5s ease-in-out;
 }
 
 .info-section:hover {
     transform: scale(1.02);
-    background-color: #e0f7fa;
-}
-
-h1,
-h2,
-h3 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-ol,
-ul {
-    padding-left: 20px;
-    list-style-type: none;
-    /* Remover os pontos */
+    background-color: rgba(224, 247, 250, 0.8);
+    /* Torna o fundo da seção de informações semi-transparente ao passar o mouse */
 }
 
 li {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Torna o fundo dos itens da lista semi-transparente */
     padding: 15px;
     margin: 10px 20px;
     /* Ajusta as margens laterais */
@@ -97,26 +98,13 @@ li {
 }
 
 li:hover {
-    background-color: #e0f7fa;
-}
-
-.certo {
-    color: #5FB157;
-    font-weight: bold;
-}
-
-.errado {
-    color: #ED1C24;
-    font-weight: bold;
-}
-
-.dica {
-    color: #1976d2;
-    font-weight: bold;
+    background-color: rgba(224, 247, 250, 0.8);
+    /* Torna o fundo dos itens da lista semi-transparente ao passar o mouse */
 }
 
 footer {
-    background-color: rgba(215, 56, 51);/* Torna o rodapé semi-transparente */
+    background-color: rgba(215, 56, 51);
+    /* Torna o rodapé semi-transparente */
     color: white;
     text-align: center;
     padding: 10px;
