@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     const header = document.querySelector('header');
     if (!header) return;
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
 
 window.addEventListener('scroll', function() {
     const header = document.querySelector('header');
