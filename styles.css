@@ -1,10 +1,8 @@
-
-
 body {
     font-family: "Rubik", serif;
     margin: 0;
     padding: 0;
-    background: url('./ia.png') no-repeat center center fixed;
+    background: url('./pge-bl.png') no-repeat center center fixed;
     /* Adiciona a imagem de fundo */
     background-size: cover;
     /* Garante que a imagem cubra todo o espaço da tela */
@@ -12,10 +10,8 @@ body {
 }
 
 header {
-    background-color: rgba(95, 177, 87, 0.7);
+    background-color: rgba(246, 252, 246, 0.9);
     /* Torna o cabeçalho semi-transparente */
-    background-image: url('./ia2.png');
-    /* Adiciona a imagem de fundo */
     background-size: cover;
     /* Garante que a imagem cubra todo o espaço do cabeçalho */
     background-position: center;
@@ -38,10 +34,14 @@ header {
     /* Ocupa toda a largura da página */
     z-index: 1000;
     /* Garante que o cabeçalho fique acima de outros elementos */
-    transition: padding 0.3s ease;
-    /* Adiciona transição suave para o padding */
+    transition: padding 0.3s ease, top 0.3s ease;
+    /* Adiciona transição suave para o padding e a posição top */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* Adiciona uma borda sombreada */
+}
+
+.header-hidden {
+    top: -100px; /* Ajuste este valor conforme necessário para esconder completamente o cabeçalho */
 }
 
 .header-small {
@@ -53,8 +53,7 @@ header {
     max-height: 80px;
     margin-right: 10px;
     /* Ajusta a margem direita para um valor menor */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Adiciona uma borda sombreada à imagem */
+    /* Removido o sombreamento */
 }
 
 header h1 {
@@ -62,14 +61,13 @@ header h1 {
     /* Permite que o h1 ocupe o espaço restante */
     text-align: left;
     /* Alinha o texto à esquerda */
-    margin-left: 20px;
+    margin-left: 90px;
     /* Adiciona uma margem à esquerda */
 }
 
 main {
     padding: 20px;
     margin-top: 120px;/* Ajusta a margem superior para evitar sobreposição com o cabeçalho fixo */
-    cursor: pointer;
 }
 
 .info-section {
@@ -82,43 +80,49 @@ main {
     /* Aumenta as margens laterais */
     transition: transform 0.3s ease, background-color 0.3s ease;
     animation: fadeIn 0.5s ease-in-out;
+    cursor: pointer; /* Adiciona o cursor pointer */
 }
 
 .info-section:hover {
     transform: scale(1.02);
-    background-color: rgba(224, 247, 250, 0.8);
+    background-color: rgba(224, 250, 230, 0.6);
     /* Torna o fundo da seção de informações semi-transparente ao passar o mouse */
 }
 
 ul {
     list-style-type: none;
     /* Remove os pontos das listas */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adiciona espaço entre os itens */
+    padding: 10px;
 }
 
 li {
     background-color: rgba(255, 255, 255, 0.8);
     /* Torna o fundo dos itens da lista semi-transparente */
     padding: 15px;
-    margin: 10px 20px;
-    /* Ajusta as margens laterais */
+    margin: 0; /* Remove as margens laterais */
     border-left: 5px solid #00796b;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease;
     animation: slideIn 0.5s ease-in-out;
+    flex: 1 1 calc(50% - 20px); /* Ajusta a largura dos itens para caberem dois por linha */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
 }
 
 li:hover {
     background-color: rgba(224, 247, 250, 0.8);
     /* Torna o fundo dos itens da lista semi-transparente ao passar o mouse */
 }
-
+ /* Rodapé */
 footer {
     background-color: rgba(215, 56, 51);
-    /* Torna o rodapé semi-transparente */
+   
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 2px;
     width: 100%;
     animation: fadeOut 1s ease-in-out;
 }
@@ -174,19 +178,18 @@ footer {
 
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
 @keyframes slideIn {
     from {
-        transform: translateX(-100%);
         opacity: 0;
+        transform: translateX(-100%);
     }
 
     to {
-        transform: translateX(0);
         opacity: 1;
+        transform: translateX(0);
     }
 }
 
@@ -212,14 +215,4 @@ footer {
     100% {
         transform: scale(1);
     }
-}
-
-button {
-    background-color: #00796b;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    animation: pulse 2s infinite;
 }
