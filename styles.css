@@ -3,21 +3,15 @@ body {
     margin: 0;
     padding: 0;
     background: url('./pge-bl.png') no-repeat center center fixed;
-    /* Adiciona a imagem de fundo */
     background-size: cover;
-    /* Garante que a imagem cubra todo o espaço da tela */
     color: #333;
 }
 
 header {
     background-color: rgba(246, 252, 246, 0.9);
-    /* Torna o cabeçalho semi-transparente */
     background-size: cover;
-    /* Garante que a imagem cubra todo o espaço do cabeçalho */
     background-position: center;
-    /* Centraliza a imagem de fundo */
     background-repeat: no-repeat;
-    /* Evita que a imagem se repita */
     color: #231F20;
     padding: 20px;
     text-align: center;
@@ -25,114 +19,140 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Distribui espaço entre os itens */
     position: fixed;
-    /* Torna o cabeçalho fixo */
     top: 0;
-    /* Fixa no topo da página */
     width: 100%;
-    /* Ocupa toda a largura da página */
     z-index: 1000;
-    /* Garante que o cabeçalho fique acima de outros elementos */
     transition: padding 0.3s ease, top 0.3s ease;
-    /* Adiciona transição suave para o padding e a posição top */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Adiciona uma borda sombreada */
 }
 
 .header-hidden {
-    top: -100px; /* Ajuste este valor conforme necessário para esconder completamente o cabeçalho */
+    top: -100px;
 }
 
 .header-small {
     padding: 0px;
-    /* Reduz o padding quando o cabeçalho está recolhido */
 }
 
 .header-img {
     max-height: 80px;
     margin-right: 10px;
-    /* Ajusta a margem direita para um valor menor */
-    /* Removido o sombreamento */
 }
 
 header h1 {
     flex-grow: 1;
-    /* Permite que o h1 ocupe o espaço restante */
     text-align: left;
-    /* Alinha o texto à esquerda */
-    margin-left: 90px;
-    /* Adiciona uma margem à esquerda */
+    margin-left: 120px;
+    font-size: 2.4em;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
 main {
     padding: 20px;
-    margin-top: 120px;/* Ajusta a margem superior para evitar sobreposição com o cabeçalho fixo */
+    margin-top: 120px;
 }
+h2 {
+    color: #231F20; /* Altere esta linha para a cor desejada */
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); /* Adicione esta linha para sombra */
+}
+
 
 .info-section {
     background-color: rgba(255, 255, 255, 0.8);
-    /* Torna o fundo da seção de informações semi-transparente */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px 200px;
-    /* Aumenta as margens laterais */
     transition: transform 0.3s ease, background-color 0.3s ease;
     animation: fadeIn 0.5s ease-in-out;
-    
 }
 
 .info-section:hover {
     transform: scale(1.02);
     background-color: rgba(224, 250, 230, 0.6);
-    /* Torna o fundo da seção de informações semi-transparente ao passar o mouse */
 }
+
+.cards-section {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 200px;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    padding-bottom: 60px; /* Adicione esta linha para criar espaço para o link */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(50% - 20px);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    animation: fadeIn 0.5s ease-in-out;
+    margin: 0 10px; /* Adicione esta linha para espaçamento lateral */
+    position: relative;
+}
+
+
+.card:hover {
+    transform: scale(1.05);
+    background-color: rgba(224, 250, 230, 0.6);
+}
+.card .link-indicator {
+    position: absolute; /* Adicione esta linha para posicionamento absoluto */
+    bottom: 10px; /* Ajuste a distância do link em relação ao fundo do card */
+    left: 10px; /* Ajuste a distância do link em relação ao lado esquerdo do card */
+}
+
 .link-indicator {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
+    bottom: 2px; /* Ajuste a distância do link em relação ao fundo do card */
+    left: 10px; /* Ajuste a distância do link em relação ao lado esquerdo do card */
+    display: inline-flex;
+    padding: 10px;
     background-color: #00796b;
     color: white;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
-
 .link-indicator:hover {
     background-color: #004d40;
 }
+
 ul {
     list-style-type: none;
-    /* Remove os pontos das listas */
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* Adiciona espaço entre os itens */
+    gap: 20px;
     padding: 10px;
 }
 
 li {
     background-color: rgba(255, 255, 255, 0.8);
-    /* Torna o fundo dos itens da lista semi-transparente */
     padding: 15px;
-    margin: 0; /* Remove as margens laterais */
+    margin: 0;
     border-left: 5px solid #00796b;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, max-height 0.3s ease;
     animation: slideIn 0.5s ease-in-out;
-    flex: 1 1 calc(50% - 20px); /* Ajusta a largura dos itens para caberem dois por linha */
-    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
+    flex: 1 1 calc(50% - 20px);
+    box-sizing: border-box;
+    max-height: 50px;
+    overflow: hidden;
+    cursor: pointer;
 }
 
-li:hover {
-    background-color: rgba(224, 247, 250, 0.8);
-    /* Torna o fundo dos itens da lista semi-transparente ao passar o mouse */
+li h3, li h2 {
+    margin: 0;
 }
- /* Rodapé */
+
+li.expanded {
+    max-height: none;
+    background-color: rgba(224, 247, 250, 0.8);
+}
+
 footer {
     background-color: rgba(215, 56, 51);
-   
     color: white;
     text-align: center;
     padding: 2px;
@@ -140,7 +160,6 @@ footer {
     animation: fadeOut 1s ease-in-out;
 }
 
-/* Media Queries para responsividade */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
@@ -188,7 +207,6 @@ footer {
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
     }
@@ -199,7 +217,6 @@ footer {
         opacity: 0;
         transform: translateX(-100%);
     }
-
     to {
         opacity: 1;
         transform: translateX(0);
@@ -210,7 +227,6 @@ footer {
     from {
         opacity: 1;
     }
-
     to {
         opacity: 0;
     }
@@ -220,11 +236,9 @@ footer {
     0% {
         transform: scale(1);
     }
-
     50% {
         transform: scale(1.05);
     }
-
     100% {
         transform: scale(1);
     }
