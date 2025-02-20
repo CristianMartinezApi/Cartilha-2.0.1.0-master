@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background: linear-gradient(90deg, rgba(95, 177, 87, 0.7), rgba(246, 252, 246, 0.9));
+    background-color: rgba(246, 252, 246);
     /* Adiciona um gradiente linear de 90 graus */
     background-size: cover;
     background-position: center;
@@ -50,7 +50,8 @@ header {
 header h1 {
     flex-grow: 1;
     text-align: center;
-    margin: 0 20px; /* Ajusta a margem para centralizar o texto */
+    margin: 0 20px;
+    /* Ajusta a margem para centralizar o texto */
     font-size: 2.4em;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
@@ -61,8 +62,10 @@ main {
 }
 
 h2 {
-    color: #231F20; /* Altere esta linha para a cor desejada */
-    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); /* Adicione esta linha para sombra */
+    color: #231F20;
+    /* Altere esta linha para a cor desejada */
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    /* Adicione esta linha para sombra */
 }
 
 .info-section {
@@ -72,17 +75,16 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px 200px;
     max-width: 90%;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    animation: fadeIn 0.5s ease-in-out;
+
+    text-shadow: 2px, 2px, 2px rgba(0, 0, 0, 0.5), -1px -1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .info-section:hover {
-    transform: scale(1.02);
     background-color: rgba(224, 250, 230, 0.6);
 }
 
 .cards-section {
-    display:flex;
+    display: flex;
     justify-content: space-around;
     margin: 20px 190px;
     max-width: 90%;
@@ -91,26 +93,32 @@ h2 {
 .card {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
-    padding-bottom: 60px; /* Adicione esta linha para criar espaço para o link */
+    padding-bottom: 60px;
+    /* Adicione esta linha para criar espaço para o link */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: calc(50% - 20px);
     transition: transform 0.3s ease, background-color 0.3s ease;
     animation: fadeIn 0.5s ease-in-out;
-    margin: 0 10px; /* Adicione esta linha para espaçamento lateral */
+    margin: 0 10px;
+    /* Adicione esta linha para espaçamento lateral */
     position: relative;
     overflow: hidden;
-    z-index: 1; /* Garante que o card esteja acima da imagem */
+    z-index: 1;
+    /* Garante que o card esteja acima da imagem */
+}
+
+.card:hover {
+    background-color: rgba(224, 250, 230, 0.6);
 }
 
 .card .link-indicator {
     position: absolute;
-    bottom: -60px; /* Ajuste a distância do link em relação ao fundo do card */
-    left: 2px; /* Ajuste a distância do link em relação ao lado esquerdo do card */
+    bottom: -60px;
+    /* Ajuste a distância do link em relação ao fundo do card */
+    left: 2px;
+    /* Ajuste a distância do link em relação ao lado esquerdo do card */
     display: inline-flex;
-    background-color: rgba(255, 255, 255, 0.2); /* Ajuste a opacidade para o efeito de vidro */
-    backdrop-filter: blur(10px); /* Adiciona o efeito de desfoque */
-    border: 2px solid rgba(255, 255, 255, 0.3); /* Adiciona uma borda para o efeito de vidro */
     padding: 10px;
     background-color: #5FB157;
     color: white;
@@ -119,35 +127,32 @@ h2 {
     transition: background-color 0.3s ease;
 }
 
-.card-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    object-fit: cover;
-    z-index: 0; /* Garante que a imagem esteja atrás do conteúdo */
-    filter: blur(1.1px); /* Adiciona desfoque à imagem */
-}
-
 .card-content {
     position: relative;
-    z-index: 2; /* Garante que o texto fique na frente da imagem */
-    color: #ece3e3; /* Ajusta a cor do texto para ser mais destacada */
-    font-weight: bold; /* Adiciona negrito ao texto para maior destaque */
+    z-index: 2;
+    /* Garante que o texto fique na frente da imagem */
+    color: #231F20;
+    /* Ajusta a cor do texto para ser mais destacada */
+    font-weight: bold;
+    /* Adiciona negrito ao texto para maior destaque */
 }
+
 .card-content h2 {
-    color: #f4f2f2; /* Altere esta linha para a cor desejada para os h2 dentro dos cards */
-    text-shadow: 2px 2px 2px rgba(246, 243, 243, 0.5), 2px 2px 4px #000; /* Adiciona uma borda escura ao texto */
+    color: #231F20;
+    /* Altere esta linha para a cor desejada para os h2 dentro dos cards */
+    text-shadow: 2px 2px 2px rgba(246, 243, 243, 0.5), 2px 2px 4px #000;
+    /* Adiciona uma borda escura ao texto */
 }
 
 .link-indicator {
-    bottom: -60px; /* Ajuste a distância do link em relação ao fundo do card */
-    left: 10px; /* Ajuste a distância do link em relação ao lado esquerdo do card */
+    bottom: -60px;
+    /* Ajuste a distância do link em relação ao fundo do card */
+    left: 10px;
+    /* Ajuste a distância do link em relação ao lado esquerdo do card */
     display: inline-flex;
     padding: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.3); /* Adiciona uma borda para o efeito de vidro */
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    /* Adiciona uma borda para o efeito de vidro */
     background-color: #5FB157;
     color: white;
     text-decoration: none;
@@ -175,7 +180,7 @@ li {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, max-height 0.3s ease;
-    animation: slideIn 0.5s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out;
     flex: 1 1 calc(50% - 20px);
     box-sizing: border-box;
     max-height: 50px;
@@ -183,7 +188,13 @@ li {
     cursor: pointer;
 }
 
-li h3, li h2 {
+li:hover {
+    transform: scale(1.02);
+    /* Adicione esta linha para efeito de hover */
+}
+
+li h3,
+li h2 {
     margin: 0;
 }
 
@@ -248,6 +259,7 @@ footer {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
     }
@@ -258,6 +270,7 @@ footer {
         opacity: 0;
         transform: translateX(-100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -268,6 +281,7 @@ footer {
     from {
         opacity: 1;
     }
+
     to {
         opacity: 0;
     }
@@ -277,9 +291,11 @@ footer {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
+
     100% {
         transform: scale(1);
     }
