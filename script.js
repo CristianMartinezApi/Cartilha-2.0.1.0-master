@@ -38,4 +38,24 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.toggle('expanded');
         });
     });
+
+    // Adiciona o código para alternar a visibilidade do conteúdo adicional
+    const buttons = document.querySelectorAll('.show-more');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation(); // Impede que o clique no botão afete o item da lista
+            const moreContent = this.previousElementSibling;
+            const listItem = this.closest('li');
+            if (moreContent.style.display === 'none' || moreContent.style.display === '') {
+                moreContent.style.display = 'block';
+                this.textContent = 'Mostrar menos';
+                listItem.classList.add('expanded');
+            } else {
+                moreContent.style.display = 'none';
+                this.textContent = 'Mostrar mais';
+                listItem.classList.remove('expanded');
+            }
+        });
+    });
 });

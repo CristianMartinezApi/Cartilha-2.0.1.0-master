@@ -75,6 +75,7 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px 200px;
     max-width: 90%;
+    
 }
 
 .info-section:hover {
@@ -114,7 +115,7 @@ h2 {
     display: inline-flex;
     align-items: center; /* Alinha o conteúdo verticalmente ao centro */
     padding: 10px;
-    background: linear-gradient(45deg, #5FB157, #004d40); /* Adiciona o gradiente de cor */
+    background: linear-gradient(2deg, #fcfdfc25 -70%, #5FB157 98%); /* Adiciona o gradiente de cor */
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -126,18 +127,21 @@ h2 {
     display: inline-flex;
     align-items: center; /* Alinha o conteúdo verticalmente ao centro */
     padding: 10px;
-    background: linear-gradient(45deg, #5FB157, #004d40); /* Adiciona o gradiente de cor */
+    background: linear-gradient(2deg, #fcfdfc25 -70%, #5FB157 98%); /* Adiciona o gradiente de cor */
     color: white;
     text-decoration: none;
     border-radius: 5px;
     border: none; /* Remove a borda padrão do botão */
     cursor: pointer; /* Adiciona o cursor de ponteiro */
-    transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Adiciona a transição de cores e sombra */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adiciona sombra inicial */
+    font-weight: bold; /* Adiciona negrito ao texto */
 }
 
 .link-indicator:hover {
-    background: linear-gradient(45deg, #004d40, #5FB157); /* Adiciona o gradiente de cor no hover */
+    background: linear-gradient(270deg, #004d40 0%, #5FB157 60%); /* Adiciona o gradiente de cor no hover */
     color: #ffffff; /* Adiciona a cor do texto na transição */
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.2); /* Adiciona o efeito luminoso no hover */
 }
 
 .button-icon {
@@ -161,7 +165,7 @@ li {
     border-left: 5px solid #00796b;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, max-height 0.3s ease;
+    transition: background-color 0.3s ease, max-height 0.3s ease, box-shadow 0.3s ease;
     animation: fadeIn 0.5s ease-in-out;
     flex: 1 1 calc(50% - 20px);
     box-sizing: border-box;
@@ -171,17 +175,61 @@ li {
 }
 
 li:hover {
+    background-color: rgba(224, 247, 250, 0.8);
+    box-shadow: 0 4px 8px rgba(139, 231, 86, 0.4);
     transform: scale(1.02);
-    /* Adicione esta linha para efeito de hover */
 }
 
 li h3, li h2 {
     margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li .info-text {
+    font-size: 0.8em;
+    color: #00796b;
+    margin-left: 10px;
 }
 
 li.expanded {
     max-height: none;
     background-color: rgba(224, 247, 250, 0.8);
+}
+
+.more-content {
+    display: none; /* Esconde o conteúdo adicional por padrão */
+    transition: max-height 0.3s ease;
+}
+
+.show-more {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: linear-gradient(45deg, #5FB157, #004d40); /* Adiciona o gradiente de cor */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none; /* Remove a borda padrão do botão */
+    cursor: pointer; /* Adiciona o cursor de ponteiro */
+    transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
+    font-weight: bold; /* Adiciona negrito ao texto */
+}
+
+.show-more:hover {
+    background: linear-gradient(45deg, #004d40, #5FB157); /* Adiciona o gradiente de cor no hover */
+    color: #ffffff; /* Adiciona a cor do texto na transição */
+}
+
+.arrow {
+    display: inline-block;
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+}
+
+li.expanded .arrow {
+    transform: rotate(180deg);
 }
 
 footer {
@@ -191,6 +239,27 @@ footer {
     padding: 2px;
     width: 100%;
     animation: fadeOut 1s ease-in-out;
+}
+.more-content {
+    display: none; /* Esconde o conteúdo adicional por padrão */
+}
+
+.show-more {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: linear-gradient(45deg, #5FB157, #004d40); /* Adiciona o gradiente de cor */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none; /* Remove a borda padrão do botão */
+    cursor: pointer; /* Adiciona o cursor de ponteiro */
+    transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
+}
+
+.show-more:hover {
+    background: linear-gradient(45deg, #004d40, #5FB157); /* Adiciona o gradiente de cor no hover */
+    color: #ffffff; /* Adiciona a cor do texto na transição */
 }
 
 @media (max-width: 768px) {
