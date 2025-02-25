@@ -9,7 +9,6 @@ body {
 
 header {
     background-color: rgba(246, 252, 246);
-    /* Adiciona um gradiente linear de 90 graus */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -73,7 +72,7 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px 200px;
+    margin: 20px 150px;
     max-width: 90%;
     
 }
@@ -81,11 +80,14 @@ h2 {
 .info-section:hover {
     background-color: rgba(224, 250, 230, 0.6);
 }
+#conclusaoSection li {
+    cursor: default !important; /* Remove o cursor pointer com prioridade */
+}
 
 .cards-section {
     display: flex;
     justify-content: space-around;
-    margin: 20px 190px;
+    margin: 0px auto;
     max-width: 90%;
 }
 
@@ -120,7 +122,6 @@ h2 {
     text-decoration: none;
     border-radius: 5px;
     border: none; /* Remove a borda padrão do botão */
-    cursor: pointer; /* Adiciona o cursor de ponteiro */
     transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
 }
 .link-indicator {
