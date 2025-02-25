@@ -74,12 +74,12 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px 150px;
     max-width: 90%;
-    
 }
 
 .info-section:hover {
     background-color: rgba(224, 250, 230, 0.6);
 }
+
 #conclusaoSection li {
     cursor: default !important; /* Remove o cursor pointer com prioridade */
 }
@@ -110,45 +110,66 @@ h2 {
     background-color: rgba(224, 250, 230, 0.6);
 }
 
-.card .link-indicator {
-    position: absolute;
-    bottom: 20px; /* Ajusta a distância do botão em relação ao fundo do card */
-    left: 20px; /* Ajusta a distância do botão em relação ao lado esquerdo do card */
+.card-content h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-content .link-indicator {
     display: inline-flex;
-    align-items: center; /* Alinha o conteúdo verticalmente ao centro */
+    align-items: center;
     padding: 10px;
-    background: linear-gradient(2deg, #fcfdfc25 -70%, #5FB157 98%); /* Adiciona o gradiente de cor */
+    background: linear-gradient(2deg, #fcfdfc25 -70%, #5FB157 98%);
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    border: none; /* Remove a borda padrão do botão */
-    transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    margin-left: 10px; /* Espaçamento entre o título e o botão */
 }
-.link-indicator {
+
+.card-content .link-indicator img {
+    margin-right: 8px;
+    height: 20px;
+    width: 20px;
+}
+
+.card-content .link-indicator:hover {
+    background: linear-gradient(270deg, #004d40 0%, #5FB157 60%);
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+}
+
+.info-section .link-indicator {
     display: inline-flex;
-    align-items: center; /* Alinha o conteúdo verticalmente ao centro */
+    align-items: center;
     padding: 10px;
-    background: linear-gradient(2deg, #fcfdfc25 -70%, #5FB157 98%); /* Adiciona o gradiente de cor */
+    background: linear-gradient(2deg, #fcfdfc25 -70%, #5FB157 98%);
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    border: none; /* Remove a borda padrão do botão */
-    cursor: pointer; /* Adiciona o cursor de ponteiro */
-    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Adiciona a transição de cores e sombra */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adiciona sombra inicial */
-    font-weight: bold; /* Adiciona negrito ao texto */
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    margin-top: 10px; /* Espaçamento superior para separar do texto */
 }
 
-.link-indicator:hover {
-    background: linear-gradient(270deg, #004d40 0%, #5FB157 60%); /* Adiciona o gradiente de cor no hover */
-    color: #ffffff; /* Adiciona a cor do texto na transição */
-    box-shadow: 0 0 8px rgba(0, 255, 0, 0.2); /* Adiciona o efeito luminoso no hover */
+.info-section .link-indicator img {
+    margin-right: 8px;
+    height: 30px;
+    width: 30px;
 }
 
-.button-icon {
-    margin-right: 8px; /* Espaçamento entre a imagem e o texto */
-    height: 20px; /* Ajuste a altura da imagem conforme necessário */
-    width: 20px; /* Ajuste a largura da imagem conforme necessário */
+.info-section .link-indicator:hover {
+    background: linear-gradient(270deg, #004d40 0%, #5FB157 60%);
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
 }
 
 ul {
@@ -241,6 +262,7 @@ footer {
     width: 100%;
     animation: fadeOut 1s ease-in-out;
 }
+
 .more-content {
     display: none; /* Esconde o conteúdo adicional por padrão */
 }
