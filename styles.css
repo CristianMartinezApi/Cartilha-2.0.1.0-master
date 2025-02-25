@@ -87,7 +87,7 @@ h2 {
 .cards-section {
     display: flex;
     justify-content: space-around;
-    margin: 0px auto;
+    margin: 20px auto;
     max-width: 90%;
 }
 
