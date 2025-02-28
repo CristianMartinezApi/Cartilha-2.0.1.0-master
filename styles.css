@@ -286,44 +286,72 @@ footer {
 }
 
 @media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 10px;
-    }
+    /* Ajustes para telas menores que 768px (tablets e celulares) */
 
-    .header-img {
-        max-height: 60px;
-        margin-right: 0;
-        margin-bottom: 10px;
+    header {
+        flex-direction: column; /* Coloca os elementos do header em coluna */
+        align-items: center; /* Centraliza os itens */
+        padding: 10px; /* Reduz o padding */
     }
 
     header h1 {
-        margin-left: 0;
-        text-align: center;
+        font-size: 1.8em; /* Reduz o tamanho da fonte do título */
+        margin: 10px 0; /* Ajusta as margens */
+    }
+
+    .header-img, .header-img-right {
+        max-height: 60px; /* Reduz o tamanho das imagens do header */
+        margin: 5px; /* Reduz as margens das imagens */
+    }
+
+    .header-img-right {
+        margin-right: 5px;
+    }
+
+    main {
+        margin-top: 180px; /* Aumenta a margem superior do main */
+        padding: 10px; /* Reduz o padding do main */
     }
 
     .info-section {
-        margin: 20px 20px;
+        margin: 10px; /* Reduz as margens da seção de informações */
+        max-width: 100%; /* Garante que a seção ocupe toda a largura */
+    }
+
+    .cards-section {
+        flex-direction: column; /* Coloca os cards em coluna */
+        align-items: center; /* Centraliza os cards */
+    }
+
+    .card {
+        width: 90%; /* Ajusta a largura dos cards */
+        margin: 10px 0; /* Ajusta as margens dos cards */
+    }
+
+    ul {
+        flex-direction: column; /* Coloca os itens da lista em coluna */
+        padding: 5px; /* Reduz o padding da lista */
+    }
+
+    li {
+        width: 95%; /* Ajusta a largura dos itens da lista */
+        flex: none; /* Remove a flexibilidade dos itens da lista */
+        margin: 5px 0; /* Ajusta as margens dos itens da lista */
     }
 }
 
 @media (max-width: 480px) {
-    header {
-        padding: 5px;
+    /* Ajustes para telas menores que 480px (celulares menores) */
+    header h1 {
+        font-size: 1.5em; /* Reduz ainda mais o tamanho da fonte do título */
     }
 
-    .header-img {
-        max-height: 50px;
+    .header-img, .header-img-right {
+        max-height: 40px; /* Reduz ainda mais o tamanho das imagens do header */
     }
 
-    .info-section {
-        margin: 10px 10px;
-        padding: 15px;
-    }
-
-    li {
-        padding: 10px;
-        margin: 5px 10px;
+    main {
+        margin-top: 150px;
     }
 }
 
