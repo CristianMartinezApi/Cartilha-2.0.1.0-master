@@ -60,3 +60,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const boasPraticasSection = document.getElementById('boasPraticasSection');
+    const boasPraticasTitle = boasPraticasSection.querySelector('h2');
+    const boasPraticasList = boasPraticasSection.querySelector('.boas-praticas-list'); // Seleciona a lista ul
+
+    boasPraticasTitle.addEventListener('click', function() {
+        boasPraticasList.classList.toggle('hidden'); // Adiciona ou remove a classe 'hidden' da lista
+    });
+});

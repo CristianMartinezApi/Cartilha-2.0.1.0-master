@@ -93,6 +93,7 @@ h2 {
     max-width: 100%;
 }
 
+
 .card {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
@@ -113,6 +114,18 @@ h2 {
 .card:hover {
     background-color: rgba(224, 250, 230, 0.6);
 }
+.boas-praticas-list {
+    display: flex; /* Garante que a lista seja exibida como bloco */
+}
+
+.boas-praticas-list li {
+    width: 100%; /* Garante que os itens da lista ocupem a largura total */
+}
+
+#boasPraticasSection .boas-praticas-list.hidden {
+    display: none; /* Esconde a lista quando a classe 'hidden' estiver presente */
+}
+
 
 .card-content h2 {
     display: flex;
