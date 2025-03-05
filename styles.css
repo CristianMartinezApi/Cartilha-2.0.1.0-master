@@ -1,10 +1,11 @@
 body {
-    font-family: "Rubik", serif;
+    font-family: 'Roboto', sans-serif;                                   
     margin: 0;
     padding: 0;
     background: url('./img/pge-bl.png') no-repeat center center fixed;
     background-size: cover;
     color: #333;
+    font-size: 16px;
 }
 
 header {
@@ -22,7 +23,7 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 100;
     transition: padding 0.3s ease, top 0.3s ease, background 0.5s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -51,13 +52,13 @@ header h1 {
     text-align: center;
     margin: 0 20px;
     /* Ajusta a margem para centralizar o texto */
-    font-size: 2.4em;
+    font-size: 2.4rem;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
 main {
-    padding: 20px;
-    margin-top: 120px;
+    padding: 10px 10px;
+    margin-top: 100px;
 }
 
 h2 {
@@ -72,7 +73,7 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px 150px;
+    margin: 20px 120px;
     max-width: 90%;
 }
 
@@ -81,27 +82,30 @@ h2 {
 }
 
 #conclusaoSection li {
-    cursor: default !important; /* Remove o cursor pointer com prioridade */
+    cursor: default !important;
+    /* Remove o cursor pointer com prioridade */
 }
 
 .cards-section {
     display: flex;
     justify-content: space-around;
-    margin: 20px auto;
-    max-width: 90%;
+    margin: 10px auto;
+    max-width: 100%;
 }
 
 .card {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
-    padding-bottom: 60px; /* Adiciona espaço para o botão */
+    padding-bottom: 60px;
+    /* Adiciona espaço para o botão */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: calc(50% - 20px);
+    width: calc(50% - 10px);
     transition: transform 0.3s ease, background-color 0.3s ease;
     animation: fadeIn 0.5s ease-in-out;
     margin: 0 10px;
-    position: relative; /* Necessário para posicionar o botão */
+    position: relative;
+    /* Necessário para posicionar o botão */
     overflow: hidden;
     z-index: 1;
 }
@@ -129,13 +133,14 @@ h2 {
     transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     font-weight: bold;
-    margin-left: 10px; /* Espaçamento entre o título e o botão */
+    margin-left: 10px;
+    /* Espaçamento entre o título e o botão */
 }
 
 .card-content .link-indicator img {
     margin-right: 8px;
-    height: 20px;
-    width: 20px;
+    height: 10px;
+    width: 10px;
 }
 
 .card-content .link-indicator:hover {
@@ -157,13 +162,14 @@ h2 {
     transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     font-weight: bold;
-    margin-top: 10px; /* Espaçamento superior para separar do texto */
+    margin-top: 10px;
+    /* Espaçamento superior para separar do texto */
 }
 
 .info-section .link-indicator img {
     margin-right: 8px;
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
 }
 
 .info-section .link-indicator:hover {
@@ -194,6 +200,8 @@ li {
     max-height: 50px;
     overflow: hidden;
     cursor: pointer;
+    word-wrap: break-word;
+    /* Adicionado para quebra de texto */
 }
 
 li:hover {
@@ -202,11 +210,15 @@ li:hover {
     transform: scale(1.02);
 }
 
-li h3, li h2 {
+li h3,
+li h2 {
     margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+p {
+    font-weight: normal;
 }
 
 li .info-text {
@@ -221,27 +233,33 @@ li.expanded {
 }
 
 .more-content {
-    display: none; /* Esconde o conteúdo adicional por padrão */
+    display: none;
+    /* Esconde o conteúdo adicional por padrão */
     transition: max-height 0.3s ease;
 }
 
 .show-more {
     display: inline-block;
     margin-top: 10px;
-    padding: 5px 10px;
-    background: linear-gradient(45deg, #5FB157, #004d40); /* Adiciona o gradiente de cor */
+    padding: 10px 15px;
+    /* Ajuste inicial do padding */
+    background: linear-gradient(45deg, #5FB157, #004d40);
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    border: none; /* Remove a borda padrão do botão */
-    cursor: pointer; /* Adiciona o cursor de ponteiro */
-    transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
-    font-weight: bold; /* Adiciona negrito ao texto */
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+    font-weight: bold;
+    white-space: normal;
+    /* Adicionado para quebra de texto */
 }
 
 .show-more:hover {
-    background: linear-gradient(45deg, #004d40, #5FB157); /* Adiciona o gradiente de cor no hover */
-    color: #ffffff; /* Adiciona a cor do texto na transição */
+    background: linear-gradient(45deg, #004d40, #5FB157);
+    /* Adiciona o gradiente de cor no hover */
+    color: #ffffff;
+    /* Adiciona a cor do texto na transição */
 }
 
 .arrow {
@@ -264,44 +282,62 @@ footer {
 }
 
 .more-content {
-    display: none; /* Esconde o conteúdo adicional por padrão */
+    display: none;
+    /* Esconde o conteúdo adicional por padrão */
 }
 
 .show-more {
     display: inline-block;
     margin-top: 10px;
     padding: 5px 10px;
-    background: linear-gradient(45deg, #5FB157, #004d40); /* Adiciona o gradiente de cor */
+    background: linear-gradient(45deg, #5FB157, #004d40);
+    /* Adiciona o gradiente de cor */
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    border: none; /* Remove a borda padrão do botão */
-    cursor: pointer; /* Adiciona o cursor de ponteiro */
-    transition: background 0.3s ease, color 0.3s ease; /* Adiciona a transição de cores */
+    border: none;
+    /* Remove a borda padrão do botão */
+    cursor: pointer;
+    /* Adiciona o cursor de ponteiro */
+    transition: background 0.3s ease, color 0.3s ease;
+    /* Adiciona a transição de cores */
 }
 
 .show-more:hover {
-    background: linear-gradient(45deg, #004d40, #5FB157); /* Adiciona o gradiente de cor no hover */
-    color: #ffffff; /* Adiciona a cor do texto na transição */
+    background: linear-gradient(45deg, #004d40, #5FB157);
+    /* Adiciona o gradiente de cor no hover */
+    color: #ffffff;
+    /* Adiciona a cor do texto na transição */
 }
 
 @media (max-width: 768px) {
     /* Ajustes para telas menores que 768px (tablets e celulares) */
 
     header {
-        flex-direction: column; /* Coloca os elementos do header em coluna */
-        align-items: center; /* Centraliza os itens */
-        padding: 10px; /* Reduz o padding */
+        flex-direction: column;
+        /* Coloca os elementos do header em coluna */
+        align-items: center;
+        /* Centraliza os itens */
+        padding: 10px;
+        /* Reduz o padding */
     }
 
     header h1 {
-        font-size: 1.8em; /* Reduz o tamanho da fonte do título */
-        margin: 10px 0; /* Ajusta as margens */
+        font-size: 2.0rem;
+        /* Reduz o tamanho da fonte do título */
+        margin: 10px 0;
+        /* Ajusta as margens */
+    }
+    p {
+        font-weight: normal; /* Remove o negrito em telas menores */
     }
 
-    .header-img, .header-img-right {
-        max-height: 60px; /* Reduz o tamanho das imagens do header */
-        margin: 5px; /* Reduz as margens das imagens */
+    .header-img,
+    .header-img-right {
+        max-height: 60px;
+        /* Reduz o tamanho das imagens do header */
+        margin: 5px;
+        /* Reduz as margens das imagens */
     }
 
     .header-img-right {
@@ -309,49 +345,92 @@ footer {
     }
 
     main {
-        margin-top: 180px; /* Aumenta a margem superior do main */
-        padding: 10px; /* Reduz o padding do main */
+        margin-top: 150px;
+        /* Aumenta a margem superior do main */
+        padding: 10px;
+        /* Reduz o padding do main */
     }
 
     .info-section {
-        margin: 10px; /* Reduz as margens da seção de informações */
-        max-width: 100%; /* Garante que a seção ocupe toda a largura */
+        margin: 10px 5%;
+        /* Reduz as margens da seção de informações */
+        max-width: 100%;
+        /* Garante que a seção ocupe toda a largura */
     }
 
     .cards-section {
-        flex-direction: column; /* Coloca os cards em coluna */
-        align-items: center; /* Centraliza os cards */
+        flex-direction: column;
+        /* Coloca os cards em coluna */
+        align-items: center;
+        /* Centraliza os cards */
     }
 
     .card {
-        width: 90%; /* Ajusta a largura dos cards */
-        margin: 10px 0; /* Ajusta as margens dos cards */
+        width: 90%;
+        /* Ajusta a largura dos cards */
+        margin: 10px 0;
+        /* Ajusta as margens dos cards */
     }
 
     ul {
-        flex-direction: column; /* Coloca os itens da lista em coluna */
-        padding: 5px; /* Reduz o padding da lista */
+        flex-direction: column;
+        /* Coloca os itens da lista em coluna */
+        padding: 5px;
+        /* Reduz o padding da lista */
     }
 
     li {
-        width: 95%; /* Ajusta a largura dos itens da lista */
-        flex: none; /* Remove a flexibilidade dos itens da lista */
-        margin: 5px 0; /* Ajusta as margens dos itens da lista */
+        padding: 10px;
+        /* Reduz o padding */
+        font-size: 0.9rem;
+        /* Reduz o tamanho da fonte */
+        flex: 1 1 100%;
+        /* Garante que ocupem a largura total */
+    }
+
+    .show-more {
+        padding: 8px 12px;
+        /* Reduz o padding */
+        font-size: 0.9rem;
+        /* Reduz o tamanho da fonte */
     }
 }
 
 @media (max-width: 480px) {
+
     /* Ajustes para telas menores que 480px (celulares menores) */
     header h1 {
-        font-size: 1.5em; /* Reduz ainda mais o tamanho da fonte do título */
+        font-size: 1.8rem;
+        /* Reduz ainda mais o tamanho da fonte do título */
     }
 
-    .header-img, .header-img-right {
-        max-height: 40px; /* Reduz ainda mais o tamanho das imagens do header */
+    .header-img,
+    .header-img-right {
+        max-height: 40px;
+        /* Reduz ainda mais o tamanho das imagens do header */
     }
 
     main {
-        margin-top: 150px;
+        margin-top: 130px;
+
+    }
+
+    .info-section {
+        max-width: 70%;
+    }
+
+    li {
+        padding: 8px;
+        /* Reduz ainda mais o padding */
+        font-size: 0.85rem;
+        /* Reduz ainda mais o tamanho da fonte */
+    }
+
+    .show-more {
+        padding: 6px 10px;
+        /* Reduz ainda mais o padding */
+        font-size: 0.85rem;
+        /* Reduz ainda mais o tamanho da fonte */
     }
 }
 
