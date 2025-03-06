@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     const header = document.querySelector('header');
     if (!header) return;
@@ -21,9 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.requestAnimationFrame(onScroll);
             ticking = true;
         }
-    });
-
-    window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
             header.classList.add('header-hidden');
         } else {
@@ -31,21 +27,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Adiciona o código para alternar a classe 'expanded' nos itens da lista
     const listItems = document.querySelectorAll('li');
-
     listItems.forEach(item => {
         item.addEventListener('click', function() {
             this.classList.toggle('expanded');
         });
     });
 
-    // Adiciona o código para alternar a visibilidade do conteúdo adicional
     const buttons = document.querySelectorAll('.show-more');
-    
     buttons.forEach(button => {
         button.addEventListener('click', function(event) {
-            event.stopPropagation(); // Impede que o clique no botão afete o item da lista
+            event.stopPropagation();
             const moreContent = this.previousElementSibling;
             const listItem = this.closest('li');
             if (moreContent.style.display === 'none' || moreContent.style.display === '') {
@@ -59,13 +51,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
-document.addEventListener('DOMContentLoaded', function() {
+
     const boasPraticasSection = document.getElementById('boasPraticasSection');
     const boasPraticasTitle = boasPraticasSection.querySelector('h2');
-    const boasPraticasList = boasPraticasSection.querySelector('.boas-praticas-list'); // Seleciona a lista ul
+    const boasPraticasList = boasPraticasSection.querySelector('.boas-praticas-list');
+    const expandIndicator = boasPraticasSection.querySelector('.expand-indicator');
 
     boasPraticasTitle.addEventListener('click', function() {
-        boasPraticasList.classList.toggle('hidden'); // Adiciona ou remove a classe 'hidden' da lista
+        boasPraticasList.classList.toggle('hidden');
+        boasPraticasList.classList.toggle('expanded');
+        if (boasPraticasList.classList.contains('hidden')){
+            expandIndicator.textContent = "Saiba Mais";
+        } else {
+            expandIndicator.textContent = "Recolher";
+        }
+    });
+
+    const pdfPopup = document.getElementById('pdf-popup');
+    const confirmPdf = document.getElementById('confirm-pdf');
+
+    pdfPopup.style.display = 'flex';
+
+    confirmPdf.addEventListener('click', function() {
+        pdfPopup.style.display = 'none';
     });
 });
