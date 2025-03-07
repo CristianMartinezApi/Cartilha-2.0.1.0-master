@@ -43,11 +43,11 @@ header {
 }
 
 .popup-content {
-    background: white;
+    background: rgb(255, 255, 255);
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(255, 254, 254, 0.692);
     max-width: 400px;
     width: 100%;
     margin-top: 50px; /* Distância do topo, ajuste conforme necessário */
@@ -123,7 +123,7 @@ h2 {
 }
 
 .info-section {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -132,7 +132,7 @@ h2 {
 }
 
 .info-section:hover {
-    background-color: rgba(224, 250, 230, 0.6);
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 #conclusaoSection li {
@@ -183,7 +183,22 @@ h2 {
 #boasPraticasSection .boas-praticas-list.hidden {
     display: none; /* Esconde a lista quando a classe 'hidden' estiver presente */
 }
+#boasPraticasSection h2 {
+    cursor: pointer;
+    display: flex; /* Adiciona flexbox ao título */
+    justify-content: space-between; /* Espalha o título e o indicador */
+    align-items: center; /* Alinha verticalmente */
+}
 
+.expand-indicator {
+    font-size: 0.6em;
+    color: #551A8B;
+    transform: translateX(-15px); /* Ajuste o valor conforme necessário */
+    text-decoration: underline; /* Adiciona o sublinhado */
+}
+.expand-indicator {
+    text-shadow: none; /* Remove a sombra */
+}
 
 .card-content h2 {
     display: flex;
@@ -234,7 +249,7 @@ h2 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     font-weight: bold;
     margin-top: 10px;
-    /* Espaçamento superior para separar do texto */
+  
 }
 
 .info-section .link-indicator img {
@@ -268,8 +283,8 @@ li {
     animation: fadeIn 0.5s ease-in-out;
     flex: 1 1 calc(50% - 20px);
     box-sizing: border-box;
-    max-height: 50px;
-    overflow: hidden;
+    
+   
     cursor: pointer;
     word-wrap: break-word;
     /* Adicionado para quebra de texto */
@@ -296,17 +311,6 @@ li .info-text {
     font-size: 0.8em;
     color: #00796b;
     margin-left: 10px;
-}
-
-li.expanded {
-    max-height: none;
-    background-color: rgba(224, 247, 250, 0.8);
-}
-
-.more-content {
-    display: none;
-    /* Esconde o conteúdo adicional por padrão */
-    transition: max-height 0.3s ease;
 }
 
 .show-more {
@@ -339,9 +343,7 @@ li.expanded {
     transition: transform 0.3s ease;
 }
 
-li.expanded .arrow {
-    transform: rotate(180deg);
-}
+
 
 footer {
     background-color: rgba(215, 56, 51);
