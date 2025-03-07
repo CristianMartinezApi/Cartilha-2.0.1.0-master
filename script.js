@@ -34,45 +34,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const buttons = document.querySelectorAll('.show-more');
-    buttons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();
-            const moreContent = this.previousElementSibling;
-            const listItem = this.closest('li');
-            if (moreContent.style.display === 'none' || moreContent.style.display === '') {
-                moreContent.style.display = 'block';
-                this.textContent = 'Mostrar menos';
-                listItem.classList.add('expanded');
-            } else {
-                moreContent.style.display = 'none';
-                this.textContent = 'Mostrar mais';
-                listItem.classList.remove('expanded');
-            }
-        });
-    });
-
     const boasPraticasSection = document.getElementById('boasPraticasSection');
     const boasPraticasTitle = boasPraticasSection.querySelector('h2');
     const boasPraticasList = boasPraticasSection.querySelector('.boas-praticas-list');
     const expandIndicator = boasPraticasSection.querySelector('.expand-indicator');
+    const boasPraticasItems = boasPraticasList.querySelectorAll('li');
+
+    // Inicia a lista de boas práticas como fechada
+    boasPraticasList.classList.add('hidden');
+    boasPraticasItems.forEach(item => {
+        item.classList.add('hidden'); // As li começam fechadas
+    });
 
     boasPraticasTitle.addEventListener('click', function() {
         boasPraticasList.classList.toggle('hidden');
         boasPraticasList.classList.toggle('expanded');
-        if (boasPraticasList.classList.contains('hidden')){
+
+        if (boasPraticasList.classList.contains('hidden')) {
             expandIndicator.textContent = "Saiba Mais";
+            boasPraticasItems.forEach(item => {
+                item.classList.remove('expanded'); // Remove a expansão de cada li ao recolher
+            });
         } else {
             expandIndicator.textContent = "Recolher";
+            boasPraticasItems.forEach(item => {
+                item.classList.add('expanded'); // Adiciona a classe expanded em cada li
+                item.classList.remove('hidden'); // Exibe os itens das li
+            });
         }
     });
 
-    const pdfPopup = document.getElementById('pdf-popup');
-    const confirmPdf = document.getElementById('confirm-pdf');
+    // Pop-up com a mensagem e link para o PDF
+    const popup = document.getElementById('popup');
+    const okButton = document.getElementById('ok-btn');  // Botão OK
+    const pdfLink = document.getElementById('pdf-link'); // Link para o PDF
 
-    pdfPopup.style.display = 'flex';
+    // Exibe o pop-up assim que a página carrega
+    popup.style.display = 'flex';
 
-    confirmPdf.addEventListener('click', function() {
-        pdfPopup.style.display = 'none';
+    // Quando o botão "OK" for clicado, esconde o pop-up e remove a rolagem da página
+    okButton.addEventListener('click', function() {
+        popup.style.display = 'none'; // Fecha o pop-up
+        document.body.style.overflow = 'auto'; // Restaura a rolagem da página
     });
+
+    // Quando o link do PDF for clicado, abre o PDF em uma nova aba
+    pdfLink.addEventListener('click', function() {
+        window.open('./materia.pdf', '_blank'); // Substitua './materia.pdf' pelo caminho correto do seu PDF
+    });
+
+    // Quando o pop-up for exibido, desabilita a rolagem da página
+    if (popup.style.display === 'flex') {
+        document.body.style.overflow = 'hidden';
+    }
 });

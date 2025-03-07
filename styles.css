@@ -27,7 +27,8 @@ header {
     transition: padding 0.3s ease, top 0.3s ease, background 0.5s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.popup-overlay {
+
+.popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -36,29 +37,49 @@ header {
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    align-items: flex-start; /* Isso alinha a caixa do pop-up ao topo */
+    z-index: 1000; /* Garantir que o pop-up fique acima dos outros elementos */
+    overflow: hidden; /* Impede a rolagem no pop-up */
 }
 
 .popup-content {
     background: white;
     padding: 20px;
     border-radius: 8px;
-    width: 80%;
-    max-width: 750px;
-    position: relative;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    margin-top: 50px; /* Distância do topo, ajuste conforme necessário */
 }
 
-#confirm-pdf {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
+.popup-content p {
+    margin-bottom: 15px;
+}
+
+.popup-content a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.popup-content a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background: #007bff;
     color: white;
     border: none;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    max-width: 100%;
 }
+
+button:hover {
+    background: #0056b3;
+}
+
+
 
 .header-hidden {
     top: -100px;
