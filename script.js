@@ -91,3 +91,24 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden';
     }
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('popup');
+    const okBtn = document.getElementById('ok-btn');
+    const dontShowAgain = document.getElementById('dontShowAgain');
+
+    // Check localStorage on page load
+    if (localStorage.getItem('hidePopup') === 'true') {
+        popup.style.display = 'none';
+    } else {
+        popup.style.display = 'flex';
+    }
+
+    // Handle OK button click
+    okBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+        
+        if (dontShowAgain.checked) {
+            localStorage.setItem('hidePopup', 'true');
+        }
+    });
+});

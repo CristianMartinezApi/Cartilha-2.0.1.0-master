@@ -7,7 +7,7 @@
     <title>Guia de Uso Seguro da IA na PGE-SC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                
+
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
 </head>
@@ -20,39 +20,56 @@
     </header>
     <div class="popup" id="popup">
         <div class="popup-content">
-            <p><strong>Aviso:</strong> A portaria <strong>GAB/PGE n° 19/2025</strong> está disponível para acessar <a href="./materia.pdf" target="_blank" id="pdf-link">Clique aqui</a></p>
-            <button id="ok-btn">OK</button>
+            <p><strong>Aviso:</strong> A portaria <strong>GAB/PGE n° 19/2025</strong> está disponível para acessar <a
+                    href="./materia.pdf" target="_blank" id="pdf-link">Clique aqui</a></p>
+            <div class="popup-actions">
+                <button id="ok-btn">OK</button>
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dontShowAgain">
+                    Não mostrar novamente
+                </label>
+               
+            </div>
         </div>
     </div>
     
+
     /* Documentos e Orientações */
     </div>
     <main>
         <section class="info-section" id="infoSection">
             <h2><b>Documentos e Orientações</b></h2>
             <p>
-                A PGE-SC definiu diretrizes de uso de Inteligencia Artificial, por meio da portaria <strong>GAB/PGE nº 19/2025</strong>.
+                A PGE-SC definiu diretrizes de uso de Inteligencia Artificial, por meio da portaria <strong>GAB/PGE nº
+                    19/2025</strong>.
                 <a href="./materia.pdf" target="_blank">Clique aqui</a>
             </p>
             <p>
                 Governo lança cartilha "Inteligência Artificial Generativa no Serviço Público".
-                <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf" target="_blank">Clique aqui</a>
+                <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
+                    target="_blank">Clique aqui</a>
             </p>
-            
+
         </section>
         <section class="info-section" id="infoSection">
             <h2><b>Ferramentas Disponiveis no Momento</h2>
-            <h4>Acesse as ferramentas disponíveis com o e-mail institucional.</h4>
+            <h4> ATENÇÂO: As ferramentas a seguir são seguras somente quando acessadas por meio de login do email
+                institucional da PGE/SC
+
+                Para manter a PGE/SC segura e eficiente, escolha apenas soluções de IA confiáveis e aprovadas. Priorize
+                tecnologias que protejam a privacidade, sigam a LGPD e garantam segurança em cada processo. Ao adotar
+                soluções seguras, você protege os dados da instituição e contribui para um ambiente digital mais
+                confiável para todos. Segurança em IA é um compromisso de todos nós!</h4>
 
 
             <section class="cards-section">
                 <div class="card" id="cardGemini">
                     <div class="card-content">
-                        <h2>Gemini  <button onclick="window.open('https://gemini.google.com/app', '_blank')"
-                            class="link-indicator">
-                            <img src="./img/gemini-color.png" alt="Gemini Icon" class="button-icon"> <b> Acessar
-                                Gemini</b>
-                        </button></h2>
+                        <h2>Gemini <button onclick="window.open('https://gemini.google.com/app', '_blank')"
+                                class="link-indicator">
+                                <img src="./img/gemini-color.png" alt="Gemini Icon" class="button-icon"> <b> Acessar
+                                    Gemini</b>
+                            </button></h2>
                         <p>O Gemini é uma ferramenta desenvolvida pela Google que utiliza IA para gerar textos de forma
                             colaborativa. Ele permite que os usuários criem documentos compartilhados e editem o
                             conteúdo
@@ -63,7 +80,7 @@
                             pareceres, contratos, relatórios e outros tipos de textos jurídicos.
                         </p>
                         <p>
-                           
+
                         </p>
                     </div>
                 </div>
@@ -96,7 +113,7 @@
 
         <section class="info-section" id="boasPraticasSection">
             <h2>Boas Práticas <span class="expand-indicator">Saiba Mais</span></h2>
-           
+
             <ul class="boas-praticas-list">
                 <li>
                     <h3>1. Veracidade </h3>

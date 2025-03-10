@@ -78,6 +78,21 @@ button:hover {
     background: #0056b3;
 }
 
+.popup-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.dont-show-again {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
 
 
 .header-hidden {
@@ -132,6 +147,10 @@ h2 {
 
 .info-section:hover {
     background-color: rgba(255, 255, 255, 0.8);
+}
+.info-section h4 {
+    color: #e02222;
+    font-size: 0.8rem;
 }
 
 #conclusaoSection li {
