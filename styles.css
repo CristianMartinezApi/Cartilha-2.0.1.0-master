@@ -360,8 +360,113 @@ li .info-text {
     margin-left: 5px;
     transition: transform 0.3s ease;
 }
+.satisfaction-survey {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    display: none; /* Force hidden state on load */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.satisfaction-survey.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.satisfaction-survey.minimized {
+    transform: scale(0.3);
+    opacity: 0.7;
+    cursor: pointer;
+}
+#survey-trigger {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 9998; /* Just below survey */
+}
+.rating-container {
+      margin: 20px 0;
+  }
+
+.rating-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.rating-btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+  .rating-btn[data-value="0"] { background-color: #ff0000; }
+  .rating-btn[data-value="1"] { background-color: #ff1a1a; }
+  .rating-btn[data-value="2"] { background-color: #ff3333; }
+  .rating-btn[data-value="3"] { background-color: #ff4d4d; }
+  .rating-btn[data-value="4"] { background-color: #ff6666; }
+  .rating-btn[data-value="5"] { background-color: #ff8533; }
+  .rating-btn[data-value="6"] { background-color: #ffa64d; }
+  .rating-btn[data-value="7"] { background-color: #ffc266; }
+  .rating-btn[data-value="8"] { background-color: #80cc28; }
+  .rating-btn[data-value="9"] { background-color: #66b300; }
+  .rating-btn[data-value="10"] { background-color: #4d9900; }
 
 
+  .rating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .rating-btn.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }  .feedback-container {
+      margin: 20px 0;
+  }
+
+  .feedback-container textarea {
+      width: 90%;
+      padding: 10px;
+      min-height: 80px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 8px;
+  }
+
+  .submit-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      max-width: 250px;
+  }
+
+  .submit-btn:hover {
+      background: #04a026;
+  }
 
 footer {
     background-color: rgba(215, 56, 51);

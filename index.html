@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Guia de Uso Seguro da IA na PGE-SC</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia de Uso Seguro da IA na PGE-SC</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-</head>
-
+      <link rel="stylesheet" href="styles.css">
+      <!-- Add these before your other scripts -->
+      <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+      <script>
+          (function() {
+              emailjs.init("cole_sua_public_key_aqui");
+          })();
+      </script>
+      <script src="script.js" defer></script>
+  </head>
 <body>
     <header>
         <img src="./img/pge.png" alt="Descrição da Imagem" class="header-img">
@@ -230,6 +235,41 @@
                 <li>✔ Mantenha-se atualizado sobre as regulamentações</li>
             </ul>
         </section>
+        <section class="info-section" id="pesquisaSection">
+            <h2>Pesquisa de Satisfação</h2>
+            <div class="survey-container">
+                <p>Como você avalia este guia?</p>
+                <div class="rating-container">
+                    <div class="rating-numbers">
+                        <!-- Rating buttons 0-10 -->
+                        <button class="rating-btn" data-value="0">0</button>
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                    <div class="feedback-container">
+                        <label for="feedback">Deixe seu feedback (opcional):</label>
+                        <textarea id="feedback" rows="4" placeholder="Digite seus comentários aqui..."></textarea>
+                    </div>
+                    <button id="submit-survey" class="submit-btn">Enviar Avaliação</button>
+                </div>
+
+
+
+
+
+            </div>
+        </section>
+        <button id="survey-trigger">Feedback</button>
+    
+
     </main>
     <footer>
         <p>© 2025 - Todos os direitos reservados</p>
