@@ -28,6 +28,7 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Adicionando transição para o pop-up */
 .popup {
     position: fixed;
     top: 0;
@@ -37,9 +38,19 @@ header {
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Isso alinha a caixa do pop-up ao topo */
-    z-index: 1000; /* Garantir que o pop-up fique acima dos outros elementos */
-    overflow: hidden; /* Impede a rolagem no pop-up */
+    align-items: flex-start;
+    z-index: 1000;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0); /* Posição inicial */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Anima opacidade e posição */
+}
+
+/* Estado de fechamento do pop-up */
+.popup.fechar {
+    opacity: 0; /* Desaparece */
+    transform: translateY(-20px); /* Move levemente para cima durante o desaparecimento */
+    pointer-events: none; /* Evita interação */
 }
 
 .popup-content {

@@ -64,12 +64,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     okButton.addEventListener('click', function() {
-        popup.style.display = 'none';
+        popup.classList.add('fechar'); // Adiciona a classe para ativar a animação
         document.body.style.overflow = 'auto';
-        if (dontShowAgain && dontShowAgain.checked) {
-            localStorage.setItem('hidePopup', 'true');
-        }
+    
+        // Aguarda o fim da animação para ocultar completamente
+        setTimeout(() => {
+            popup.style.display = 'none';
+            if (dontShowAgain && dontShowAgain.checked) {
+                localStorage.setItem('hidePopup', 'true');
+            }
+        }, 500); // Tempo correspondente à duração da transição
     });
+    
+    
 
     // Pesquisa de satisfação - Mostrar e ocultar ao clicar no botão
 const pesquisaSection = document.getElementById('pesquisaSection');
