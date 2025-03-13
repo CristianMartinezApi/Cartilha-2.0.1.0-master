@@ -411,21 +411,24 @@ li .info-text {
 .rating-numbers {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
-    margin: 15px 0;
+  
+    margin: 20px 0;
 }
 
 .rating-btn {
     width: 35px;
     height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 15px;
     font-weight: bold;
-    
     color: white;
 }
 
