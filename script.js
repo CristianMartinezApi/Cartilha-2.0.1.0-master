@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             expandIndicator.textContent = "Saiba Mais";
             boasPraticasItems.forEach(item => item.classList.add('hidden'));
         } else {
-            expandIndicator.textContent = "Saiba Menos";
+            expandIndicator.textContent = "Recolher";
             boasPraticasItems.forEach(item => item.classList.remove('hidden'));
         }
     });
@@ -92,5 +92,53 @@ surveyTrigger.addEventListener('click', function() {
         pesquisaSection.style.display = 'none';
     }
 });
+
+// Armazena o rating selecionado
+let selectedRating = null;
+
+// Seleciona todos os botões de avaliação e adiciona evento de clique
+document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Remove a seleção dos botões anteriores (apenas visual)
+        document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedRating = btn.getAttribute('data-value');
+    });
+});
+
+const submitSurvey = document.getElementById('submit-survey');
+const feedbackField = document.getElementById('feedback');
+
+submitSurvey.addEventListener('click', function() {
+    // Verifica se foi selecionado um rating
+    if (selectedRating === null) {
+        alert('Por favor, selecione uma nota de 0 a 10.');
+        return;
+    }
+    
+    // Cria os dados a serem enviados
+    const surveyData = {
+        rating: selectedRating,
+        feedback: feedbackField.value
+    };
+
+    // Envia os dados via EmailJS (altere SERVICE_ID e TEMPLATE_ID para os corretos)
+    emailjs.send('service_nt3i72o', 'Cartilha', surveyData)
+        .then(function(response) {
+            alert('Obrigado por sua avaliação!');
+            // Opcional: Limpa o formulário
+            selectedRating = null;
+            feedbackField.value = '';
+            document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+            // Oculta a pesquisa após o envio, se desejar
+            document.getElementById('pesquisaSection').style.display = 'none';
+        }, function(error) {
+            alert('Ocorreu um erro ao enviar sua avaliação. Tente novamente.');
+            console.error('Erro ao enviar:', error);
+        });
+});
+
+// Substitua 'YOUR_PUBLIC_KEY' pela sua chave pública válida
+emailjs.init("DG7YsAsHEOixs5qKI");
 
 });
