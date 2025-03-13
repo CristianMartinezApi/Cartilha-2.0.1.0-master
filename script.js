@@ -123,7 +123,7 @@ submitSurvey.addEventListener('click', function() {
     };
 
     // Envia os dados via EmailJS (altere SERVICE_ID e TEMPLATE_ID para os corretos)
-    emailjs.send('service_nt3i72o', 'Cartilha', surveyData)
+    emailjs.send('service_nt3i72o', 'template_pjjg7o5', surveyData)
         .then(function(response) {
             alert('Obrigado por sua avaliação!');
             // Opcional: Limpa o formulário
@@ -139,6 +139,6 @@ submitSurvey.addEventListener('click', function() {
 });
 
 // Substitua 'YOUR_PUBLIC_KEY' pela sua chave pública válida
-emailjs.init("DG7YsAsHEOixs5qKI");
+emailjs.init("Ck08OM3INTYwm8nQ5");
 
 });

@@ -223,10 +223,33 @@ h2 {
     font-size: 0.6em;
     color: #551A8B;
     transform: translateX(-15px); /* Ajuste o valor conforme necessário */
-    text-decoration: underline; /* Adiciona o sublinhado */
+
 }
 .expand-indicator {
     text-shadow: none; /* Remove a sombra */
+}
+
+/* Estilização básica do botão expand-indicator */
+.expand-indicator {
+    background-color: #5FB157;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 10px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Alteração de cor e leve escala ao passar o mouse */
+.expand-indicator:hover {
+    background-color: #004d40;
+    transform: scale(1.05);
+}
+
+/* Aplicando a animação pulse, se desejar que ele pulse continuamente */
+.expand-indicator.pulsing {
+    animation: pulse 2s infinite;
 }
 
 .card-content h2 {
@@ -691,3 +714,4 @@ footer {
         transform: scale(1);
     }
 }
+
