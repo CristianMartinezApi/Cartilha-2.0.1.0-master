@@ -96,8 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Resto do código (rating, submit etc.)
-
     // Armazena o rating selecionado
     let selectedRating = null;
 
