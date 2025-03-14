@@ -244,7 +244,7 @@ h2 {
 /* Alteração de cor e leve escala ao passar o mouse */
 .expand-indicator:hover {
     background-color: #004d40;
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 /* Aplicando a animação pulse, se desejar que ele pulse continuamente */
@@ -426,6 +426,11 @@ li .info-text {
     border-radius: 4px;
     cursor: pointer;
     z-index: 9998; /* Just below survey */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+#survey-trigger:hover {
+    background-color: #004d40;
+    transform: scale(1.05);
 }
 .rating-container {
       margin: 20px 0;
