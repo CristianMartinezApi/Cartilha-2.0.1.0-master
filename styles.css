@@ -496,7 +496,7 @@ li .info-text {
   }
 
   .submit-btn {
-      background: #007bff;
+      background: #4CAF5f;
       color: white;
       border: none;
       padding: 8px 20px;
@@ -508,8 +508,25 @@ li .info-text {
   }
 
   .submit-btn:hover {
-      background: #04a026;
+      background: #004d40;
   }
+
+  #nome, #email { 
+    width: 40%;              /* Define a largura para 100% do elemento pai, garantindo que ocupem toda a largura disponível */
+    padding: 8px;             /* Adiciona um espaçamento interno de 8 pixels em todos os lados, para que o conteúdo não encoste nas bordas */
+    margin: 10px 0;           /* Aplica uma margem de 10 pixels na parte superior e inferior, separando os elementos verticalmente */
+    border: 1px solid #ccc;   /* Define uma borda fina (1px) com cor cinza clara (#ccc) para destacar levemente o elemento */
+    border-radius: 4px;       /* Arredonda os cantos da borda em 4 pixels, proporcionando um visual mais suave */
+    font-size: 0.8rem;          /* Define o tamanho da fonte como 1rem, que geralmente corresponde ao tamanho base do documento */
+}
+.feedback-container {
+    display: flex;
+    flex-direction: column;
+    
+}
+.survey-form {
+    display: block;
+}
 
 footer {
     background-color: rgba(215, 56, 51);

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const header = document.querySelector('header');
     if (!header) {
         console.error('Elemento header não encontrado.');
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ticking = false;
     }
 
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         if (!ticking) {
             window.requestAnimationFrame(onScroll);
             ticking = true;
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     boasPraticasList.classList.add('hidden');
 
-    boasPraticasTitle.addEventListener('click', function() {
+    boasPraticasTitle.addEventListener('click', function () {
         boasPraticasList.classList.toggle('hidden');
         boasPraticasList.classList.toggle('expanded');
 
@@ -63,10 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden';
     }
 
-    okButton.addEventListener('click', function() {
+    okButton.addEventListener('click', function () {
         popup.classList.add('fechar'); // Adiciona a classe para ativar a animação
         document.body.style.overflow = 'auto';
-    
+
         // Aguarda o fim da animação para ocultar completamente
         setTimeout(() => {
             popup.style.display = 'none';
@@ -75,16 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500); // Tempo correspondente à duração da transição
     });
-    
-    
+
+
 
     // Pesquisa de satisfação - Mostrar e ocultar ao clicar no botão
     const pesquisaSection = document.getElementById('pesquisaSection');
     const surveyTrigger = document.getElementById('survey-trigger');
-    
+
     // Garante que a pesquisa comece oculta
     pesquisaSection.style.display = 'none';
-    
+
     surveyTrigger.addEventListener('click', () => {
         if (pesquisaSection.style.display === 'block') {
             // Se estiver aberta, fecha
@@ -95,47 +95,59 @@ document.addEventListener('DOMContentLoaded', function() {
             pesquisaSection.scrollIntoView({ behavior: 'smooth' });
         }
     });
-    
+
     // Armazena o rating selecionado
     let selectedRating = null;
 
     // Seleciona todos os botões de avaliação e adiciona evento de clique
     document.querySelectorAll('.rating-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             // Remove a seleção dos botões anteriores (apenas visual)
             document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
             selectedRating = btn.getAttribute('data-value');
         });
     });
-
+    // Seleciona os campos do formulário
     const submitSurvey = document.getElementById('submit-survey');
     const feedbackField = document.getElementById('feedback');
+    const nomeField = document.getElementById('nome');
+    const emailField = document.getElementById('email');
 
-    submitSurvey.addEventListener('click', function() {
+    submitSurvey.addEventListener('click', function () {
         // Verifica se foi selecionado um rating
         if (selectedRating === null) {
             alert('Por favor, selecione uma nota de 0 a 10.');
             return;
         }
         
+        // Se o feedback estiver preenchido, torna obrigatório preencher nome e email
+    if (feedbackField.value.trim() !== "" && (nomeField.value.trim() === "" || emailField.value.trim() === "")) {
+        alert('Para enviar um feedback, preencha os campos de nome e e-mail.');
+        return;
+    }
+
         // Cria os dados a serem enviados
         const surveyData = {
             rating: selectedRating,
-            feedback: feedbackField.value
+            feedback: feedbackField.value,
+            nome: nomeField.value,
+            email: emailField.value
         };
 
         // Envia os dados via EmailJS (altere SERVICE_ID e TEMPLATE_ID para os corretos)
         emailjs.send('service_nt3i72o', 'template_pjjg7o5', surveyData)
-            .then(function(response) {
+            .then(function (response) {
                 alert('Obrigado por sua avaliação!');
                 // Opcional: Limpa o formulário
                 selectedRating = null;
                 feedbackField.value = '';
+                nomeField.value = '';    // Campo nome limpo
+                emailField.value = '';
                 document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
                 // Oculta a pesquisa após o envio, se desejar
                 document.getElementById('pesquisaSection').style.display = 'none';
-            }, function(error) {
+            }, function (error) {
                 alert('Ocorreu um erro ao enviar sua avaliação. Tente novamente.');
                 console.error('Erro ao enviar:', error);
             });
