@@ -496,10 +496,10 @@ li .info-text {
   }
 
   .submit-btn {
-      background: #4CAF5f;
+      background: #4CAF50;
       color: white;
       border: none;
-      padding: 8px 20px;
+      padding: 8px 15px;
       border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
@@ -509,21 +509,22 @@ li .info-text {
 
   .submit-btn:hover {
       background: #004d40;
+      transform: scale(1.05);
+      transition: all 0.3s ease;
   }
 
   #nome, #email { 
-    width: 40%;              /* Define a largura para 100% do elemento pai, garantindo que ocupem toda a largura disponível */
-    padding: 8px;             /* Adiciona um espaçamento interno de 8 pixels em todos os lados, para que o conteúdo não encoste nas bordas */
-    margin: 10px 0;           /* Aplica uma margem de 10 pixels na parte superior e inferior, separando os elementos verticalmente */
-    border: 1px solid #ccc;   /* Define uma borda fina (1px) com cor cinza clara (#ccc) para destacar levemente o elemento */
-    border-radius: 4px;       /* Arredonda os cantos da borda em 4 pixels, proporcionando um visual mais suave */
-    font-size: 0.8rem;          /* Define o tamanho da fonte como 1rem, que geralmente corresponde ao tamanho base do documento */
+    display: block !important; /* Força os elementos a se comportarem como blocos */
+    width: 40%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    box-sizing: border-box;
 }
-.feedback-container {
-    display: flex;
-    flex-direction: column;
-    
-}
+
+/* Garante que o contêiner do formulário seja um bloco */
 .survey-form {
     display: block;
 }
@@ -587,7 +588,10 @@ footer {
     p {
         font-weight: normal; /* Remove o negrito em telas menores */
     }
-
+    header.header-hidden {
+        transform: translateY(-120%);
+         transition: transform 0.3s ease;
+    }
     .header-img,
     .header-img-right {
         max-height: 60px;
@@ -652,11 +656,30 @@ footer {
     }
 }
 
-@media (max-width: 480px) {
+/* Ajustes de responsividade para os números de avaliação em telas pequenas */
+@media (max-width: 415px) {
+    .rating-numbers {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* Define 6 colunas para dividir os botões em 2 fileiras */
+        gap: 5px; /* Espaçamento entre os botões */
+        margin: 20px 0;
+        width: 100%;
+    }
+  .rating-btn {
+     
+      height: 30px;     /* Reduz a altura */
+      font-size: 13px;  /* Ajusta o tamanho da fonte */
+  }
+  .h2 {
+    font-size: 2vw; /* Ajusta o tamanho da fonte */
+  }
+}
+
+@media (max-width: 428px) {
 
     /* Ajustes para telas menores que 480px (celulares menores) */
     header h1 {
-        font-size: 1.8rem;
+        font-size: 4vw;
         /* Reduz ainda mais o tamanho da fonte do título */
     }
 
@@ -681,6 +704,21 @@ footer {
         font-size: 0.85rem;
         /* Reduz ainda mais o tamanho da fonte */
     }
+    .rating-numbers {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* Define 6 colunas para dividir os botões em 2 fileiras */
+        gap: 5px; /* Espaçamento entre os botões */
+        margin: 20px 0;
+        width: 100%;
+    }
+  .rating-btn {
+     
+      height: 30px;     /* Reduz a altura */
+      font-size: 13px;  /* Ajusta o tamanho da fonte */
+  }
+  .h2 {
+    font-size: 2vw; /* Ajusta o tamanho da fonte */
+  }
 
     .show-more {
         padding: 6px 10px;
@@ -688,6 +726,62 @@ footer {
         font-size: 0.85rem;
         /* Reduz ainda mais o tamanho da fonte */
     }
+    .button.link-indicator,
+  .info-section .link-indicator {
+      padding: 4px 5px;     /* Reduz o padding */
+      font-size: 2.5vw;     /* Reduz o tamanho da fonte */
+      margin: 5px;           /* Reduz o espaço externo */
+       img {
+          height: 16px;
+          width: 16px;
+      } 
+  }
+}
+
+/* Layout para telas grandes (ex.: desktops) */
+@media (min-width: 480px) {
+  .survey-form {
+      width: 600px;         /* Define uma largura fixa para pesquisas em telas grandes */
+      margin: 20px auto;    /* Centraliza o formulário horizontalmente com margin vertical de 20px */
+  }
+  .feedback-container textarea {
+      width: 90%;
+  }
+  /* Mantém os inputs (#nome, #email) com 40% se desejado (podem ser agrupados horizontalmente ou conforme sua estrutura) */
+  header {
+    flex-direction: column;    /* Organiza o header em coluna */
+    align-items: center;
+    padding: 10px;             /* Reduz o padding */
+  }
+
+  header h1 {
+    font-size: 2rem;           /* Reduz o tamanho da fonte do título */
+    margin: 10px 0;
+  }
+
+  .header-img,
+  .header-img-right {
+    max-height: 60px;          /* Reduz o tamanho das imagens */
+    margin: 5px;               /* Ajusta a margem das imagens */
+  }
+}
+
+/* Layout para telas pequenas (ex.: celulares) */
+@media (max-width: 768px) {
+    
+  .survey-form {
+      width: 90%;          /* Usa 90% da viewport para maximizar o espaço em telas pequenas */
+      margin: 10px auto;
+      padding: 10px;
+  }
+  .feedback-container textarea {
+      width: 90%;         /* Garante que o textarea ocupe toda a largura disponível */
+  }
+  
+  #nome, #email {
+      width: 90%;         /* Em telas pequenas, os inputs ocupam toda a largura do contêiner */
+  }
+  
 }
 
 @keyframes fadeIn {
