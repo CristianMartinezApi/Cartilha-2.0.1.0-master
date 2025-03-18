@@ -656,30 +656,98 @@ footer {
     }
 }
 
-/* Ajustes de responsividade para os números de avaliação em telas pequenas */
-@media (max-width: 415px) {
-    .rating-numbers {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr); /* Define 6 colunas para dividir os botões em 2 fileiras */
-        gap: 5px; /* Espaçamento entre os botões */
-        margin: 20px 0;
-        width: 100%;
+
+@media (max-width: 768px) {
+    /* Ajustes para telas menores que 768px (tablets e celulares) */
+
+    header {
+        flex-direction: column;
+        /* Coloca os elementos do header em coluna */
+        align-items: center;
+        /* Centraliza os itens */
+        padding: 10px;
+        /* Reduz o padding */
     }
-  .rating-btn {
-     
-      height: 30px;     /* Reduz a altura */
-      font-size: 13px;  /* Ajusta o tamanho da fonte */
-  }
-  .h2 {
-    font-size: 2vw; /* Ajusta o tamanho da fonte */
-  }
+
+    header h1 {
+        font-size: 2.0rem;
+        /* Reduz o tamanho da fonte do título */
+        margin: 10px 0;
+        /* Ajusta as margens */
+    }
+    p {
+        font-weight: normal; /* Remove o negrito em telas menores */
+    }
+
+    .header-img,
+    .header-img-right {
+        max-height: 60px;
+        /* Reduz o tamanho das imagens do header */
+        margin: 5px;
+        /* Reduz as margens das imagens */
+    }
+
+    .header-img-right {
+        margin-right: 5px;
+    }
+
+    main {
+        margin-top: 150px;
+        /* Aumenta a margem superior do main */
+        padding: 10px;
+        /* Reduz o padding do main */
+    }
+
+    .info-section {
+        margin: 10px 5%;
+        /* Reduz as margens da seção de informações */
+        max-width: 100%;
+        /* Garante que a seção ocupe toda a largura */
+    }
+
+    .cards-section {
+        flex-direction: column;
+        /* Coloca os cards em coluna */
+        align-items: center;
+        /* Centraliza os cards */
+    }
+
+    .card {
+        width: 90%;
+        /* Ajusta a largura dos cards */
+        margin: 10px 0;
+        /* Ajusta as margens dos cards */
+    }
+
+    ul {
+        flex-direction: column;
+        /* Coloca os itens da lista em coluna */
+        padding: 5px;
+        /* Reduz o padding da lista */
+    }
+
+    li {
+        padding: 10px;
+        /* Reduz o padding */
+        font-size: 0.9rem;
+        /* Reduz o tamanho da fonte */
+        flex: 1 1 100%;
+        /* Garante que ocupem a largura total */
+    }
+
+    .show-more {
+        padding: 8px 12px;
+        /* Reduz o padding */
+        font-size: 0.9rem;
+        /* Reduz o tamanho da fonte */
+    }
 }
 
-@media (max-width: 428px) {
+@media (max-width: 480px) {
 
     /* Ajustes para telas menores que 480px (celulares menores) */
     header h1 {
-        font-size: 4vw;
+        font-size: 1.8rem;
         /* Reduz ainda mais o tamanho da fonte do título */
     }
 
@@ -704,21 +772,6 @@ footer {
         font-size: 0.85rem;
         /* Reduz ainda mais o tamanho da fonte */
     }
-    .rating-numbers {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr); /* Define 6 colunas para dividir os botões em 2 fileiras */
-        gap: 5px; /* Espaçamento entre os botões */
-        margin: 20px 0;
-        width: 100%;
-    }
-  .rating-btn {
-     
-      height: 30px;     /* Reduz a altura */
-      font-size: 13px;  /* Ajusta o tamanho da fonte */
-  }
-  .h2 {
-    font-size: 2vw; /* Ajusta o tamanho da fonte */
-  }
 
     .show-more {
         padding: 6px 10px;
@@ -726,62 +779,6 @@ footer {
         font-size: 0.85rem;
         /* Reduz ainda mais o tamanho da fonte */
     }
-    .button.link-indicator,
-  .info-section .link-indicator {
-      padding: 4px 5px;     /* Reduz o padding */
-      font-size: 2.5vw;     /* Reduz o tamanho da fonte */
-      margin: 5px;           /* Reduz o espaço externo */
-       img {
-          height: 16px;
-          width: 16px;
-      } 
-  }
-}
-
-/* Layout para telas grandes (ex.: desktops) */
-@media (min-width: 480px) {
-  .survey-form {
-      width: 600px;         /* Define uma largura fixa para pesquisas em telas grandes */
-      margin: 20px auto;    /* Centraliza o formulário horizontalmente com margin vertical de 20px */
-  }
-  .feedback-container textarea {
-      width: 90%;
-  }
-  /* Mantém os inputs (#nome, #email) com 40% se desejado (podem ser agrupados horizontalmente ou conforme sua estrutura) */
-  header {
-    flex-direction: column;    /* Organiza o header em coluna */
-    align-items: center;
-    padding: 10px;             /* Reduz o padding */
-  }
-
-  header h1 {
-    font-size: 2rem;           /* Reduz o tamanho da fonte do título */
-    margin: 10px 0;
-  }
-
-  .header-img,
-  .header-img-right {
-    max-height: 60px;          /* Reduz o tamanho das imagens */
-    margin: 5px;               /* Ajusta a margem das imagens */
-  }
-}
-
-/* Layout para telas pequenas (ex.: celulares) */
-@media (max-width: 768px) {
-    
-  .survey-form {
-      width: 90%;          /* Usa 90% da viewport para maximizar o espaço em telas pequenas */
-      margin: 10px auto;
-      padding: 10px;
-  }
-  .feedback-container textarea {
-      width: 90%;         /* Garante que o textarea ocupe toda a largura disponível */
-  }
-  
-  #nome, #email {
-      width: 90%;         /* Em telas pequenas, os inputs ocupam toda a largura do contêiner */
-  }
-  
 }
 
 @keyframes fadeIn {
@@ -830,4 +827,6 @@ footer {
         transform: scale(1);
     }
 }
+
+
 
