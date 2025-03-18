@@ -169,6 +169,13 @@ h2 {
 .info-section:hover {
     background-color: rgba(255, 255, 255, 0.8);
 }
+
+.info-section:not(:last-child) {
+    border-bottom: 1px solid #333; /* Linha separadora */
+    margin-bottom: 20px; /* Espaço abaixo da linha */
+    padding-bottom: 20px; /* Espaço abaixo do conteúdo */
+}
+
 .info-section h4 {
     color: #e02222;
     font-size: 1rem;
@@ -325,6 +332,12 @@ h2 {
     color: #ffffff;
     box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
 }
+#infoSection p + p {
+    border-top: 1px solid #333; /* Linha separadora entre os parágrafos */
+    padding-top: 10px;          /* Espaço interno acima do parágrafo */
+    margin-top: 10px;           /* Espaço acima da borda */
+}
+
 
 ul {
     list-style-type: none;
@@ -933,6 +946,7 @@ footer {
         transform: scale(1);
     }
 }
+
 
 
 
