@@ -127,11 +127,12 @@ button:hover {
 }
 
 header h1 {
+    /* Ajuste para tipografia fluida: mínimo 1.8rem, ideal baseado em vw e máximo 3rem */
+    font-size: clamp(1.8rem, 2.5vw, 3rem);
     flex-grow: 1;
     text-align: center;
     margin: 0 20px;
     /* Ajusta a margem para centralizar o texto */
-    font-size: 2.4rem;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
@@ -148,12 +149,12 @@ h2 {
 }
 
 .info-section {
+    margin: 2rem auto;  /* centralizando com margem automática e usando rem */
+    padding: 1rem;       /* padding em rem para manter a proporcionalidade */
+    max-width: 90%;      /* garante adaptabilidade em telas menores */
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px 120px;
-    max-width: 90%;
 }
 
 .info-section:hover {
@@ -417,8 +418,8 @@ li .info-text {
 }
 #survey-trigger {
     position: fixed;
-    bottom: 90px;
-    right: 20px;
+    bottom: 60px;
+    right: 10px;
     padding: 10px 20px;
     background: #4CAF50;
     color: white;
@@ -427,10 +428,12 @@ li .info-text {
     cursor: pointer;
     z-index: 9998; /* Just below survey */
     transition: background-color 0.3s ease, transform 0.3s ease;
+   
+    transform: rotate(90deg) scale(1.05); /* Rotaciona para vertical ao passar o mouse + escala */
 }
 #survey-trigger:hover {
     background-color: #004d40;
-    transform: scale(1.05);
+    transform: rotate(0deg); /* Posição inicial: horizontal */
 }
 .rating-container {
       margin: 20px 0;
@@ -446,8 +449,9 @@ li .info-text {
 }
 
 .rating-btn {
-    width: 35px;
-    height: 35px;
+    width: clamp(30px, 5vw, 40px);  /* largura fluida */
+    height: clamp(30px, 5vw, 40px); /* altura fluida */
+    font-size: clamp(0.8rem, 2vw, 1rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -567,7 +571,7 @@ footer {
     /* Adiciona a cor do texto na transição */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 420px) {
     /* Ajustes para telas menores que 768px (tablets e celulares) */
 
     header {
@@ -580,13 +584,50 @@ footer {
     }
 
     header h1 {
-        font-size: 2.0rem;
+        font-size: 1.8vw;
         /* Reduz o tamanho da fonte do título */
         margin: 10px 0;
         /* Ajusta as margens */
     }
     p {
         font-weight: normal; /* Remove o negrito em telas menores */
+        font-size: 3vw;
+    }
+    h2 {
+        font-size: 5vw;
+        /* Reduz o tamanho da fonte do subtítulo */
+        margin: 10px 0;
+        /* Ajusta as margens */
+    }
+    .link-indicator {
+        font-size: 2.5vw;
+        /* Reduz o tamanho da fonte do link */
+        margin: 10px 0;
+        /* Ajusta as margens */
+    }
+    .submit-btn {
+        font-size: 1vw;
+        /* Reduz o tamanho da fonte do botão */
+        margin: 5px 0;
+        /* Ajusta as margens */
+    }
+    .submit-btn {
+        font-size: 2.5vw;
+        /* Reduz o tamanho da fonte do botão */
+        margin: 5px 0;
+        /* Ajusta as margens */
+    }
+    #nome, #email {
+        font-size: 2.5vw;
+        /* Reduz o tamanho da fonte dos campos de texto */
+        margin: 10px 0;
+        /* Ajusta as margens */
+    }
+    .info-section h4 {
+        font-size: 2.5vw;
+        /* Reduz o tamanho da fonte do subtítulo */
+        margin: 10px 0;
+        /* Ajusta as margens */
     }
     header.header-hidden {
         transform: translateY(-120%);
@@ -605,7 +646,7 @@ footer {
     }
 
     main {
-        margin-top: 150px;
+        margin-top: 180px;
         /* Aumenta a margem superior do main */
         padding: 10px;
         /* Reduz o padding do main */
@@ -642,10 +683,27 @@ footer {
     li {
         padding: 10px;
         /* Reduz o padding */
-        font-size: 0.9rem;
+        font-size: 0.5vw;
         /* Reduz o tamanho da fonte */
         flex: 1 1 100%;
         /* Garante que ocupem a largura total */
+    }
+    .rating-numbers {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 5 colunas, cada uma ocupando o mesmo espaço */
+        gap: 8px;
+        margin: 10px auto;
+        align-items: center;
+        justify-items: center;
+    }
+    .rating-btn {
+        width: 100%;
+        font-size: 4vw; /* ajuste conforme necessário */
+    }
+    .expand-indicator {
+        font-size: 3vw; /* Diminui a fonte */
+        padding: 6px 8px;  /* Reduz o preenchimento */
+        border-radius: 3px; /* Opcional: ajusta a borda */
     }
 
     .show-more {
@@ -717,6 +775,9 @@ footer {
         /* Ajusta a largura dos cards */
         margin: 10px 0;
         /* Ajusta as margens dos cards */
+    }
+    .popup-content {
+        max-width: 300px;
     }
 
     ul {
@@ -747,18 +808,18 @@ footer {
 
     /* Ajustes para telas menores que 480px (celulares menores) */
     header h1 {
-        font-size: 1.8rem;
+        font-size: 0.9rem;
         /* Reduz ainda mais o tamanho da fonte do título */
     }
 
     .header-img,
     .header-img-right {
-        max-height: 40px;
+        max-height: 20px;
         /* Reduz ainda mais o tamanho das imagens do header */
     }
 
     main {
-        margin-top: 130px;
+        margin-top: 100px;
 
     }
 
@@ -778,6 +839,10 @@ footer {
         /* Reduz ainda mais o padding */
         font-size: 0.85rem;
         /* Reduz ainda mais o tamanho da fonte */
+    }
+    #survey-trigger {
+        position: fixed;
+        bottom: 10px;
     }
 }
 
