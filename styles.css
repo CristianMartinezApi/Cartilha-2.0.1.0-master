@@ -621,11 +621,20 @@ footer {
         margin: 10px 0;
         /* Ajusta as margens */
     }
-    .link-indicator {
-        font-size: 2.5vw;
-        /* Reduz o tamanho da fonte do link */
-        margin: 10px 0;
-        /* Ajusta as margens */
+   
+    .info-section .link-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 35%;
+        padding: 3px;
+        font-size: 0.5rem; /* Reduce o tamanho da fonte */
+        margin-top: 5px;
+    }
+    .info-section .link-indicator img {
+        height: 15px;
+        width: 15px;
+        margin-right: 3px;
     }
     .submit-btn {
         font-size: 1vw;
@@ -723,7 +732,7 @@ footer {
         font-size: 4vw; /* ajuste conforme necessário */
     }
     .expand-indicator {
-        font-size: 3vw; /* Diminui a fonte */
+        font-size: 2vw; /* Diminui a fonte */
         padding: 6px 8px;  /* Reduz o preenchimento */
         border-radius: 3px; /* Opcional: ajusta a borda */
     }
@@ -843,15 +852,15 @@ footer {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 40%;
-        padding: 8px;
-        font-size: 0.5rem; /* Reduce o tamanho da fonte */
-        margin-top: 10px;
+        width: 35%;
+        padding: 3px;
+        font-size: 0.4rem; /* Reduce o tamanho da fonte */
+        margin-top: 5px;
     }
     .info-section .link-indicator img {
-        height: 16px;
-        width: 16px;
-        margin-right: 5px;
+        height: 15px;
+        width: 15px;
+        margin-right: 3px;
     }
     .info-section h4 {
         font-size: 2.4vw;
@@ -884,6 +893,12 @@ footer {
         font-size: 0.6rem;
         /* Reduz ainda mais o tamanho da fonte */
     }
+    .expand-indicator {
+        font-size: 2vw; /* Diminui a fonte */
+        padding: 6px 8px;  /* Reduz o preenchimento */
+        border-radius: 3px; /* Opcional: ajusta a borda */
+    }
+
 
     .show-more {
         padding: 6px 10px;
