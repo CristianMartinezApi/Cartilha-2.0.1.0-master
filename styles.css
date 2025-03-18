@@ -627,8 +627,8 @@ footer {
         justify-content: center;
         align-items: center;
         width: 35%;
-        padding: 3px;
-        font-size: 0.5rem; /* Reduce o tamanho da fonte */
+        padding: 2px;
+        font-size: 0.3rem; /* Reduce o tamanho da fonte */
         margin-top: 5px;
     }
     .info-section .link-indicator img {
@@ -853,7 +853,7 @@ footer {
         justify-content: center;
         align-items: center;
         width: 35%;
-        padding: 3px;
+        padding: 4.9px;
         font-size: 0.4rem; /* Reduce o tamanho da fonte */
         margin-top: 5px;
     }
