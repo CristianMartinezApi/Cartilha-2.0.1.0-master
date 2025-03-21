@@ -19,7 +19,7 @@ body {
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 main {
-    width: 80vw;    /* 100% da largura da viewport */
+    width: 70vw;    /* 100% da largura da viewport */
     margin: 0;       /* Remove margem para juntar completamente com o eixo horizontal */
     padding: 20px;
     box-sizing: border-box;
@@ -410,7 +410,7 @@ body.dark-theme #conclusao li {
     position: relative;
     height: 25px;       /* altura reduzida */
     font-size: 0.6vw;     /* tamanho da fonte reduzido */
-    padding:0 10px;     /* padding lateral reduzido */
+    padding:0 5px;     /* padding lateral reduzido */
     cursor: pointer;
     transition: 800ms ease all;
     outline: none;
