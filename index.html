@@ -34,7 +34,7 @@
   </div>  
     </nav>
 
-    <main>
+    <main class="main-content">
         <section id="orientacoes">
             <h1>Orientações e Documentos</h1>
             <div class="scrollable-content">
@@ -227,9 +227,34 @@
                 <li>✔ Valide sempre as respostas geradas</li>
                 <li>✔ Mantenha-se atualizado sobre as regulamentações</li>
             </ul>
-        </section>
-    </main>
 
+        </section>
+       
+    </main>
+   
+    <section class="feedback-section">
+        <button id="feedback-toggle" class="toggle-button">Feedback</button>
+        <div class="feedback-system">
+            <h2>Deixe seu Feedback</h2>
+            <form id="feedback-form">
+              <label for="feedback-type">Tipo de Feedback:</label>
+              <select id="feedback-type" name="feedback-type" required>
+                <option value="suggestao">Sugestão</option>
+                <option value="erro">Erro</option>
+                <option value="outros">Outros</option>
+              </select>
+          
+              <label for="message">Mensagem:</label>
+              <textarea id="message" name="message" rows="5" placeholder="Escreva aqui..." required></textarea>
+          
+              <label for="email">E-mail (opcional):</label>
+              <input type="email" id="email" name="email" placeholder="Seu e-mail">
+          
+              <button type="submit" class="submit-button">Enviar</button>
+            </form>
+          </div>
+          
+    </section>
     
 </body>
 </html>

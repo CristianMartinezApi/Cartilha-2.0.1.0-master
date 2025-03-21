@@ -29,6 +29,29 @@ main {
     box-sizing: border-box;
 
 }
+.main-container {
+    display: flex;
+    width: 100%;
+    align-items: stretch; /* Alterado para stretch */
+    min-height: 100vh; /* Garante que tenha pelo menos a altura da viewport */
+}
+
+/* Estilos para o feedback-section */
+.main-content {
+    width: 70vw;
+   
+}
+
+.feedback-section {
+    width: 30vw;
+    float: inline-end; /* Garante que o feedback ocupe 30% da largura e flutue à direita */
+    padding: 20px;
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+    /* Outros estilos visuais para o feedback, como cor de fundo, borda, etc. */
+}
+
+/* Clearfix para evitar quebras de layout */
+
 
 .navbar {
     position: relative;
@@ -256,9 +279,9 @@ body.dark-theme #conclusao li {
     align-items: center;
     justify-content: center;
 }
-
+/* botão expandir e recolher */
 .toggle-button {
-    min-width: 40px;
+    min-width: 90px;
     min-height: 20px;
     display: inline-flex;
     font-family: 'Nunito', sans-serif;
@@ -268,7 +291,7 @@ body.dark-theme #conclusao li {
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.3px;
-
+    font-weight: 700;
     color: #313133;
     background: #4FD1C5;
     background: linear-gradient(90deg, rgba(129, 230, 217, 1) 0%, rgba(79, 209, 197, 1) 100%);
@@ -327,8 +350,10 @@ body.dark-theme #conclusao li {
     animation: none;
     display: none;
 }
+
 .toggle-button.active::after {
-    animation: ring 1.5s infinite; /* Garante a animação mesmo após o clique */
+    animation: ring 1.5s infinite;
+    /* Garante a animação mesmo após o clique */
 }
 
 
@@ -687,6 +712,49 @@ button:hover:after {
     opacity: 1 !important;
     /* assegura opacidade total */
 }
+.feedback-system {
+    max-width: 500px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #313131;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-top: 10px;
+    color: #4FD1C5;
+  }
+  
+  textarea, input, select {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+  }
+  
+  .submit-button {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    background: #4FD1C5;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background: #3AB2A5;
+  }
+  
 
 
 
@@ -843,15 +911,17 @@ button:hover:after {
     }
 
 }
+
 @keyframes ring {
     0% {
-      width: 10px;
-      height: 10px;
-      opacity: 1;
+        width: 10px;
+        height: 10px;
+        opacity: 1;
     }
+
     100% {
-      width: 65px;
-      height: 65px;
-      opacity: 0;
+        width: 65px;
+        height: 65px;
+        opacity: 0;
     }
-    }
+}
