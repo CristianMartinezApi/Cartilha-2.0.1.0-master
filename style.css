@@ -231,7 +231,7 @@ body.dark-theme #conclusao li {
     cursor: pointer;
     transition: 800ms ease all;
     outline: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* sombra aplicada */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.308); /* sombra aplicada */
 }
 
 .toggle-button:hover {
