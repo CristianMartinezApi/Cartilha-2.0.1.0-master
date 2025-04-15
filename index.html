@@ -1,13 +1,12 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Guia de Uso Seguro da IA na PGE-SC</title>
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Uso Seguro da IA na PGE-SC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link rel="stylesheet" href="styles.css">
     <!-- Add these before your other scripts -->
@@ -222,143 +221,264 @@
 
         <section id="promptSection" class="info-section">
 
+
             <h2>7 Passos para Criar Prompts Eficazes</h2>
             <p>Siga esses passos para criar prompts claros, específicos e eficazes ao interagir com a Inteligência
                 Artificial.</p>
 
-                <div class="accordion">
-                    <!-- Passo 1 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Defina Claramente o Objetivo da Tarefa</button>
-                        <div class="accordion-body">
-                            <p>Antes de começar a escrever o prompt, pergunte-se: Qual é o resultado que eu espero obter? Seja o mais específico possível sobre o que você precisa da IA.</p>
-                            <p><strong>Exemplos:</strong></p>
-                            <ul>
-                                <li><strong>❌Em vez de:</strong> "Preciso de informações sobre esse caso."<br><strong>✅Defina:</strong> "Quero um resumo dos principais argumentos da defesa apresentados no processo administrativo disciplinar nº XXXX."</li>
-                                <li><strong>❌Em vez de:</strong> "Compare essas decisões."<br><strong>✅Defina:</strong> "Compare o entendimento do Tribunal de Justiça de Santa Catarina e do Superior Tribunal de Justiça sobre a aplicação da teoria do fato consumado em casos de reintegração de servidores públicos."</li>
-                            </ul>
-                            <p><strong>Exemplo prático do Prompt:</strong></p>
-                            <blockquote>
-                                <p><strong>Defina claramente o objetivo da tarefa</strong><br>
-                                <strong>Prompt:</strong> "Elabore um parecer jurídico conciso sobre a possibilidade legal de um servidor público estadual, regido pelo Estatuto dos Servidores Públicos de Santa Catarina (Lei nº 6.745/85), acumular o cargo de professor (com carga horária de 20 horas semanais) com outro cargo técnico (especificar a área técnica, por exemplo, analista de sistemas) em uma autarquia estadual."</p>
-                            </blockquote>
-                        </div>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header">O que é um Prompt?</button>
+                    <div class="accordion-body">
+                        <p>
+                            <strong>O que é um Prompt?</strong><br>
+                        <ul>
+                           <li> Um <em>prompt</em> é a instrução ou pergunta que direciona a Inteligência Artificial (IA) a
+                            executar uma tarefa específica — como elaborar um parecer jurídico, responder a uma dúvida
+                            ou sugerir caminhos para uma decisão.
+                            </p>
+                            <p>
+                                Na prática, é através do prompt que orientamos a IA sobre <strong>o que
+                                    queremos</strong>, <strong>como queremos</strong> e <strong>em que formato esperamos
+                                    a resposta</strong>.
+                            </p>
+                            <p>
+                                Quanto mais claro, objetivo e bem estruturado for o prompt, mais eficiente será a
+                                resposta da IA. Saber construir bons prompts é fundamental para usar a IA de forma
+                                estratégica e segura no contexto da PGE-SC.
+                            </p></li>
+                        </ul>
                     </div>
-                
-                    <!-- Passo 2 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Identifique as Informações Essenciais que a IA Precisa</button>
-                        <div class="accordion-body">
-                            <p>Pense em quais informações a IA precisa para entender completamente a sua solicitação. Inclua detalhes relevantes e específicos.</p>
-                            <p><strong>Exemplos:</strong></p>
-                            <ul>
-                                <li><strong>Número do Processo/Documento:</strong> "Analise o parecer nº YYYY/2024."</li>
-                                <li><strong>Legislação Específica:</strong> "Interprete o artigo 10 da Lei Estadual nº ZZZZ."</li>
-                                <li><strong>Jurisprudência Relevante:</strong> "Encontre decisões do STF sobre o tema da terceirização na administração pública direta."</li>
-                                <li><strong>Período Temporal:</strong> "Busque jurisprudência do TJSC publicada nos últimos 5 anos sobre o tema X."</li>
-                            </ul>
-                            <h3>Exemplo prático:</h3>
-                            <blockquote>
-                                <p><strong>Prompt:</strong><br>
-                                "Considere as disposições constitucionais relativas à acumulação de cargos públicos (artigo 37, inciso XVI), a legislação estadual aplicável (Lei nº 6.745/85) e a jurisprudência relevante do Tribunal de Justiça de Santa Catarina e do Supremo Tribunal Federal sobre o tema."</p>
-                            </blockquote>
-                        </div>
+                </div>
+            </div>
+
+
+            <div class="accordion">
+                <!-- Passo 1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">1. Defina Claramente o Objetivo da Tarefa</button>
+                    <div class="accordion-body">
+                        <p>Antes de começar a escrever o prompt, pergunte-se: Qual é o resultado que eu espero obter?
+                            Seja o mais específico possível sobre o que você precisa da IA.</p>
+                        <p><strong>Exemplos:</strong></p>
+                        <ul>
+                            <li><strong>❌Em vez de:</strong> "Preciso de informações sobre esse
+                                caso."<br><strong>✅Defina:</strong> "Quero um resumo dos principais argumentos da defesa
+                                apresentados no processo administrativo disciplinar nº XXXX."</li>
+                            <li><strong>❌Em vez de:</strong> "Compare essas decisões."<br><strong>✅Defina:</strong>
+                                "Compare o entendimento do Tribunal de Justiça de Santa Catarina e do Superior Tribunal
+                                de Justiça sobre a aplicação da teoria do fato consumado em casos de reintegração de
+                                servidores públicos."</li>
+                        </ul>
+                        <p><strong>Exemplo prático do Prompt:</strong></p>
+                        <blockquote>
+                            <p><strong>Defina claramente o objetivo da tarefa</strong><br>
+                                <strong>Prompt:</strong> "Elabore um parecer jurídico conciso sobre a possibilidade
+                                legal de um servidor público estadual, regido pelo Estatuto dos Servidores Públicos de
+                                Santa Catarina (Lei nº 6.745/85), acumular o cargo de professor (com carga horária de 20
+                                horas semanais) com outro cargo técnico (especificar a área técnica, por exemplo,
+                                analista de sistemas) em uma autarquia estadual."
+                            </p>
+                        </blockquote>
                     </div>
-                
-                    <!-- Passo 3 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Seja Preciso na Linguagem e Evite Ambiguidade</button>
-                        <div class="accordion-body">
-                            <p>Utilize uma linguagem clara, direta e objetiva. Evite jargões excessivos que possam não ser compreendidos pela IA ou termos vagos que levem a interpretações equivocadas.</p>
-                            <p><strong>Exemplos:</strong></p>
-                            <ul>
-                                <li><strong>❌Em vez de:</strong> "Preciso de informações sobre esse contrato."<br><strong>✅Defina:</strong> "Liste as cláusulas essenciais do contrato administrativo nº XXXX/2024, incluindo o objeto, o prazo de vigência e as condições de pagamento."</li>
-                                <li><strong>❌Em vez de:</strong> "O que aconteceu nesse caso?"<br><strong>✅Defina:</strong> "Resuma os fatos relevantes do processo judicial nº AAAA."</li>
-                            </ul>
-                            <h3>Exemplo prático do passo:</h3>
-                            <blockquote>
-                                <p><strong>Prompt:</strong><br>
-                                "Analise especificamente se a natureza do cargo técnico (analista de sistemas) se enquadra nas exceções constitucionais para a acumulação de cargos, considerando a compatibilidade de horários e a vedação ao acúmulo remunerado, salvo as exceções previstas."</p>
-                            </blockquote>
-                        </div>
+                </div>
+
+                <!-- Passo 2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">2. Identifique as Informações Essenciais que a IA Precisa</button>
+                    <div class="accordion-body">
+                        <p>Pense em quais informações a IA precisa para entender completamente a sua solicitação. Inclua
+                            detalhes relevantes e específicos.</p>
+                        <p><strong>Exemplos:</strong></p>
+                        <ul>
+                            <li><strong>Número do Processo/Documento:</strong> "Analise o parecer nº YYYY/2024."</li>
+                            <li><strong>Legislação Específica:</strong> "Interprete o artigo 10 da Lei Estadual nº
+                                ZZZZ."</li>
+                            <li><strong>Jurisprudência Relevante:</strong> "Encontre decisões do STF sobre o tema da
+                                terceirização na administração pública direta."</li>
+                            <li><strong>Período Temporal:</strong> "Busque jurisprudência do TJSC publicada nos últimos
+                                5 anos sobre o tema X."</li>
+                        </ul>
+                        <h3>Exemplo prático:</h3>
+                        <blockquote>
+                            <p><strong>Prompt:</strong><br>
+                                "Considere as disposições constitucionais relativas à acumulação de cargos públicos
+                                (artigo 37, inciso XVI), a legislação estadual aplicável (Lei nº 6.745/85) e a
+                                jurisprudência relevante do Tribunal de Justiça de Santa Catarina e do Supremo Tribunal
+                                Federal sobre o tema."</p>
+                        </blockquote>
                     </div>
-                
-                    <!-- Passo 4 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Especifique o Formato da Resposta Desejada</button>
-                        <div class="accordion-body">
-                            <p>Indique claramente como você gostaria que a informação fosse apresentada. Isso ajuda a IA a estruturar a resposta de forma útil para você.</p>
-                            <p><strong>Exemplos:</strong></p>
-                            <ul>
-                                <li>"Apresente a resposta em formato de lista."</li>
-                                <li>"Gere um resumo com no máximo 3 parágrafos."</li>
-                                <li>"Crie uma tabela comparativa com os principais pontos."</li>
-                                <li>"Formate a resposta utilizando marcadores."</li>
-                            </ul>
-                            <h3>Prompt (Continuando):</h3>
-                            <blockquote>
-                                <p><em>"Apresente o parecer em formato de texto corrido, com as seguintes seções: I - Introdução (breve resumo da consulta), II - Fundamentação Jurídica (análise da legislação e jurisprudência), III - Conclusão (resposta clara e objetiva sobre a possibilidade de acumulação)."</em></p>
-                            </blockquote>
-                        </div>
+                </div>
+
+                <!-- Passo 3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">3. Seja Preciso na Linguagem e Evite Ambiguidade</button>
+                    <div class="accordion-body">
+                        <p>Utilize uma linguagem clara, direta e objetiva. Evite jargões excessivos que possam não ser
+                            compreendidos pela IA ou termos vagos que levem a interpretações equivocadas.</p>
+                        <p><strong>Exemplos:</strong></p>
+                        <ul>
+                            <li><strong>❌Em vez de:</strong> "Preciso de informações sobre esse
+                                contrato."<br><strong>✅Defina:</strong> "Liste as cláusulas essenciais do contrato
+                                administrativo nº XXXX/2024, incluindo o objeto, o prazo de vigência e as condições de
+                                pagamento."</li>
+                            <li><strong>❌Em vez de:</strong> "O que aconteceu nesse caso?"<br><strong>✅Defina:</strong>
+                                "Resuma os fatos relevantes do processo judicial nº AAAA."</li>
+                        </ul>
+                        <h3>Exemplo prático do passo:</h3>
+                        <blockquote>
+                            <p><strong>Prompt:</strong><br>
+                                "Analise especificamente se a natureza do cargo técnico (analista de sistemas) se
+                                enquadra nas exceções constitucionais para a acumulação de cargos, considerando a
+                                compatibilidade de horários e a vedação ao acúmulo remunerado, salvo as exceções
+                                previstas."</p>
+                        </blockquote>
                     </div>
-                
-                    <!-- Passo 5 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Considere Adicionar Contexto Relevante</button>
-                        <div class="accordion-body">
-                            <p>Fornecer um breve contexto pode ajudar a IA a entender melhor a sua necessidade e gerar uma resposta mais adequada.</p>
-                            <p><strong>Exemplos:</strong></p>
-                            <ul>
-                                <li>"Considerando que a PGE-SC está defendendo o Estado em uma ação de indenização por danos morais..."</li>
-                                <li>"No âmbito de um processo de tomada de contas especial..."</li>
-                                <li>"Para auxiliar na elaboração de uma manifestação em agravo de instrumento..."</li>
-                            </ul>
-                            <h3>Prompt (Continuando):</h3>
-                            <blockquote>
-                                <p><em>"O servidor em questão foi aprovado em ambos os concursos públicos e a compatibilidade de horários já foi preliminarmente verificada pela unidade de recursos humanos."</em></p>
-                            </blockquote>
-                        </div>
+                </div>
+
+                <!-- Passo 4 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">4. Especifique o Formato da Resposta Desejada</button>
+                    <div class="accordion-body">
+                        <p>Indique claramente como você gostaria que a informação fosse apresentada. Isso ajuda a IA a
+                            estruturar a resposta de forma útil para você.</p>
+                        <p><strong>Exemplos:</strong></p>
+                        <ul>
+                            <li>"Apresente a resposta em formato de lista."</li>
+                            <li>"Gere um resumo com no máximo 3 parágrafos."</li>
+                            <li>"Crie uma tabela comparativa com os principais pontos."</li>
+                            <li>"Formate a resposta utilizando marcadores."</li>
+                        </ul>
+                        <h3>Prompt (Continuando):</h3>
+                        <blockquote>
+                            <p><em>"Apresente o parecer em formato de texto corrido, com as seguintes seções: I -
+                                    Introdução (breve resumo da consulta), II - Fundamentação Jurídica (análise da
+                                    legislação e jurisprudência), III - Conclusão (resposta clara e objetiva sobre a
+                                    possibilidade de acumulação)."</em></p>
+                        </blockquote>
                     </div>
-                
-                    <!-- Passo 6 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Utilize Palavras-Chave Específicas</button>
-                        <div class="accordion-body">
-                            <p>Incluir palavras-chave relevantes para o tema jurídico em questão pode direcionar a busca da IA e garantir que ela encontre informações pertinentes.</p>
-                            <p><strong>Exemplos:</strong></p>
-                            <ul>
-                                <li><strong>❌Em vez de:</strong> "Questão sobre servidores."<br><strong>✅Defina:</strong> "Análise da legalidade da remoção de servidor público estadual."</li>
-                                <li>Utilize termos como: "responsabilidade civil do Estado", "licitação", "improbidade administrativa", "controle de constitucionalidade".</li>
-                            </ul>
-                            <h3>Prompt (Continuando):</h3>
-                            <blockquote>
-                                <p><em>"Utilize palavras-chave como 'acumulação de cargos públicos', 'servidor público estadual', 'cargo de professor', 'cargo técnico', 'Estatuto dos Servidores Públicos de Santa Catarina', 'artigo 37, inciso XVI da CF', 'jurisprudência TJSC', 'jurisprudência STF'."</em></p>
-                            </blockquote>
-                        </div>
+                </div>
+
+                <!-- Passo 5 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">5. Considere Adicionar Contexto Relevante</button>
+                    <div class="accordion-body">
+                        <p>Fornecer um breve contexto pode ajudar a IA a entender melhor a sua necessidade e gerar uma
+                            resposta mais adequada.</p>
+                        <p><strong>Exemplos:</strong></p>
+                        <ul>
+                            <li>"Considerando que a PGE-SC está defendendo o Estado em uma ação de indenização por danos
+                                morais..."</li>
+                            <li>"No âmbito de um processo de tomada de contas especial..."</li>
+                            <li>"Para auxiliar na elaboração de uma manifestação em agravo de instrumento..."</li>
+                        </ul>
+                        <h3>Prompt (Continuando):</h3>
+                        <blockquote>
+                            <p><em>"O servidor em questão foi aprovado em ambos os concursos públicos e a
+                                    compatibilidade de horários já foi preliminarmente verificada pela unidade de
+                                    recursos humanos."</em></p>
+                        </blockquote>
                     </div>
-                
-                    <!-- Passo 7 -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">Seja Interativo e Refine seus Prompts</button>
-                        <div class="accordion-body">
-                            <p>Nem sempre o primeiro prompt gera o resultado perfeito. Esteja preparado para ajustar e refinar seus prompts com base nas respostas que você obtém. Experimente diferentes formulações e adicione mais detalhes se necessário.</p>
-                            <p><strong>Exemplo:</strong></p>
-                            <ul>
-                                <li><strong>Prompt inicial:</strong> "Resuma o acórdão."</li>
-                                <li><strong>Resposta insatisfatória:</strong> Resumo muito genérico.</li>
-                                <li><strong>Prompt refinado:</strong> "Resuma o acórdão proferido no Recurso Ordinário em Mandado de Segurança nº XXXXX, destacando os fundamentos da decisão e a tese jurídica principal."</li>
-                            </ul>
-                            <h3>Prompt (Adicionando instrução para refinamento):</h3>
-                            <blockquote>
-                                <p><em>"Caso a resposta inicial não seja suficientemente detalhada, eu posso solicitar informações adicionais sobre a descrição das atividades do cargo técnico."</em></p>
-                            </blockquote>
-                        </div>
+                </div>
+
+                <!-- Passo 6 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">6. Utilize Palavras-Chave Específicas</button>
+                    <div class="accordion-body">
+                        <p>Incluir palavras-chave relevantes para o tema jurídico em questão pode direcionar a busca da
+                            IA e garantir que ela encontre informações pertinentes.</p>
+                        <p><strong>Exemplos:</strong></p>
+                        <ul>
+                            <li><strong>❌Em vez de:</strong> "Questão sobre servidores."<br><strong>✅Defina:</strong>
+                                "Análise da legalidade da remoção de servidor público estadual."</li>
+                            <li>Utilize termos como: "responsabilidade civil do Estado", "licitação", "improbidade
+                                administrativa", "controle de constitucionalidade".</li>
+                        </ul>
+                        <h3>Prompt (Continuando):</h3>
+                        <blockquote>
+                            <p><em>"Utilize palavras-chave como 'acumulação de cargos públicos', 'servidor público
+                                    estadual', 'cargo de professor', 'cargo técnico', 'Estatuto dos Servidores Públicos
+                                    de Santa Catarina', 'artigo 37, inciso XVI da CF', 'jurisprudência TJSC',
+                                    'jurisprudência STF'."</em></p>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <!-- Passo 7 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">7.Seja Interativo e Refine seus Prompts</button>
+                    <div class="accordion-body">
+                        <p>Nem sempre o primeiro prompt gera o resultado perfeito. Esteja preparado para ajustar e
+                            refinar seus prompts com base nas respostas que você obtém. Experimente diferentes
+                            formulações e adicione mais detalhes se necessário.</p>
+                        <p><strong>Exemplo:</strong></p>
+                        <ul>
+                            <li><strong>Prompt inicial:</strong> "Resuma o acórdão."</li>
+                            <li><strong>Resposta insatisfatória:</strong> Resumo muito genérico.</li>
+                            <li><strong>Prompt refinado:</strong> "Resuma o acórdão proferido no Recurso Ordinário em
+                                Mandado de Segurança nº XXXXX, destacando os fundamentos da decisão e a tese jurídica
+                                principal."</li>
+                        </ul>
+                        <h3>Prompt (Adicionando instrução para refinamento):</h3>
+                        <blockquote>
+                            <p><em>"Caso a resposta inicial não seja suficientemente detalhada, eu posso solicitar
+                                    informações adicionais sobre a descrição das atividades do cargo técnico."</em></p>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <!-- Conclusão Final -->
+                <div class="accordion-item">
+                    <button class="accordion-header">Conclusão Final</button>
+                    <div class="accordion-body">
+                        <p>Este exemplo completo demonstra como aplicar os 7 passos para criar um prompt eficaz,
+                            atendendo a uma consulta jurídica específica na PGE-SC. Ao seguir essas etapas, é possível
+                            gerar prompts claros e específicos, proporcionando respostas precisas e eficientes da IA.
+                        </p>
+
+                        <p><strong>Prompt Final:</strong></p>
+
+                        <p><strong>Prompt Completo:</strong><br>
+                            "Elabore um parecer jurídico conciso sobre a possibilidade legal de um servidor público
+                            estadual, regido pelo Estatuto dos Servidores Públicos de Santa Catarina (Lei nº 6.745/85),
+                            acumular o cargo de professor (com carga horária de 20 horas semanais) com outro cargo
+                            técnico (analista de sistemas) em uma autarquia estadual. Considere as disposições
+                            constitucionais relativas à acumulação de cargos públicos (artigo 37, inciso XVI), a
+                            legislação estadual aplicável (Lei nº 6.745/85) e a jurisprudência relevante do Tribunal de
+                            Justiça de Santa Catarina e do Supremo Tribunal Federal sobre o tema. Análise
+                            especificamente se a natureza do cargo técnico (analista de sistemas) se enquadra nas
+                            exceções constitucionais para a acumulação de cargos, considerando a compatibilidade de
+                            horários e a vedação ao acúmulo remunerado, salvo as exceções previstas. Apresente o parecer
+                            em formato de texto corrido, com as seguintes seções: <br>
+                            I - Introdução (breve resumo da consulta), <br>
+                            II - Fundamentação Jurídica (análise da legislação e jurisprudência),<br>
+                            III - Conclusão (resposta clara e objetiva sobre a possibilidade de acumulação). <br>
+                            O servidor em questão foi aprovado em ambos os concursos públicos e a compatibilidade de
+                            horários já foi preliminarmente verificada pela unidade de recursos humanos. Utilize
+                            palavras-chave como 'acumulação de cargos públicos', 'servidor público estadual', 'cargo de
+                            professor', 'cargo técnico', 'Estatuto dos Servidores Públicos de Santa Catarina', 'artigo
+                            37, inciso XVI da CF', 'jurisprudência TJSC', 'jurisprudência STF'. Caso a resposta inicial
+                            não seja suficientemente detalhada, eu posso solicitar informações adicionais sobre a
+                            descrição das atividades do cargo técnico."
+                        </p>
+
+                        <p><strong>Observações:</strong></p>
+                        <blockquote>
+                            <p><em>Este é um exemplo completo que incorpora todos os 7 passos. <br>
+                                    A pontuação das etapas está implícita na forma como o prompt foi construído,
+                                    seguindo cada um dos passos. <br>
+                                    Em um cenário real, você pode ajustar o prompt dependendo da especificidade da
+                                    informação que você já possui e do nível de detalhe que você espera da IA. <br>
+                                    O Passo 7 já antecipa a possibilidade de interação, mostrando que a criação de
+                                    prompts é um processo que pode envolver ajustes.</em></p>
+                        </blockquote>
                     </div>
                 </div>
 
 
             </div>
         </section>
+
 
 
 
