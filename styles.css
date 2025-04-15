@@ -239,7 +239,7 @@ h2 {
 
 /* Estilos gerais para a seção de prompts */
 #promptSection {
-    padding: 40px;
+    max-width: 90%;
     background-color: #f9f9f9;
 }
 
