@@ -32,13 +32,28 @@
 </head>
 
 <body>
+    <!-- Navbar deve estar aqui, antes do header -->
+    <div class="main-navigation-bar">
+        <div class="nav-item dropdown">
+            <a href="#infoSection">Documentos</a>
+            <div class="dropdown-menu">
+                <a href="./materia.pdf" target="_blank">Portaria GAB/PGE</a>
+                <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf" target="_blank">Cartilha Federal</a>
+            </div>
+        </div>
+        <a href="#cardGemini">Ferramentas</a>
+        <a href="#boasPraticasSection">Boas Práticas</a>
+        <a href="#promptSection">Prompts</a>    
+        <a href="#pesquisaSection">Feedback</a>
+    </div>
+
     <header>
         <img src="./img/pge.png" alt="Descrição da Imagem" class="header-img">
         <h1>Guia de Uso Seguro da IA Generativa na PGE-SC</h1>
         <img src="./img/eppe-logo-color.png" alt="Segunda Imagem" class="header-img-right">
     </header>
 
-    <div class="popup" id="popup">
+   <!--  <div class="popup" id="popup">
         <div class="popup-content">
             <p><strong>Aviso:</strong> A portaria <strong>GAB/PGE n° 19/2025</strong> está disponível. Para acessar <a
                     href="./materia.pdf" target="_blank" id="pdf-link">Clique aqui</a></p>
@@ -50,14 +65,24 @@
                 </label>
             </div>
         </div>
+    </div> -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <p><strong>Novidade:</strong> A funcionalidade para <strong>criar prompts com Inteligência Artificial</strong> já está disponível nesta página. Explore e aproveite ao máximo essa ferramenta!</p>
+            <div class="popup-actions">
+                <button id="ok-btn">OK</button>
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dontShowAgain">
+                    Não mostrar novamente
+                </label>
+            </div>
+        </div>
     </div>
-
-
-
-    /* Documentos e Orientações */
-    </div>
+    
+   
+    
     <main>
-        <section class="info-section" id="infoSection">
+        <!-- <section class="info-section" id="infoSection">
             <h2><b>Documentos e Orientações</b></h2>
             <p> Novo conteúdo disponível, aprenda 7 formas práticas de criar prompts eficazes e melhore seu uso da IA na
                 PGE-SC. <a href="#promptSection">Confira a baixo!</a><span class="emoji-grande">🆕</span>
@@ -72,7 +97,7 @@
                 <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
                     target="_blank">Clique aqui</a>
             </p>
-        </section>
+        </section> -->
 
         <section class="info-section" id="infoSection">
             <h2><b>Ferramentas Disponiveis no Momento</h2>
@@ -132,7 +157,7 @@
 
 
         <section class="info-section" id="boasPraticasSection">
-            <h2>Boas Práticas <button class="expand-indicator" type="button">Expandir</button></h2>
+            <h2>Boas Práticas <button class="expand-indicator" type="button">Saiba mais</button></h2>
 
             <ul class="boas-praticas-list">
                 <li>
@@ -235,7 +260,20 @@
                         responsabilidade.</p>
                     <p><span class="errado">❌ Errado:</span> Tentar burlar restrições para utilizar IA sem controle.</p>
                 </li>
+                
+            <p>O uso da IA na PGE-SC deve seguir diretrizes claras para garantir segurança, transparência e conformidade
+                com as normas da instituição. Seguindo estas boas práticas, é possível aproveitar os benefícios da IA
+                sem comprometer a integridade dos dados e a qualidade dos serviços prestados.</p>
+            
+            <li class="info-section">
+                <p><strong>Dicas:</strong></p>
+                <p>✔ Proteja dados sensíveis</p>
+                <p>✔ Utilize apenas plataformas seguras</p>
+                <p>✔ Valide sempre as respostas geradas</p>
+                <p>✔ Mantenha-se atualizado sobre as regulamentações</p>
+            </li>
             </ul>
+            
         </section>
 
 
@@ -516,55 +554,127 @@
 
 
 
-        <section class="info-section" id="conclusaoSection">
-            <h2>Conclusão</h2>
-            <p>O uso da IA na PGE-SC deve seguir diretrizes claras para garantir segurança, transparência e conformidade
-                com as normas da instituição. Seguindo estas boas práticas, é possível aproveitar os benefícios da IA
-                sem comprometer a integridade dos dados e a qualidade dos serviços prestados.</p>
-            <p><strong>Dicas:</strong></p>
-            <ul>
-                <li>✔ Proteja dados sensíveis</li>
-                <li>✔ Utilize apenas plataformas seguras</li>
-                <li>✔ Valide sempre as respostas geradas</li>
-                <li>✔ Mantenha-se atualizado sobre as regulamentações</li>
-            </ul>
-        </section>
         <section class="info-section" id="pesquisaSection">
-            <h2>Pesquisa de Satisfação</h2>
-            <div class="survey-container">
-                <p>Você gostaria de contribuir com uma avaliação ou sugestões?</p>
-                <div class="rating-container">
-                    <div class="rating-numbers">
-                        <!-- Rating buttons 0-10 -->
-                        <button class="rating-btn" data-value="0">0</button>
-                        <button class="rating-btn" data-value="1">1</button>
-                        <button class="rating-btn" data-value="2">2</button>
-                        <button class="rating-btn" data-value="3">3</button>
-                        <button class="rating-btn" data-value="4">4</button>
-                        <button class="rating-btn" data-value="5">5</button>
-                        <button class="rating-btn" data-value="6">6</button>
-                        <button class="rating-btn" data-value="7">7</button>
-                        <button class="rating-btn" data-value="8">8</button>
-                        <button class="rating-btn" data-value="9">9</button>
-                        <button class="rating-btn" data-value="10">10</button>
-                    </div>
-
-                    <div class="feedback-container">
-                        <label for="feedback">Deixe seu feedback (opcional):</label>
-                        <textarea id="feedback" rows="4" placeholder="Digite seus comentários aqui..."></textarea>
-                        <input type="text" id="nome" placeholder="Nome" />
-                        <input type="email" id="email" placeholder="E-mail" />
-                    </div>
-                    <button id="submit-survey" class="submit-btn">Enviar Avaliação</button>
+            <h2>Espaço Colaborativo</h2>
+            <div class="collaborative-space">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="feedback">Feedback</button>
+                    <button class="tab-btn" data-tab="questions">Dúvidas</button>
+                    <button class="tab-btn" data-tab="suggestions">Sugestões</button>
                 </div>
+                
+                <!-- Tab de Feedback (baseado no seu código atual) -->
+                <div class="tab-content active" id="feedback-tab">
+                    <p>Você gostaria de contribuir com uma avaliação sobre as diretrizes de IA?</p>
+                    <div class="rating-container">
+                        <div class="rating-numbers">
+                            <!-- Rating buttons 0-10 (mantendo seu código atual) -->
+                            <button class="rating-btn" data-value="0">0</button>
+                            <button class="rating-btn" data-value="1">1</button>
+                            <button class="rating-btn" data-value="2">2</button>
+                            <button class="rating-btn" data-value="3">3</button>
+                            <button class="rating-btn" data-value="4">4</button>
+                            <button class="rating-btn" data-value="5">5</button>
+                            <button class="rating-btn" data-value="6">6</button>
+                            <button class="rating-btn" data-value="7">7</button>
+                            <button class="rating-btn" data-value="8">8</button>
+                            <button class="rating-btn" data-value="9">9</button>
+                            <button class="rating-btn" data-value="10">10</button>
+                        </div>
 
-
-
-
-
+                        <div class="feedback-container">
+                            <label for="feedback">Deixe seu feedback:</label>
+                            <textarea id="feedback" rows="4" placeholder="Digite seus feedback aqui..."></textarea>
+                            <!-- Removendo campos de identificação para manter anonimato -->
+                        </div>
+                        <button id="submit-survey" class="submit-btn">Enviar Avaliação</button>
+                    </div>
+                    
+                    <!-- Adicionando feedbacks recentes -->
+                    <div class="recent-feedback">
+                        <h4>Feedbacks Recentes</h4>
+                        <div class="feedback-list">
+                            <div class="feedback-item">
+                                <div class="feedback-rating">Avaliação: 9/10</div>
+                                <p>"As diretrizes são claras e ajudam muito no dia a dia. Consegui implementar várias sugestões no meu trabalho."</p>
+                                <span class="feedback-date">15/05/2025</span>
+                            </div>
+                            <div class="feedback-item">
+                                <div class="feedback-rating">Avaliação: 10/10</div>
+                                <p>"A seção de prompts é excelente! Já estou usando os exemplos nas minhas consultas com IA."</p>
+                                <span class="feedback-date">10/05/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab de Dúvidas (nova) -->
+<div class="tab-content" id="questions-tab">
+    <h3>Perguntas & Respostas</h3>
+    <p>Tem dúvidas sobre o uso de IA? Pergunte aqui ou veja as respostas para perguntas frequentes.</p>
+    
+    <div class="question-form">
+        <textarea id="question-text" placeholder="Digite sua pergunta sobre IA..."></textarea>
+        <button id="submit-question" class="submit-btn">Enviar Pergunta</button>
+        <!-- Aqui a resposta da IA será injetada dinamicamente -->
+    </div>
+    
+    <div class="questions-list">
+        <div class="question-item">
+            <div class="question">
+                <h4>Como garantir que a IA não use informações sigilosas?</h4>
+                <span class="question-date">12/05/2025</span>
             </div>
-        </section>
-        <button id="survey-trigger">Feedback</button>
+            <div class="answer">
+                <p>Para garantir a segurança das informações, evite inserir dados pessoais ou sigilosos nos prompts. Utilize apenas dados públicos ou anonimizados. Sempre revise o conteúdo gerado antes de utilizá-lo.</p>
+                <span class="answer-author">Equipe EPPE</span>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question">
+                <h4>Posso usar IA para redigir minutas de pareceres?</h4>
+                <span class="question-date">08/05/2025</span>
+            </div>
+            <div class="answer">
+                <p>Sim, a IA pode ser usada como ferramenta de apoio para redigir minutas, mas lembre-se que o conteúdo final deve ser sempre revisado e validado por um procurador. A responsabilidade pelo documento é sempre do servidor que o assina.</p>
+                <span class="answer-author">Equipe EPPE</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+                
+                <!-- Tab de Sugestões (nova) -->
+                <div class="tab-content" id="suggestions-tab">
+                    <h3>Sugestões de Melhoria</h3>
+                    <p>Compartilhe suas ideias para melhorar o uso de IA na PGE-SC.</p>
+                    
+                    <div class="suggestion-form">
+                        <textarea id="suggestion-text" placeholder="Compartilhe sua sugestão para melhorar o uso de IA..."></textarea>
+                        <button id="submit-suggestion" class="submit-btn">Enviar Sugestão</button>
+                    </div>
+                    
+                    <div class="suggestions-list">
+                        <div class="suggestion-item">
+                            <p>"Seria interessante ter um repositório de prompts específicos para cada área de atuação da PGE."</p>
+                            <div class="suggestion-votes">
+                                <button class="vote-btn">👍 <span>12</span></button>
+                            </div>
+                            <span class="suggestion-date">05/05/2025</span>
+                        </div>
+                        
+                        <div class="suggestion-item">
+                            <p>"Poderia haver treinamentos periódicos sobre novas ferramentas de IA disponíveis."</p>
+                            <div class="suggestion-votes">
+                                <button class="vote-btn">👍 <span>8</span></button>
+                            </div>
+                            <span class="suggestion-date">01/05/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>        <button id="survey-trigger">Feedback</button>
 
 
     </main>
