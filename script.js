@@ -46,17 +46,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mostrar/esconder lista de boas práticas
     const boasPraticasSection = document.getElementById('boasPraticasSection');
-    const boasPraticasTitle = boasPraticasSection.querySelector('h2');
-    const boasPraticasList = boasPraticasSection.querySelector('.boas-praticas-list');
     const expandIndicator = boasPraticasSection.querySelector('.expand-indicator');
+    const boasPraticasList = boasPraticasSection.querySelector('.boas-praticas-list');
     const boasPraticasItems = boasPraticasList.querySelectorAll('li');
-
+    
+    // Inicia a lista oculta
     boasPraticasList.classList.add('hidden');
-
-    boasPraticasTitle.addEventListener('click', function () {
+    
+    // Remove o listener do h2, se existente
+    // boasPraticasSection.querySelector('h2').removeEventListener(...);
+    
+    // Adiciona o listener ao botão
+    expandIndicator.addEventListener('click', function () {
         boasPraticasList.classList.toggle('hidden');
         boasPraticasList.classList.toggle('expanded');
-
+    
         if (boasPraticasList.classList.contains('hidden')) {
             expandIndicator.textContent = "Saiba Mais";
             boasPraticasItems.forEach(item => item.classList.add('hidden'));
