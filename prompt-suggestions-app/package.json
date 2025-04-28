@@ -1,0 +1,22 @@
+{
+  "name": "prompt-suggestions-app",
+  "version": "1.0.0",
+  "description": "A web application for submitting and managing prompt suggestions, with an admin approval system.",
+  "main": "src/scripts/main.js",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build process not defined yet.'"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "live-server": "^1.2.1"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "suggestions",
+    "prompts",
+    "admin",
+    "approval"
+  ]
+}

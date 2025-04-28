@@ -17,7 +17,7 @@
         gtag('config', 'G-1YLW2YHQSE');
     </script>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/styles.css">
 
     <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -28,7 +28,7 @@
     </script>
 
     <!-- Script principal -->
-    <script src="script.js" defer></script>
+    <script src="scripts/script.js" defer></script>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
         <div class="nav-item dropdown">
             <a href="#top">Documentos</a>
             <div class="dropdown-menu">
-                <a href="./materia.pdf" target="_blank">Portaria GAB/PGE</a>
+                <a href="../materia.pdf" target="_blank">Portaria GAB/PGE</a>
                 <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
                     target="_blank">Cartilha Federal</a>
             </div>
@@ -567,7 +567,6 @@
 
 
 
-
         <section class="info-section" id="pesquisaSection">
             <h2>Espaço Colaborativo</h2>
             <div class="collaborative-space">
@@ -664,33 +663,19 @@
                 <!-- Tab de Sugestões (nova) -->
                 <div class="tab-content" id="suggestions-tab">
                     <h3>Sugestões de Melhoria</h3>
-                    <p>Compartilhe suas ideias para melhorar o uso de IA na PGE-SC.</p>
+                    <p>Compartilhe suas ideias para melhorar o uso de IA na PGE-SC. Sua sugestão será enviada para revisão e, se aprovada, aparecerá abaixo.</p>
 
-                    <div class="suggestion-form">
-                        <textarea id="suggestion-text"
-                            placeholder="Compartilhe sua sugestão para melhorar o uso de IA..."></textarea>
+                    <form id="suggestion-form" class="suggestion-form">
+                        <textarea id="suggestion-text" placeholder="Compartilhe sua sugestão para melhorar o uso de IA..."></textarea>
                         <button id="submit-suggestion" class="submit-btn">Enviar Sugestão</button>
-                    </div>
+                    </form>
 
                     <div class="suggestions-list">
-                        <div class="suggestion-item">
-                            <p>"Seria interessante ter um repositório de prompts específicos para cada área de atuação
-                                da PGE."</p>
-                            <div class="suggestion-votes">
-                                <button class="vote-btn">👍 <span>12</span></button>
-                            </div>
-                            <span class="suggestion-date">05/05/2025</span>
-                        </div>
-
-                        <div class="suggestion-item">
-                            <p>"Poderia haver treinamentos periódicos sobre novas ferramentas de IA disponíveis."</p>
-                            <div class="suggestion-votes">
-                                <button class="vote-btn">👍 <span>8</span></button>
-                            </div>
-                            <span class="suggestion-date">01/05/2025</span>
-                        </div>
+                        <!-- Sugestões aprovadas serão carregadas aqui via JavaScript -->
                     </div>
-                </div>
+                </div> 
+
+
             </div>
         </section> <button id="survey-trigger">Feedback</button>
 
@@ -699,7 +684,8 @@
     <footer>
         <p>© 2025 - Todos os direitos reservados</p>
     </footer>
-
+    <script src="scripts/main.js" defer></script>
+    <script src="scripts/suggestions.js" defer></script>
 </body>
 
 </html>

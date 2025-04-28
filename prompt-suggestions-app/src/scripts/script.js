@@ -346,6 +346,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===== SUGESTÕES =====
+    // Remova ou comente essa parte para evitar conflito com o suggestions.js
+    /*
     const submitSuggestionBtn = document.getElementById('submit-suggestion');
     if (submitSuggestionBtn) {
         submitSuggestionBtn.addEventListener('click', () => {
@@ -379,7 +381,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Função para atualizar a lista de sugestões
     function updateSuggestionsList() {
         const suggestionsList = document.querySelector('.suggestions-list');
         if (suggestionsList) {
@@ -406,24 +407,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     suggestionsList.appendChild(suggestionItem);
                 });
 
-                // Adicionar funcionalidade de voto aos botões
+                // Adicionar funcionalidade de voto aos botões (opcional)
                 const voteBtns = suggestionsList.querySelectorAll('.vote-btn');
                 voteBtns.forEach(btn => {
                     btn.addEventListener('click', function() {
                         const index = this.getAttribute('data-index');
                         const suggestions = JSON.parse(localStorage.getItem('suggestions') || '[]');
 
-                        // Incrementar votos
                         suggestions[index].votes += 1;
-
-                        // Atualizar localStorage
                         localStorage.setItem('suggestions', JSON.stringify(suggestions));
-
-                        // Atualizar contagem na interface
                         const voteCount = this.querySelector('span');
                         voteCount.textContent = suggestions[index].votes;
-
-                        // Desabilitar botão após votar
                         this.disabled = true;
                         this.style.opacity = '0.7';
                     });
@@ -438,6 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateRecentFeedbacks();
     updateQuestionsList();
     updateSuggestionsList();
+    */
 });
 
 
@@ -476,3 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 })();
+
+
+
