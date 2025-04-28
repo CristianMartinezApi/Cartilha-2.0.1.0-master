@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         suggestions.push(newSuggestion);
         localStorage.setItem('suggestions', JSON.stringify(suggestions));
-        alert('Your prompt has been submitted for approval!');
+        alert('Seu prompt foi enviado para aprovação!');
     }
 
     function fetchApprovedPrompts() {
