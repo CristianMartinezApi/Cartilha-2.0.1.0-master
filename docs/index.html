@@ -7,18 +7,18 @@
     <title>Guia de Uso Seguro da IA na PGE-SC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YLW2YHQSE"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+        function gtag(){dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-1YLW2YHQSE');
     </script>
-
+    
     <link rel="stylesheet" href="./src/styles/styles.css">
-
+    
     <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
@@ -26,12 +26,15 @@
             emailjs.init("cole_sua_public_key_aqui");
         })();
     </script>
-    <script type="module" src="src/scripts/firebase-init.js"></script>
-    <script type="module" src="src/scripts/suggestions.js"></script>
-    <script type="module" src="src/scripts/fetch-suggestions.js"></script>
-    
+   <!-- Carregue os SDKs do Firebase antes do firebase-init.js -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-    <!-- Script principal -->
+<!-- Inicialização do Firebase -->
+<script src="./src/scripts/firebase-init.js"></script>
+
+<!-- Scripts que dependem do Firebase -->
+<script src="./src/scripts/suggestions.js" defer></script>
     <script src="./src/scripts/script.js" defer></script>
 </head>
 
@@ -43,7 +46,7 @@
         <div class="nav-item dropdown">
             <a href="#top">Documentos</a>
             <div class="dropdown-menu">
-                <a href="../materia.pdf" target="_blank">Portaria GAB/PGE</a>
+                <a href="./materia.pdf" target="_blank">Portaria GAB/PGE</a>
                 <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
                     target="_blank">Cartilha Federal</a>
             </div>
@@ -689,7 +692,7 @@
         <p>© 2025 - Todos os direitos reservados</p>
     </footer>
     <script src="./src/scripts/main.js" defer></script>
-    <script src="./src/scripts/suggestions.js" defer></script>
+   
 </body>
 
 </html>
