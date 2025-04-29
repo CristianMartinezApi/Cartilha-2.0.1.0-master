@@ -12,22 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
             approvedContainer.innerHTML = '';
             console.log("Atualizações em tempo real, documentos recebidos:", snapshot.size);
             snapshot.forEach((doc) => {
-                console.log("Documento recebido:", doc.id, doc.data());
                 const data = doc.data();
+                console.log(`Documento ${doc.id} com status:`, data.status);
                 let suggestionItem = document.createElement('div');
                 suggestionItem.classList.add('suggestion-item');
-                suggestionItem.innerHTML = `
-                    <p>${data.text}</p>
-                    <span>${data.date ? new Date(data.date.toDate()).toLocaleString() : "Sem data"}</span>
-                    <button class="approve-btn" data-id="${doc.id}">Aprovar</button>
-                    <button class="reject-btn" data-id="${doc.id}">Rejeitar</button>
-                `;
-                if (data.status === 'pending') {
+
+                if (data.status && data.status.toLowerCase().trim() === 'pending') {
+                    suggestionItem.innerHTML = `
+                        <p>${data.text}</p>
+                        <span>${data.date ? new Date(data.date.toDate()).toLocaleString() : "Sem data"}</span>
+                        <button class="approve-btn" data-id="${doc.id}">Aprovar</button>
+                        <button class="reject-btn" data-id="${doc.id}">Rejeitar</button>
+                    `;
                     pendingContainer.appendChild(suggestionItem);
-                } else if (data.status === 'approved') {
+                } else if (data.status && data.status.toLowerCase().trim() === 'approved') {
+                    suggestionItem.innerHTML = `
+                        <p>${data.text}</p>
+                        <span>${data.date ? new Date(data.date.toDate()).toLocaleString() : "Sem data"}</span>
+                    `;
                     approvedContainer.appendChild(suggestionItem);
                 }
             });
+            console.log("Conteúdo do container de aprovados:", approvedContainer.innerHTML);
         }, (error) => {
             console.error("Erro no onSnapshot:", error);
         });
@@ -47,7 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.db.collection("sugestoes").doc(suggestionId).update({
             status: 'approved'
         }).then(() => {
-            fetchSuggestionsForAdmin(); // Atualize a lista se necessário
+            console.log(`Sugestão ${suggestionId} atualizada para "approved".`);
+            // Força a recarga manual da lista para confirmar a atualização na interface
+            fetchSuggestionsForAdmin();
         }).catch((error) => {
             console.error("Erro ao aprovar sugestão:", error);
         });
