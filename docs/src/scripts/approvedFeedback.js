@@ -11,15 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .where("status", "==", "approved")
         .orderBy("date", "desc")
         .onSnapshot((snapshot) => {
-            feedbackList.innerHTML = "";
+            feedbackList.innerHTML = ""; // Limpa a lista antes de inserir os novos itens
             console.log("Feedbacks aprovados recebidos:", snapshot.size);
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 let feedbackItem = document.createElement("div");
                 feedbackItem.classList.add("feedback-item");
                 
-                // Se o documento não contiver avaliação, insira um placeholder ou ajuste conforme a sua lógica.
-                // Exemplo abaixo utiliza data.text e data.date para exibição.
+                // Ajuste a string de avaliação conforme a sua lógica – aqui usamos um placeholder
                 feedbackItem.innerHTML = `
                     <div class="feedback-rating">Avaliação: ?/10</div>
                     <p>"${data.text}"</p>
