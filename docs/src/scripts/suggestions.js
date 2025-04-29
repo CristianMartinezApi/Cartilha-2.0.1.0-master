@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitPrompt(prompt);
             suggestionText.value = ''; // Clear the input field
         } else {
-            alert('Por favor, insira uma sugestão válida.');
+            alert('Obrigado pela sua sugestão!');
         }
     });
 
