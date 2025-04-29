@@ -1,4 +1,4 @@
-// This file manages the functionality specific to the suggestions tab.
+/* // This file manages the functionality specific to the suggestions tab.
 // It includes functions for submitting prompts to the admin area and displaying prompts once they are approved.
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -63,4 +63,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial fetch of approved prompts
     fetchApprovedPrompts();
+});
+
+
+const suggestionForm = document.getElementById('suggestion-form');
+const suggestionText = document.getElementById('suggestion-text');
+
+suggestionForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const prompt = suggestionText.value.trim();
+
+  if (prompt) {
+    db.collection("sugestoes").add({
+      text: prompt,
+      date: new Date().toISOString(),
+      status: "pending"
+    }).then(() => {
+      alert("Sugestão enviada para aprovação!");
+      suggestionText.value = "";
+    }).catch((error) => {
+      console.error("Erro ao enviar sugestão:", error);
+    });
+  }
+});
+ */
+
+
+// main.js – Envia sugestões para o Firestore
+
+document.addEventListener('DOMContentLoaded', () => {
+    const suggestionForm = document.getElementById('suggestion-form');
+    const suggestionText = document.getElementById('suggestion-text');
+
+    suggestionForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const prompt = suggestionText.value.trim();
+
+        if (prompt) {
+            submitPrompt(prompt);
+            suggestionText.value = '';
+        }
+    });
+
+    function submitPrompt(prompt) {
+        db.collection("sugestoes").add({
+            text: prompt,
+            date: new Date(),
+            status: 'pending'
+        }).then(() => {
+            alert('Sua sugestão foi enviada para aprovação!');
+        }).catch((error) => {
+            console.error("Erro ao enviar sugestão:", error);
+            alert('Ocorreu um erro ao enviar sua sugestão. Tente novamente mais tarde.');
+        });
+    }
 });
