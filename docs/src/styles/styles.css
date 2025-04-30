@@ -221,6 +221,25 @@ button:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Mantém a transição para suavizar a rotação */
+.nav-item.dropdown .dropdown-indicator {
+    margin-left: 5px;
+    font-size: 0.9em;
+    color: inherit;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Quando o dropdown estiver hover, rotaciona 180 graus */
+.nav-item.dropdown:hover .dropdown-indicator {
+    transform: rotate(180deg);
+}
+
+.nav-item.dropdown .dropdown-indicator {
+    margin-left: 5px;
+    font-size: 0.8em;
+    color: inherit; /* herda a cor do link, se necessário */
+}
 
 h2 {
     color: #231F20;
