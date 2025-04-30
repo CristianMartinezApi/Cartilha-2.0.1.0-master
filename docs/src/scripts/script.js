@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===== FEEDBACK =====
-    const submitFeedbackBtn = document.getElementById('submit-survey');
+   /*  const submitFeedbackBtn = document.getElementById('submit-survey');
     if (submitFeedbackBtn) {
         submitFeedbackBtn.addEventListener('click', () => {
             const feedbackText = document.getElementById('feedback').value;
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.add('active');
             });
         });
-    }
+    } */
 
     // Função para atualizar a lista de feedbacks recentes
     function updateRecentFeedbacks() {

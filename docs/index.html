@@ -26,16 +26,19 @@
             emailjs.init("cole_sua_public_key_aqui");
         })();
     </script>
-   <!-- Carregue os SDKs do Firebase antes do firebase-init.js -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Inicialização do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="./src/scripts/firebase-init.js"></script>
 
-<!-- Inicialização do Firebase -->
-<script src="./src/scripts/firebase-init.js"></script>
+    <!-- Scripts que dependem do Firebase -->
+    <script src="./src/scripts/suggestions.js" defer></script>
+    <script src="./src/scripts/approvedFeedback.js" defer></script>
 
-<!-- Scripts que dependem do Firebase -->
-<script src="./src/scripts/suggestions.js" defer></script>
-<script src="./src/scripts/approvedFeedback.js" defer></script>
+    <!-- Novos scripts para feedback -->
+    <script src="./src/scripts/feedback.js" defer></script>
+    <script src="./src/scripts/feedbackListener.js" defer></script>
     <script src="./src/scripts/script.js" defer></script>
 </head>
 
