@@ -70,6 +70,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Adiciona funcionalidade ao link de boas práticas
+    const boasPraticasLink = document.querySelector('a[href="#boasPraticasSection"]');
+    if (boasPraticasLink) {
+        boasPraticasLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Seleciona o botão expand-indicator dentro da seção Boas Práticas
+            const expandBtn = document.querySelector('#boasPraticasSection .expand-indicator');
+            if (expandBtn) {
+                expandBtn.click(); // simula o clique para alternar o estado de aberto/fechado
+                // Opcional: rolagem suave até a seção
+                document.getElementById('boasPraticasSection').scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    }
+
     // Pop-up com opção "Não mostrar novamente"
     const popup = document.getElementById('popup');
     const okButton = document.getElementById('ok-btn');
