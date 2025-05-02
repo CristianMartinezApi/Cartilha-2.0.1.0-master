@@ -7,18 +7,18 @@
     <title>Guia de Uso Seguro da IA na PGE-SC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YLW2YHQSE"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments); }
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-1YLW2YHQSE');
     </script>
-    
+
     <link rel="stylesheet" href="./src/styles/styles.css">
-    
+
     <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
@@ -26,7 +26,7 @@
             emailjs.init("cole_sua_public_key_aqui");
         })();
     </script>
-    
+
     <!-- Inicialização do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -34,7 +34,7 @@
 
     <!-- Scripts que dependem do Firebase -->
     <script src="./src/scripts/suggestions.js" defer></script>
-    <script src="./src/scripts/approvedFeedback.js" defer></script>
+    <script src="./src/scripts/approvedSuggestions.js" defer></script>
 
     <!-- Novos scripts para feedback -->
     <script src="./src/scripts/feedback.js" defer></script>
@@ -676,17 +676,65 @@
                 <!-- Tab de Sugestões (nova) -->
                 <div class="tab-content" id="suggestions-tab">
                     <h3>Compartilhe seu prompt</h3>
-                    <p>"Contribua com seus prompts e ajude a construir um uso mais inteligente e eficiente da IA na PGE-SC. Suas ideias serão analisadas e publicadas aqui!"</p>
+                    <p>"Contribua com seus prompts e ajude a construir um uso mais inteligente e eficiente da IA na
+                        PGE-SC. Suas ideias serão analisadas e publicadas aqui!"</p>
+
 
                     <form id="suggestion-form" class="suggestion-form">
-                        <textarea id="suggestion-text" placeholder="Compartilhe seu prompt..."></textarea>
-                        <button id="submit-suggestion" class="submit-btn">Enviar</button>
+                        <div class="form-group">
+                            <label for="prompt-title" class="form-label">Finalidade do Prompt</label>
+                            <input type="text" id="prompt-title" placeholder="Digite um título para seu prompt">
+                        </div>
+                        <div class="form-group">
+                            <label for="prompt-text" class="form-label">Texto do Prompt</label>
+                            <textarea id="prompt-text" placeholder="Digite o texto do seu prompt"></textarea>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="prompt-category" class="form-label">Categoria</label>
+                            <input type="text" id="prompt-category" placeholder="Digite a categoria do prompt">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="prompt-category" class="form-label">Categoria</label>
+                            <select id="prompt-category" required>
+                                <option value="" disabled selected>Selecione uma categoria</option>
+                                <option value="Jurídico">Jurídico</option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Pesquisa">Pesquisa</option>
+                                <option value="Redação">Redação</option>
+                                <option value="Análise de Documentos">Análise de Documentos</option>
+                                <option value="Pareceres">Pareceres</option>
+                                <option value="Petições">Petições</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prompt-comment" class="form-label">Comentário</label>
+                            <textarea id="prompt-comment"
+                                placeholder="Adicione um comentário sobre o prompt"></textarea>
+                        </div>
+
+
+
+
+                        <button type="submit" id="submit-suggestion">Enviar Sugestão</button>
                     </form>
 
+
+
+                    <!-- 
+                    <form id="suggestion-form" class="suggestion-form">
+                        <input type="text" id="prompt-title" placeholder="Título do Prompt" required>
+                        <input type="text" id="prompt-comment" placeholder="Comentário sobre o Modelo" required>
+                        <input type="text" id="prompt-category" placeholder="Categoria" required>
+                        <textarea id="prompt-text" placeholder="Digite seu prompt..." required></textarea>
+                        <button id="submit-suggestion" class="submit-btn" type="submit">Enviar</button>
+                    </form> -->
+
                     <div class="suggestions-list">
-                        <!-- Sugestões aprovadas serão carregadas aqui via JavaScript -->
+                        <!-- Aqui serão carregados os prompts aprovados -->
                     </div>
-                </div> 
+                </div>
 
 
             </div>
@@ -698,7 +746,7 @@
         <p>© 2025 - Todos os direitos reservados</p>
     </footer>
     <script src="./src/scripts/main.js" defer></script>
-    
+
 </body>
 
 </html>

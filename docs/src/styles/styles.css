@@ -966,7 +966,293 @@ footer {
 }
 
 /* Formulários adicionais */
+
+/* Formulários adicionais */
 .question-form, .suggestion-form {
+    margin-bottom: 10px;
+}
+
+/* Estilo comum para todos os campos de entrada */
+ 
+#prompt-text, 
+#prompt-comment,
+#question-text, 
+#suggestion-text {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+#prompt-title, 
+#prompt-category {
+    width: 35%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    resize: vertical;
+   
+}
+
+/* Altura específica para campos de texto maiores */
+#prompt-text, 
+#prompt-comment,
+#question-text, 
+#suggestion-text {
+    min-height: 100px;
+}
+
+/* Altura menor para campos de título e categoria */
+#prompt-title,
+#prompt-category {
+    min-height: 20px;
+}
+
+/* Estilo para labels */
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Botões de envio */
+#submit-question, 
+#submit-suggestion,
+#suggestion-form button[type="submit"] {
+    background-color: #5FB157;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#submit-question:hover, 
+#submit-suggestion:hover,
+#suggestion-form button[type="submit"]:hover {
+    background-color: #004d40;
+}
+
+/* Container para organizar o formulário - removida a centralização */
+#suggestion-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* Removido: max-width: 800px; */
+    /* Removido: margin: 0 auto; */
+}
+
+/* Espaçamento entre grupos de formulário */
+.form-group {
+    margin-bottom: 10px;
+}
+
+/* Alinhamento do botão à esquerda */
+#suggestion-form button[type="submit"] {
+    align-self: flex-start;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 16px;
+    color: #333;
+    appearance: none; /* Remove a aparência padrão em alguns navegadores */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+}
+
+select:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+select option {
+    padding: 10px;
+}
+/* Estilos para o filtro de categorias - versão melhorada */
+.category-filter-container {
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.category-filter-container h4 {
+    margin-bottom: 12px;
+    color: #333;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.category-filter {
+    background-color: #e8eaf6; /* Cor de fundo mais visível */
+    border: 1px solid #c5cae9; /* Borda sutil */
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    font-weight: 500; /* Texto mais visível */
+    color: #3f51b5; /* Cor do texto mais visível */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.category-filter:hover {
+    background-color: #d1d9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.category-filter.active {
+    background-color: #3f51b5; /* Azul mais escuro e rico */
+    color: white;
+    border-color: #3f51b5;
+    box-shadow: 0 2px 5px rgba(63, 81, 181, 0.3);
+}
+
+/* Estilo para as tags de categoria dentro dos itens */
+.category-tag {
+    display: inline-block;
+    background-color: #e8eaf6;
+    color: #3f51b5;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 5px;
+    border: 1px solid #c5cae9;
+}
+
+@media (max-width: 768px) {
+    .category-filters {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .category-filter {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-filters {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+
+/* Estilos para o dropdown de sugestões */
+.suggestions-dropdown-container {
+    margin-bottom: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.suggestions-dropdown-header {
+    background-color: #f5f5f5;
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.suggestions-dropdown-header:hover {
+    background-color: #eeeeee;
+}
+
+.suggestions-dropdown-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-arrow {
+    margin-left: 10px;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+.dropdown-arrow.active {
+    transform: rotate(180deg); /* Rotaciona 180 graus para inverter */
+}
+
+.suggestions-count {
+    background-color: #3f51b5;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.suggestions-dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.suggestions-dropdown-content.active {
+    max-height: 2000px; /* Valor alto o suficiente para mostrar todo o conteúdo */
+}
+
+.suggestions-list-content {
+    padding: 20px;
+}
+
+.no-suggestions, .error-message {
+    text-align: center;
+    padding: 20px;
+    color: #757575;
+    font-style: italic;
+}
+
+.error-message {
+    color: #f44336;
+}
+
+/* Ajustes para o container de filtros dentro do dropdown */
+.suggestions-dropdown-content .category-filter-container {
+    margin: 15px 20px;
+    padding: 15px;
+}
+
+
+
+
+
+
+/* .question-form, .suggestion-form {
     margin-bottom: 20px;
 }
 
@@ -994,7 +1280,7 @@ footer {
 
 #submit-question:hover, #submit-suggestion:hover {
     background-color: #004d40;
-}
+} */
 /* Estilos para o botão de feedback na navegação */
 .header-actions {
     display: flex;
