@@ -1,13 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Verifique se estamos em uma página que deve mostrar sugestões aprovadas
     const feedbackList = document.querySelector(".suggestions-list");
     
+    // Se o elemento não existir nesta página, simplesmente retorne sem mostrar erro
     if (!feedbackList) {
-        console.error("Container de feedback não encontrado!");
-        return;
+        console.log("Container de sugestões aprovadas não encontrado nesta página - ignorando.");
+        return; // Saia da função sem mostrar erro
     }
     
-    console.log("Carregando feedbacks aprovados...");
+    console.log("Carregando sugestões aprovadas...");
     
+    // O resto do seu código para carregar sugestões aprovadas...
     window.db.collection("sugestoes")
         .where("status", "==", "approved")
         .orderBy("date", "desc")
@@ -37,6 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 feedbackList.appendChild(feedbackItem);
             });
         }, (error) => {
-            console.error("Erro ao carregar feedbacks aprovados:", error);
+            console.error("Erro ao carregar sugestões aprovadas:", error);
         });
 });
