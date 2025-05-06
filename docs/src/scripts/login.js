@@ -2,6 +2,8 @@
  * login.js - Handles authentication for the admin panel
  */
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Login script loaded');
+    
     // Check if Firebase is initialized
     if (typeof firebase === 'undefined') {
       console.error('Firebase não está inicializado. Verifique se os scripts do Firebase foram carregados.');
@@ -24,15 +26,52 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Check if user is already logged in
       auth.onAuthStateChanged(function(user) {
-        if (user && user.uid === '6MWhhenutOTp1GuiJFlyu6S16VO2') {
-          // User is already logged in and is the admin, redirect to admin panel
-          window.location.href = 'admin.html';
+        if (user) {
+          console.log('User already logged in:', user.uid);
+          
+          // Check if the user has the correct UID
+          if (user.uid === '6MWhhenutOTp1GuiJFlyu6S16VO2') {
+            console.log('User is admin, redirecting to admin panel');
+            
+            // Check if session is still valid
+            const lastLoginTime = localStorage.getItem('lastLoginTime');
+            if (lastLoginTime) {
+              const currentTime = Date.now();
+              const sessionAge = (currentTime - parseInt(lastLoginTime)) / (1000 * 60); // in hours
+              
+              if (sessionAge <= 3) { // Session still valid
+                // Update login timestamp
+                localStorage.setItem('lastLoginTime', currentTime.toString());
+                
+                // Redirect to admin panel
+                window.location.href = 'admin.html';
+                return;
+              }
+            }
+            
+            // Session expired or no timestamp, set new timestamp
+            localStorage.setItem('lastLoginTime', Date.now().toString());
+            
+            // Redirect to admin panel
+            window.location.href = 'admin.html';
+          } else {
+            // Not the admin user, sign them out
+            console.log('User is not admin, signing out');
+            auth.signOut();
+            
+            // Show error message
+            if (loginError) {
+              loginError.textContent = 'Você não tem permissão para acessar o painel de administração.';
+              loginError.style.display = 'block';
+            }
+          }
         }
       });
       
       // Handle login form submission
       loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
+        console.log('Login form submitted');
         
         // Clear previous errors
         if (loginError) {
@@ -60,11 +99,15 @@ document.addEventListener('DOMContentLoaded', function() {
           loginButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Entrando...';
         }
         
+        console.log('Attempting to sign in with:', email);
+        
         // Sign in with email and password
         auth.signInWithEmailAndPassword(email, password)
           .then(function(userCredential) {
             // Check if the user has the correct UID
             const user = userCredential.user;
+            console.log('User signed in:', user.uid);
+            
             if (user.uid === '6MWhhenutOTp1GuiJFlyu6S16VO2') {
               console.log('Login bem-sucedido para o administrador');
               
@@ -119,77 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
               loginButton.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Entrar';
             }
           });
-      });
-    }
-    
-    // Add logout functionality to any logout buttons on the page
-    const logoutButtons = document.querySelectorAll('.logout-btn, #logout-button');
-    logoutButtons.forEach(button => {
-      if (button) {
-        button.addEventListener('click', function() {
-          auth.signOut()
-            .then(function() {
-              // Clear login timestamp
-              localStorage.removeItem('lastLoginTime');
-              
-              // Redirect to login page
-              window.location.href = 'login.html';
-            })
-            .catch(function(error) {
-              console.error('Erro ao fazer logout:', error);
-              alert('Erro ao fazer logout. Por favor, tente novamente.');
-            });
-        });
-      }
-    });
-    
-    // Check authentication state on admin pages
-    const isAdminPage = window.location.pathname.includes('admin.html');
-    if (isAdminPage) {
-      auth.onAuthStateChanged(function(user) {
-        if (!user) {
-          // Not logged in, redirect to login page
-          window.location.href = 'login.html';
-          return;
-        }
-        
-        // Check if the user has the correct UID
-        if (user.uid !== '6MWhhenutOTp1GuiJFlyu6S16VO2') {
-          console.error('Usuário não autorizado tentando acessar o painel admin:', user.uid);
-          
-          // Sign out unauthorized user and redirect to login
-          auth.signOut().then(function() {
-            localStorage.removeItem('lastLoginTime');
-            window.location.href = 'login.html';
-          });
-          return;
-        }
-        
-        // Check session timeout
-        const lastLoginTime = localStorage.getItem('lastLoginTime');
-        if (!lastLoginTime) {
-          // No login timestamp, redirect to login
-          window.location.href = 'login.html';
-          return;
-        }
-        
-        const currentTime = Date.now();
-        const sessionAge = (currentTime - parseInt(lastLoginTime)) / (1000 * 60 * 60); // in hours
-        
-        if (sessionAge > 1) { // 1 hour session timeout
-          // Session expired, redirect to login
-          console.log('Sessão expirada após', Math.round(sessionAge * 60), 'minutos');
-          auth.signOut().then(function() {
-            localStorage.removeItem('lastLoginTime');
-            window.location.href = 'login.html';
-          });
-          return;
-        }
-        
-        // Update login timestamp to extend session
-        localStorage.setItem('lastLoginTime', currentTime.toString());
-        
-        console.log('Usuário autenticado como administrador');
       });
     }
   });

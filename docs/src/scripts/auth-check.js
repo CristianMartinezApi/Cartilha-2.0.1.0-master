@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (sessionAge > 1) { // 1 hour session timeout
         // Session expired, redirect to login
-        console.log('Sessão expirada após', Math.round(sessionAge * 60), 'minutos');
+        console.log('Sessão expirada após', Math.round(sessionAge * 3), 'minutos');
         firebase.auth().signOut().then(function() {
           localStorage.removeItem('lastLoginTime');
           window.location.href = 'login.html';
