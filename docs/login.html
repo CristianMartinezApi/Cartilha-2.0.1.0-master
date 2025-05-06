@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrativo - Cartilha de IA</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="src/styles/login.css">
+    
+</head>
+<body>
+    <div class="container-fluid p-0 d-flex flex-column min-vh-100">
+        <header class="bg-white shadow-sm py-3">
+            <div class="container">
+                <div class="d-flex align-items-center">
+                    <img src="src/img/pge.png" alt="Logo PGE-SC" height="50">
+                    <h1 class="h4 ms-3 mb-0">Cartilha de IA</h1>
+                </div>
+            </div>
+        </header>
+        
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
+                    <h2 class="h3">Acesso Administrativo</h2>
+                    <p class="text-muted">Entre com suas credenciais para acessar o painel</p>
+                </div>
+                
+                <div id="login-error" class="error-message" role="alert"></div>
+                
+                <form id="login-form" class="login-form">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="login-email" placeholder="nome@exemplo.com" required>
+                        <label for="login-email">Email</label>
+                    </div>
+                    
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="login-password" placeholder="Senha" required>
+                        <label for="login-password">Senha</label>
+                    </div>
+                    
+                    <button type="submit" id="login-button" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                    </button>
+                </form>
+                
+                <div class="login-footer">
+                    <a href="index.html" class="d-inline-flex align-items-center">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar para a página inicial
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="bg-dark text-white py-4 mt-auto">
+            <div class="container text-center">
+                <p class="mb-0">&copy; 2025 Procuradoria Geral do Estado de Santa Catarina. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- Firebase initialization -->
+    <script src="src/scripts/firebase-init.js"></script>
+    
+    <!-- Login script -->
+    <script src="src/scripts/login.js"></script>
+</body>
+</html>
