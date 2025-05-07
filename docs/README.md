@@ -1,6 +1,6 @@
 # Guia de Uso Seguro da IA na PGE-SC
 
-![Logo PGE-SC](src/img/pge.png)
+![Logo PGE-SC](./src/img/pge.png)
 
 ## Sobre o Projeto
 
@@ -24,23 +24,44 @@ Este projeto é um guia interativo sobre o uso seguro de Inteligência Artificia
 ## Estrutura do Projeto
 
 ```
-docs/
-├── index.html              # Página principal do guia
-├── login.html              # Página de login para área administrativa
-├── admin.html              # Painel administrativo
-├── materia.pdf             # Documento de portaria
-├── src/
-│   ├── img/                # Imagens e recursos visuais
-│   ├── styles/             # Arquivos CSS
-│   │   ├── styles.css      # Estilos principais
-│   │   └── dropdown-touch-fix.css # Correção para dropdowns em dispositivos móveis
-│   └── scripts/            # Arquivos JavaScript
-│       ├── script.js       # Script principal
-│       ├── firebase-init.js # Inicialização do Firebase
-│       ├── suggestions.js  # Gerenciamento de sugestões
-│       ├── feedback.js     # Sistema de feedback
-│       ├── dropdown-touch.js # Funcionalidade para menus em dispositivos móveis
-│       └── admin.js        # Funcionalidades da área administrativa
+.
+├───.vscode
+│       settings.json
+└───docs
+    │   .env
+    │   admin.html
+    │   index.html
+    │   login.html
+    │   materia.pdf
+    │   package.json
+    │   README.md
+    │
+    └───src
+        ├───img
+        │       eppe-logo-color.png
+        │       gemini-color.png
+        │       materia.jpg
+        │       NotebookLM_icon.png
+        │       pge-bl.png
+        │       pge.png
+        │
+        ├───scripts
+        │       admin.js
+        │       approvedSuggestions.js
+        │       auth-check.js
+        │       feedback.js
+        │       feedbackListener.js
+        │       fetch-suggestions.js
+        │       firebase-init.js
+        │       login.js
+        │       main.js
+        │       script.js
+        │       suggestions.js
+        │
+        └───styles
+                admin.css
+                login.css
+                styles.css
 ```
 
 ## Instalação e Configuração
@@ -63,6 +84,7 @@ cd Cartilha-2.0.1.0-master
    - Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
    - Obtenha as credenciais de configuração
    - Substitua as credenciais no arquivo `docs/src/scripts/firebase-init.js`
+   - Configure as variáveis de ambiente no arquivo `.env` na pasta docs
 
 3. Configure o EmailJS:
    - Crie uma conta no [EmailJS](https://www.emailjs.com/)
@@ -99,13 +121,26 @@ O projeto inclui uma área administrativa para gerenciar sugestões e feedback:
    - Visualizar feedback dos usuários
    - Gerenciar conteúdo do site
 
-## Responsividade e Acessibilidade
+## Melhorias Recentes
 
-O site foi desenvolvido para ser responsivo e funcionar em diversos dispositivos:
+### Responsividade para Dispositivos Móveis
+- Implementação de correções para o menu dropdown em dispositivos de toque
+- Ajustes de posicionamento e z-index para garantir visibilidade adequada
+- Melhorias na experiência de usuário em telas pequenas
 
-- **Desktop**: Experiência completa com todas as funcionalidades
-- **Tablet**: Layout adaptado para telas médias
-- **Smartphone**: Interface otimizada para telas pequenas com menus adaptados
+### Próximos Passos
+- Desenvolvimento de uma versão alternativa usando Bootstrap para comparação de usabilidade
+- Manutenção da versão atual para garantir continuidade do serviço
+
+## Arquivos Principais
+
+- **index.html**: Página principal do guia
+- **admin.html**: Interface de administração
+- **login.html**: Página de autenticação
+- **firebase-init.js**: Configuração do Firebase
+- **suggestions.js**: Gerenciamento de sugestões de prompts
+- **feedback.js**: Sistema de coleta de feedback
+- **styles.css**: Estilos principais da aplicação
 
 ## Contribuição
 
