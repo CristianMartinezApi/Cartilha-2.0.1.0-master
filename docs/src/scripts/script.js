@@ -487,5 +487,122 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 })();
 
-
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona todos os dropdowns do menu
+    const dropdowns = document.querySelectorAll('.nav-item.dropdown');
+    
+    // Flag para controlar se um dropdown foi aberto recentemente
+    let dropdownJustOpened = false;
+    
+    // Adiciona manipuladores de eventos para cada dropdown
+    dropdowns.forEach(dropdown => {
+      const dropdownLink = dropdown.querySelector('a');
+      const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+      
+      // Função para posicionar o dropdown corretamente
+      function positionDropdown() {
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          const rect = dropdown.getBoundingClientRect();
+          
+          // Posiciona o dropdown abaixo do link pai
+          dropdownMenu.style.top = (rect.bottom + 5) + 'px'; // Adiciona um pequeno espaço
+          
+          // Ajusta o posicionamento horizontal com base no tamanho da tela
+          if (window.innerWidth <= 480) {
+            // Em telas muito pequenas, centraliza
+            dropdownMenu.style.left = '50%';
+            dropdownMenu.style.transform = 'translateX(-50%)';
+            // Largura baseada na tela, mas com limites
+            const width = Math.min(Math.max(window.innerWidth * 0.85, 180), 280);
+            dropdownMenu.style.width = width + 'px';
+          } else {
+            // Em telas médias, alinha com o pai, mas com ajustes
+            const leftPos = Math.max(10, Math.min(rect.left, window.innerWidth - 260));
+            dropdownMenu.style.left = leftPos + 'px';
+            dropdownMenu.style.width = 'auto';
+            dropdownMenu.style.transform = 'none';
+          }
+          
+          // Força o dropdown a ficar na frente de tudo
+          document.body.appendChild(dropdownMenu);
+        }
+      }
+      
+      // Manipulador para eventos de toque
+      dropdownLink.addEventListener('touchstart', function(e) {
+        // Verifica se o dropdown já está aberto
+        const isActive = dropdown.classList.contains('touch-active');
+        
+        // Fecha todos os outros dropdowns
+        dropdowns.forEach(item => {
+          if (item !== dropdown) {
+            item.classList.remove('touch-active');
+          }
+        });
+        
+        // Se este dropdown não estava aberto, previne a navegação e abre o dropdown
+        if (!isActive) {
+          e.preventDefault();
+          e.stopPropagation(); // Impede propagação para o documento
+          
+          // Posiciona o dropdown antes de mostrá-lo
+          positionDropdown();
+          
+          // Mostra o dropdown
+          dropdown.classList.add('touch-active');
+          
+          // Define a flag para evitar fechamento imediato
+          dropdownJustOpened = true;
+          setTimeout(() => {
+            dropdownJustOpened = false;
+          }, 100);
+        }
+      });
+      
+      // Adiciona eventos para os links dentro do dropdown
+      const dropdownMenuLinks = dropdownMenu.querySelectorAll('a');
+      dropdownMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          // Fecha o dropdown após clicar em um link interno
+          setTimeout(() => {
+            dropdown.classList.remove('touch-active');
+          }, 100);
+        });
+      });
+    });
+    
+    // Fecha os dropdowns quando tocar em qualquer lugar fora deles
+    document.addEventListener('touchstart', function(e) {
+      // Não fecha se acabou de abrir (evita conflito de eventos)
+      if (dropdownJustOpened) return;
+      
+      // Verifica se o toque foi fora de qualquer dropdown
+      if (!e.target.closest('.dropdown-menu') && !e.target.closest('.nav-item.dropdown > a')) {
+        dropdowns.forEach(dropdown => {
+          dropdown.classList.remove('touch-active');
+        });
+      }
+    });
+    
+    // Também fecha com clique normal (para compatibilidade)
+    document.addEventListener('click', function(e) {
+      // Não fecha se acabou de abrir (evita conflito de eventos)
+      if (dropdownJustOpened) return;
+      
+      // Verifica se o clique foi fora de qualquer dropdown
+      if (!e.target.closest('.dropdown-menu') && !e.target.closest('.nav-item.dropdown > a')) {
+        dropdowns.forEach(dropdown => {
+          dropdown.classList.remove('touch-active');
+        });
+      }
+    });
+    
+    // Fecha os dropdowns quando a página é rolada
+    window.addEventListener('scroll', function() {
+      dropdowns.forEach(dropdown => {
+        dropdown.classList.remove('touch-active');
+      });
+    });
+  });
+  
 
