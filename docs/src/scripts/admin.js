@@ -1150,3 +1150,13 @@ function initAdminPanel() {
   // Configurar modal de adicionar administrador
   setupAddAdminModal();
 }
+
+
+// JavaScript para controlar o menu de hambúrguer
+const menuToggle = document.getElementById('menu-toggle');
+const sidebar = document.querySelector('.admin-sidebar');
+
+// Ao clicar no botão de menu, alternar a visibilidade da sidebar
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('active');  // Alterna a classe 'active' para mostrar/esconder a sidebar
+});
