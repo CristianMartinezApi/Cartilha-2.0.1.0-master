@@ -1,6 +1,6 @@
 # Guia de Uso Seguro da IA na PGE-SC
 
-![Logo PGE-SC](docs/src/img/pge.png)
+![Logo PGE-SC](src/img/pge.png)
 
 ## Sobre o Projeto
 
