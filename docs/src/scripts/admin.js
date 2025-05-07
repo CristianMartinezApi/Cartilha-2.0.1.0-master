@@ -1152,11 +1152,14 @@ function initAdminPanel() {
 }
 
 
-// JavaScript para controlar o menu de hambúrguer
-const menuToggle = document.getElementById('menu-toggle');
+// Selecione o botão de menu
+const menuToggle = document.querySelector('#menu-toggle');
+
+// Selecione a sidebar
 const sidebar = document.querySelector('.admin-sidebar');
 
-// Ao clicar no botão de menu, alternar a visibilidade da sidebar
+// Adicione o evento de clique no botão de menu
 menuToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('active');  // Alterna a classe 'active' para mostrar/esconder a sidebar
+  // Alterna a classe 'active' na sidebar
+  sidebar.classList.toggle('active');
 });

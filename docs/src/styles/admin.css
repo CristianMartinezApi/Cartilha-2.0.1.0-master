@@ -62,7 +62,7 @@
     left: 0;
     bottom: 0;
     box-shadow: 0 0 15px var(--shadow-color);
-    z-index: 10;
+    z-index: 1000;
   }
   
   .sidebar-header {
