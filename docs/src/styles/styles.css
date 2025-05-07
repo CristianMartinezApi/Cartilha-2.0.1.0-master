@@ -1260,26 +1260,31 @@ select option {
       position: relative;
     }
     
-    /* Garante que o dropdown apareça na frente de tudo */
-    .nav-item.dropdown .dropdown-menu {
-      position: fixed; /* Mantemos fixed para garantir que fique na frente */
-      top: auto; /* Será calculado via JavaScript */
-      left: auto; /* Será calculado via JavaScript */
-      width: auto; /* Ajustado para tamanho automático */
-      max-width: 250px; /* Limita a largura máxima */
-      min-width: 180px; /* Define uma largura mínima */
-      z-index: 999999; /* Z-index extremamente alto */
-      background-color: #b71c1c; /* Cor de fundo vermelha para combinar com o navbar */
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      border-radius: 4px;
-      display: none; /* Esconde por padrão */
-      border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-      font-size: 14px; /* Reduz ligeiramente o tamanho da fonte */
+    /* Desativa o comportamento hover em dispositivos móveis */
+    .nav-item.dropdown:hover .dropdown-menu {
+      display: none;
     }
     
-    /* Mostra o dropdown quando ativo */
+    /* Garante que o dropdown apareça na frente de tudo */
+    .nav-item.dropdown .dropdown-menu {
+      position: fixed;
+      top: auto;
+      left: auto;
+      width: auto;
+      max-width: 250px;
+      min-width: 180px;
+      z-index: 999999;
+      background-color: #b71c1c;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      border-radius: 4px;
+      display: none !important; /* Força a não exibição */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+    }
+    
+    /* Mostra o dropdown apenas quando tem a classe touch-active */
     .nav-item.dropdown.touch-active .dropdown-menu {
-      display: block;
+      display: block !important; /* Força a exibição */
     }
     
     /* Indicador de dropdown mais visível */
@@ -1290,12 +1295,12 @@ select option {
     /* Melhora a aparência dos links no dropdown */
     .dropdown-menu a {
       display: block;
-      padding: 10px 12px; /* Reduz o padding para tornar os itens mais compactos */
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separador sutil */
-      color: white !important; /* Garante que o texto seja branco */
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: white !important;
       text-decoration: none;
-      white-space: normal; /* Permite quebra de linha */
-      line-height: 1.3; /* Melhora o espaçamento entre linhas */
+      white-space: normal;
+      line-height: 1.3;
     }
     
     .dropdown-menu a:last-child {
@@ -1305,12 +1310,12 @@ select option {
     /* Efeito hover para os links do dropdown */
     .dropdown-menu a:hover, 
     .dropdown-menu a:active {
-      background-color: #d32f2f; /* Vermelho um pouco mais claro para hover */
+      background-color: #d32f2f;
     }
     
     /* Estilo especial para o item de administração */
     .dropdown-menu a.admin-item {
-      background-color: #8c1515; /* Cor diferente para destacar */
+      background-color: #8c1515;
     }
     
     .dropdown-menu a.admin-item:hover {
@@ -1328,11 +1333,11 @@ select option {
     
     /* Ajusta o dropdown para telas muito pequenas */
     .nav-item.dropdown .dropdown-menu {
-      width: 85%; /* Usa porcentagem da largura da tela */
-      max-width: 280px; /* Limita a largura máxima */
-      left: 50% !important; /* Centraliza horizontalmente */
-      transform: translateX(-50%) !important; /* Garante centralização perfeita */
-      font-size: 13px; /* Reduz ainda mais a fonte para telas muito pequenas */
+      width: 85%;
+      max-width: 280px;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      font-size: 13px;
     }
     
     /* Torna os itens do dropdown mais compactos em telas muito pequenas */
@@ -1343,7 +1348,7 @@ select option {
   
   /* Garantir que o dropdown fique na frente do header */
   header {
-    z-index: 1 !important; /* Forçar um z-index baixo para o header */
+    z-index: 1 !important;
   }
   
   .nav-item.dropdown.touch-active {
