@@ -677,6 +677,51 @@
 .logout-btn i {
   font-size: 1rem;
 }
+/* Estilização do botão de menu (hambúrguer) */
+#menu-toggle {
+  position: fixed; /* Para que ele fique sempre visível */
+  top: 20px;
+  left: 20px;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1100; /* Um nível acima da sidebar */
+}
+
+#menu-toggle i {
+  font-size: 15px;
+}
+/* Por padrão, o botão fica escondido */
+#menu-toggle {
+  display: none;
+}
+
+/* Em telas pequenas (máx. 768px), aparece menor */
+@media (max-width: 768px) {
+  #menu-toggle {
+    display: block;
+    position: fixed;
+    top: 55px;
+    left: 15px;
+    background-color: #333;
+    color: #fff;
+    padding: 6px;           /* diminui o espaço interno */
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1100;
+    width: 22px;            /* define largura fixa menor */
+    height: 22px;           /* define altura fixa menor */
+    display: flex;          /* centraliza o ícone dentro */
+    align-items: center;
+    justify-content: center;
+  }
+
+  #menu-toggle i {
+    font-size: 12px;        /* ícone um pouco menor */
+  }
+}
 
 
 
