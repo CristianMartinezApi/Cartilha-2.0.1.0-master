@@ -45,35 +45,47 @@
 <body>
     <div id="top"></div>
     <!-- Navbar deve estar aqui, antes do header -->
-    <div class="main-navigation-bar">
-        <a href="#top">Inicio</a>
-        <div class="nav-item dropdown">
-            <a href="#top">
-                Documentos <span class="dropdown-indicator">⌵</span>
-            </a>
-            <div class="dropdown-menu">
-                <a href="./materia.pdf" target="_blank">Portaria GAB/PGE</a>
-                <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
-                    target="_blank">Cartilha Federal</a>
-            </div>
+   <div class="main-navigation-bar">
+    <a href="#top">Inicio</a><div class="nav-item dropdown">
+        <a href="#top">
+            Orientações <span class="dropdown-indicator">⌵</span>
+        </a>
+        <div class="dropdown-menu">
+            <a href="#boasPraticasSection">Boas Práticas</a>
+            <a href="#promptSection">Prompts</a>
         </div>
-
-        <div class="nav-item dropdown">
-            <a href="#infoSection">Ferramentas<span class="dropdown-indicator">⌵</span></a>
-            <div class="dropdown-menu">
-                <a href="https://gemini.google.com/app" target="_blank">Gemini</a>
-                <a href="https://notebooklm.google.com/" target="_blank">NotebookLM</a>
-                <a href="login.html" class="admin-item">
-                    <i class="fas fa-cog me-1"></i> Área Administrativa
-                </a>
-            </div>
-        </div>
-
-        <a href="#boasPraticasSection">Boas Práticas</a>
-        <a href="#promptSection">Prompts</a>
-        <a href="#pesquisaSection">Feedback</a>
-        
     </div>
+    <div class="nav-item dropdown">
+        <a href="#top">
+            Documentos <span class="dropdown-indicator">⌵</span>
+        </a>
+        <div class="dropdown-menu">
+            <a href="./materia.pdf" target="_blank">Portaria GAB/PGE</a>
+            <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
+                target="_blank">Cartilha Federal</a>
+        </div>
+    </div>
+
+    <div class="nav-item dropdown">
+        <a href="#infoSection">Ferramentas<span class="dropdown-indicator">⌵</span></a>
+        <div class="dropdown-menu">
+            <a href="https://gemini.google.com/app" target="_blank">Gemini</a>
+            <a href="https://notebooklm.google.com/" target="_blank">NotebookLM</a>
+            <a href="login.html" class="admin-item">
+                <i class="fas fa-cog me-1"></i> Área Administrativa
+            </a>
+        </div>
+    </div>
+
+    
+  <a href="#" class="botao-tooltip">Portfólio de Prompt
+  <span class="tooltip-text">Em construção. Em breve estará disponível!</span>
+</a>
+
+    <!-- <a href="sugestoes.html" target="_blank">Portifólio de Prompt</a> -->
+    <a href="#pesquisaSection">Feedback</a>
+</div>
+
 
 
     <header>
@@ -584,162 +596,51 @@
 
 
         <section class="info-section" id="pesquisaSection">
-            <h2>Espaço Colaborativo</h2>
-            <div class="collaborative-space">
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="feedback">Feedback</button>
-                    <!--  <button class="tab-btn" data-tab="questions">Dúvidas</button> -->
-                    <button class="tab-btn" data-tab="suggestions">Sugestões</button>
-                </div>
-
-                <!-- Tab de Feedback (baseado no seu código atual) -->
-                <div class="tab-content active" id="feedback-tab">
-                    <p>Você gostaria de contribuir com uma avaliação sobre as diretrizes de IA?</p>
-                    <div class="rating-container">
-                        <div class="rating-numbers">
-                            <!-- Rating buttons 0-10 (mantendo seu código atual) -->
-                            <button class="rating-btn" data-value="0">0</button>
-                            <button class="rating-btn" data-value="1">1</button>
-                            <button class="rating-btn" data-value="2">2</button>
-                            <button class="rating-btn" data-value="3">3</button>
-                            <button class="rating-btn" data-value="4">4</button>
-                            <button class="rating-btn" data-value="5">5</button>
-                            <button class="rating-btn" data-value="6">6</button>
-                            <button class="rating-btn" data-value="7">7</button>
-                            <button class="rating-btn" data-value="8">8</button>
-                            <button class="rating-btn" data-value="9">9</button>
-                            <button class="rating-btn" data-value="10">10</button>
-                        </div>
-
-                        <div class="feedback-container">
-                            <label for="feedback">Deixe seu feedback:</label>
-                            <textarea id="feedback" rows="4" placeholder="Digite seus feedback aqui..."></textarea>
-                            <!-- Removendo campos de identificação para manter anonimato -->
-                        </div>
-                        <button id="submit-survey" class="submit-btn">Enviar Avaliação</button>
-                    </div>
-
-                    <!-- Adicionando feedbacks recentes -->
-                    <div class="recent-feedback">
-                        <h4>Feedbacks Recentes</h4>
-                        <div class="feedback-list">
-                            <div class="feedback-item">
-                                <div class="feedback-rating">Avaliação: 9/10</div>
-                                <p>"As diretrizes são claras e ajudam muito no dia a dia. Consegui implementar várias
-                                    sugestões no meu trabalho."</p>
-                                <span class="feedback-date">15/04/2025</span>
-                            </div>
-                            <div class="feedback-item">
-                                <div class="feedback-rating">Avaliação: 10/10</div>
-                                <p>"A seção de prompts é excelente! Já estou usando os exemplos nas minhas consultas com
-                                    IA."</p>
-                                <span class="feedback-date">10/04/2025</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab de Dúvidas (nova) -->
-                <!-- <div class="tab-content" id="questions-tab">
-    <h3>Perguntas & Respostas</h3>
-    <p>Tem dúvidas sobre o uso de IA? Pergunte aqui ou veja as respostas para perguntas frequentes.</p>
-    
-    <div class="question-form">
-        <textarea id="question-text" placeholder="Digite sua pergunta sobre IA..."></textarea>
-        <button id="submit-question" class="submit-btn">Enviar Pergunta</button>
-        
-    </div>
-    
-    <div class="questions-list">
-        <div class="question-item">
-            <div class="question">
-                <h4>Como garantir que a IA não use informações sigilosas?</h4>
-                <span class="question-date">12/05/2025</span>
-            </div>
-            <div class="answer">
-                <p>Para garantir a segurança das informações, evite inserir dados pessoais ou sigilosos nos prompts. Utilize apenas dados públicos ou anonimizados. Sempre revise o conteúdo gerado antes de utilizá-lo.</p>
-                <span class="answer-author">Equipe EPPE</span>
-            </div>
+    <h2>Espaço Colaborativo</h2>
+    <div class="collaborative-space">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="feedback">Feedback</button>
+            <!-- Removendo a aba de sugestões e adicionando um link para a nova página -->
+            
         </div>
-        
-        <div class="question-item">
-            <div class="question">
-                <h4>Posso usar IA para redigir minutas de pareceres?</h4>
-                <span class="question-date">08/05/2025</span>
+
+        <!-- Tab de Feedback (mantendo apenas esta aba) -->
+        <div class="tab-content active" id="feedback-tab">
+            <p>Você gostaria de contribuir com uma avaliação sobre as diretrizes de IA?</p>
+            <div class="rating-container">
+                <div class="rating-numbers">
+                    <!-- Rating buttons 0-10 (mantendo seu código atual) -->
+                    <button class="rating-btn" data-value="0">0</button>
+                    <button class="rating-btn" data-value="1">1</button>
+                    <button class="rating-btn" data-value="2">2</button>
+                    <button class="rating-btn" data-value="3">3</button>
+                    <button class="rating-btn" data-value="4">4</button>
+                    <button class="rating-btn" data-value="5">5</button>
+                    <button class="rating-btn" data-value="6">6</button>
+                    <button class="rating-btn" data-value="7">7</button>
+                    <button class="rating-btn" data-value="8">8</button>
+                    <button class="rating-btn" data-value="9">9</button>
+                    <button class="rating-btn" data-value="10">10</button>
+                </div>
+
+                <div class="feedback-container">
+                    <label for="feedback">Deixe seu feedback:</label>
+                    <textarea id="feedback" rows="4" placeholder="Digite seus feedback aqui..."></textarea>
+                </div>
+                <button id="submit-survey" class="submit-btn">Enviar Avaliação</button>
             </div>
-            <div class="answer">
-                <p>Sim, a IA pode ser usada como ferramenta de apoio para redigir minutas, mas lembre-se que o conteúdo final deve ser sempre revisado e validado por um procurador. A responsabilidade pelo documento é sempre do servidor que o assina.</p>
-                <span class="answer-author">Equipe EPPE</span>
+
+            <!-- Adicionando feedbacks recentes -->
+            <div class="recent-feedback">
+                <h4>Feedbacks Recentes</h4>
+                <div class="feedback-list">
+                    <!-- Feedbacks carregados dinamicamente -->
+                </div>
             </div>
         </div>
     </div>
-</div> -->
-
-
-                <!-- Tab de Sugestões (nova) -->
-                <div class="tab-content" id="suggestions-tab">
-                    <h3>Compartilhe seu prompt</h3>
-                    <p>"Contribua com seus prompts e ajude a construir um uso mais inteligente e eficiente da IA na
-                        PGE-SC. Suas ideias serão analisadas e publicadas aqui!"</p>
-
-
-                    <form id="suggestion-form" class="suggestion-form">
-                        <div class="form-group">
-                            <label for="prompt-title" class="form-label">Finalidade do Prompt</label>
-                            <input type="text" id="prompt-title" placeholder="Digite um título para seu prompt">
-                        </div>
-                        <div class="form-group">
-                            <label for="prompt-text" class="form-label">Texto do Prompt</label>
-                            <textarea id="prompt-text" placeholder="Digite o texto do seu prompt"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="prompt-category" class="form-label">Categoria</label>
-                            <select id="prompt-category" required>
-                                <option value="" disabled selected>Selecione uma categoria</option>
-                                <option value="Jurídico">Jurídico</option>
-                                <option value="Administrativo">Administrativo</option>
-                                <option value="Pesquisa">Pesquisa</option>
-                                <option value="Redação">Redação</option>
-                                <option value="Análise de Documentos">Análise de Documentos</option>
-                                <option value="Pareceres">Pareceres</option>
-                                <option value="Petições">Petições</option>
-                                <option value="Outros">Outros</option>
-                            </select>
-                        </div><!-- Add this to your index.html navigation or footer -->
-
-
-                        <div class="form-group">
-                            <label for="prompt-comment" class="form-label">Comentário</label>
-                            <textarea id="prompt-comment"
-                                placeholder="Adicione um comentário sobre o prompt"></textarea>
-                        </div>
-
-
-
-
-                        <button type="submit" id="submit-suggestion">Enviar Sugestão</button>
-                    </form>
-
-
-
-                    <!-- 
-                    <form id="suggestion-form" class="suggestion-form">
-                        <input type="text" id="prompt-title" placeholder="Título do Prompt" required>
-                        <input type="text" id="prompt-comment" placeholder="Comentário sobre o Modelo" required>
-                        <input type="text" id="prompt-category" placeholder="Categoria" required>
-                        <textarea id="prompt-text" placeholder="Digite seu prompt..." required></textarea>
-                        <button id="submit-suggestion" class="submit-btn" type="submit">Enviar</button>
-                    </form> -->
-
-                    <div class="suggestions-list">
-                        <!-- Aqui serão carregados os prompts aprovados -->
-                    </div>
-                </div>
-
-
-            </div>
-        </section> <button id="survey-trigger">Feedback</button>
+</section>
+ <button id="survey-trigger">Feedback</button>
 
 
     </main>

@@ -1,0 +1,316 @@
+/* Estilos gerais para a página de sugestões */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(79, 77, 77);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Aumentar o uso do espaço da tela para 90% */
+.container {
+    max-width: 90% !important;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Estilos para o cabeçalho da página */
+.display-5 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.lead {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+/* Estilos para os cards */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    border: none;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+}
+
+.card-header.bg-primary {
+    background-color: #9e0621 !important;
+}
+
+.card-header.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1rem;
+    border-bottom-left-radius: 0.5rem !important;
+    border-bottom-right-radius: 0.5rem !important;
+}
+
+/* Estilos para o formulário */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.form-control, .form-select {
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Estilos para os botões */
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+.btn-primary:hover {
+    background-color: #0da271;
+    border-color: #0da271;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Estilos para as sugestões */
+.suggestions-list {
+    max-height: 800px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.suggestion-item {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.suggestion-item:nth-child(1) { animation-delay: 0.1s; }
+.suggestion-item:nth-child(2) { animation-delay: 0.2s; }
+.suggestion-item:nth-child(3) { animation-delay: 0.3s; }
+.suggestion-item:nth-child(4) { animation-delay: 0.4s; }
+.suggestion-item:nth-child(5) { animation-delay: 0.5s; }
+
+.prompt-text {
+    background-color: #f1f3f5;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-left: 4px solid #0d6efd;
+}
+
+/* Estilos para os badges */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+    border-radius: 0.375rem;
+}
+
+/* Estilos para alertas de feedback */
+.alert-feedback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 350px;
+    z-index: 1050;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Estilos para o indicador de carregamento */
+#loading-indicator {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Estilos para o modal de prompt compartilhado */
+.modal-content {
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .container {
+        max-width: 95% !important;
+        padding: 1rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .card-header .badge {
+        margin-top: 0.5rem;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .card-footer div {
+        margin-top: 0.5rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .btn {
+        flex: 1;
+        margin: 0 0.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 100% !important;
+        padding: 0.5rem;
+    }
+    
+    .display-5 {
+        font-size: 1.75rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .suggestions-list {
+        max-height: 600px;
+    }
+}
+
+/* Ajustes para melhor aproveitamento do espaço */
+.row {
+    margin-right: -10px;
+    margin-left: -10px;
+}
+
+.col-lg-5, .col-lg-7 {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+/* Ajuste para o formulário ocupar mais espaço vertical */
+.card.h-100 {
+    height: auto !important;
+    min-height: 600px;
+}
+
+/* Ajuste para o formulário em telas menores */
+@media (max-width: 992px) {
+    .col-lg-5 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .card.h-100 {
+        min-height: auto;
+    }
+}
+
+/* Barra de rolagem personalizada */
+.suggestions-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.suggestions-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
