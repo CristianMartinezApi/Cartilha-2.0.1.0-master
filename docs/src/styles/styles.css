@@ -303,9 +303,9 @@ h2 {
   top: 120%; /* muda de bottom para top */
   left: 50%;
   transform: translateX(-50%);
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.3s;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* Mostrar tooltip no hover */
