@@ -547,3 +547,71 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Código existente para os dropdowns...
+    
+    // Adicionar comportamento específico para o ícone de administração
+    const adminButton = document.querySelector('.admin-button');
+    
+    if (adminButton) {
+        // Detectar se é um dispositivo de toque
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        adminButton.addEventListener(isTouchDevice ? 'touchstart' : 'click', function(e) {
+            e.preventDefault();
+            
+            const adminIcon = this.parentElement;
+            const isVisible = adminIcon.classList.contains('show-dropdown');
+            
+            // Fechar todos os outros dropdowns primeiro
+            document.querySelectorAll('.dropdown').forEach(item => {
+                if (item !== adminIcon) {
+                    item.classList.remove('show-dropdown');
+                }
+            });
+            
+            // Alternar a visibilidade do dropdown atual
+            adminIcon.classList.toggle('show-dropdown');
+            
+            // Se abriu o dropdown, configurar o listener para fechar ao clicar fora
+            if (!isVisible) {
+                const closeDropdown = function(event) {
+                    if (!adminIcon.contains(event.target)) {
+                        adminIcon.classList.remove('show-dropdown');
+                        document.removeEventListener(isTouchDevice ? 'touchstart' : 'click', closeDropdown);
+                    }
+                };
+                
+                // Pequeno atraso para evitar que o evento atual feche imediatamente o dropdown
+                setTimeout(() => {
+                    document.addEventListener(isTouchDevice ? 'touchstart' : 'click', closeDropdown);
+                }, 10);
+            }
+        });
+        
+        // Prevenir comportamento padrão para dispositivos de toque
+        if (isTouchDevice) {
+            adminButton.addEventListener('touchend', function(e) {
+                e.preventDefault();
+            });
+        }
+    }
+    
+    // Ajustar posição do dropdown em caso de rolagem ou redimensionamento
+    window.addEventListener('resize', adjustDropdownPosition);
+    window.addEventListener('scroll', adjustDropdownPosition);
+    
+    function adjustDropdownPosition() {
+        const adminIcon = document.querySelector('.admin-icon');
+        if (adminIcon && adminIcon.classList.contains('show-dropdown')) {
+            const dropdown = adminIcon.querySelector('.dropdown-menu');
+            const rect = adminIcon.getBoundingClientRect();
+            
+            // Verificar se o dropdown vai sair da tela
+            if (window.innerWidth < rect.right + dropdown.offsetWidth) {
+                dropdown.style.right = '0';
+                dropdown.style.left = 'auto';
+            }
+        }
+    }
+});

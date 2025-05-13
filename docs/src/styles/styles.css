@@ -315,6 +315,92 @@ h2 {
   opacity: 1;
 }
 
+/* Estilo base para o ícone de administração */
+.admin-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100; /* Garante que o ícone fique acima de outros elementos */
+}
+
+.admin-button {
+    font-size: 1.2rem !important;
+    padding: 8px 12px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.admin-button:hover {
+    background-color: #9e0621 !important;
+    transform: rotate(30deg);
+}
+
+/* Estilo para o menu dropdown de administração */
+.admin-icon .dropdown-menu {
+    right: 0;
+    left: auto; /* Garante que o dropdown apareça à direita */
+    min-width: 180px;
+    text-align: left;
+}
+
+.admin-menu a {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+}
+
+/* Mostra o dropdown quando o ícone é clicado */
+.admin-icon.show-dropdown .dropdown-menu {
+    display: block;
+}
+
+/* Ajustes responsivos para telas menores */
+@media screen and (max-width: 768px) {
+    .admin-icon {
+        position: relative; /* Muda para posicionamento relativo em telas pequenas */
+        right: auto;
+        top: auto;
+        transform: none;
+        margin-left: auto; /* Empurra para a direita */
+        display: flex;
+        align-items: center;
+    }
+    
+    .admin-button {
+        font-size: 1rem !important; /* Ligeiramente menor em dispositivos móveis */
+        padding: 6px 10px !important; /* Padding reduzido */
+    }
+    
+    /* Ajusta a posição do dropdown em telas pequenas */
+    .admin-icon .dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        width: 160px; /* Largura fixa menor para telas pequenas */
+    }
+}
+
+/* Para telas muito pequenas */
+@media screen and (max-width: 480px) {
+    .admin-button {
+        font-size: 0.9rem !important;
+        padding: 5px 8px !important;
+    }
+    
+    .admin-icon .dropdown-menu {
+        width: 140px;
+    }
+    
+    .admin-menu a {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}
+
+
 
 
 
