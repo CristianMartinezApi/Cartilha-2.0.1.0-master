@@ -216,6 +216,11 @@ button:hover {
     display: block;
 }
 
+/* Classe para mostrar o dropdown quando clicado */
+.nav-item.dropdown.show-dropdown .dropdown-menu {
+    display: block;
+}
+
 /* Opcional: hover para os links do dropdown, semelhante à navbar */
 .dropdown-menu a:hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -231,15 +236,11 @@ button:hover {
 }
 
 /* Quando o dropdown estiver hover, rotaciona 180 graus */
-.nav-item.dropdown:hover .dropdown-indicator {
+.nav-item.dropdown:hover .dropdown-indicator,
+.nav-item.dropdown.show-dropdown .dropdown-indicator {
     transform: rotate(180deg);
 }
 
-.nav-item.dropdown .dropdown-indicator {
-    margin-left: 5px;
-    font-size: 0.8em;
-    color: inherit; /* herda a cor do link, se necessário */
-}
 
 h2 {
     color: #231F20;
@@ -317,6 +318,167 @@ h2 {
 
 
 
+
+
+
+
+/* Estilização da seção de ferramentas - mantendo consistência com info-section */
+.tools-section {
+    /* Mantendo as mesmas propriedades da classe info-section */
+    margin: 2rem auto;
+    padding: 1rem;
+    max-width: 90%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tools-warning {
+    display: flex;
+    align-items: center;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+}
+
+.tools-warning i {
+    font-size: 1.5rem;
+    color: #ffc107;
+    margin-right: 1rem;
+}
+
+.tools-warning p {
+    margin: 0;
+    font-weight: 500;
+    color: #856404;
+}
+
+.tools-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tool-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tool-header {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease; /* Adicionando transição suave */
+}
+
+.tool-card:hover .tool-header {
+    background-color: #e9ecef; /* Cor ligeiramente mais escura ao passar o mouse */
+}
+
+
+.tool-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 1rem;
+    object-fit: contain;
+}
+
+.tool-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #343a40;
+}
+
+.tool-body {
+    padding: 1.25rem;
+    flex-grow: 1;
+}
+
+.tool-body p {
+    margin: 0;
+    color: #495057;
+    line-height: 1.6;
+}
+
+.tool-footer {
+    padding: 1.25rem;
+    border-top: 1px solid #e9ecef;
+    text-align: right;
+}
+
+.tool-button {
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.tool-button.subtle {
+    color: white;
+    background-color: #1A73E8;
+    padding: 0.5rem 1rem;
+    border: 1px solid #1A73E8;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.tool-button.subtle:hover {
+    color: white;
+    background-color: #0F5BB5;
+    border-color: #0F5BB5;
+    text-decoration: none;
+}
+
+.tool-button i {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .tools-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tools-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .tool-card {
+        max-width: 100%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 .cards-section {
     display: flex;
     justify-content: space-around;
@@ -378,19 +540,24 @@ h2 {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #5FB157;
+    background-color: #1A73E8;
     border: none;
     border-radius: 4px;
     padding: 8px 10px;
     color: white;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     z-index: 2;
 }
 .expand-indicator:hover {
-    background-color: #004d40;
-    transform: scale(1.1);
+    background-color: #0F5BB5;
+    transform: translateY(-50%) scale(1.05);
+}
+/* Adiciona efeito de clique */
+.expand-indicator:active {
+    transform: translateY(-50%) scale(0.98);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -421,6 +588,35 @@ h2 {
     color: #004d40;
     font-size: 1.2rem;
 }
+
+/* Estilo para dicas (tips) usando emoji - com alinhamento correto e fonte original */
+.prompt-intro-alert {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+    border-left: 4px solid #00796b;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+}
+
+.intro-emoji {
+    font-size: 1.25rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.intro-text {
+    margin: 0;
+    font-weight: 500;
+    color: rgb(44, 44, 44);
+    /* Restaurando o estilo da fonte original */
+    font-family: inherit; /* Usa a mesma fonte do resto do site */
+    font-size: 1rem; /* Ou o tamanho que você preferia antes */
+    line-height: 1.5;
+}
+
+
 
 
 
@@ -513,14 +709,6 @@ h2 {
 }
 
 
-
-
-/* Estilização básica do botão expand-indicator */
-
-/* Alteração de cor e leve escala ao passar o mouse */
-
-
-/* Aplicando a animação pulse, se desejar que ele pulse continuamente */
 
 
 .card-content h2 {
@@ -642,29 +830,8 @@ li .info-text {
     margin-left: 10px;
 }
 
-.show-more {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 15px;
-    /* Ajuste inicial do padding */
-    background: linear-gradient(45deg, #5FB157, #004d40);
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease, color 0.3s ease;
-    font-weight: bold;
-    white-space: normal;
-    /* Adicionado para quebra de texto */
-}
 
-.show-more:hover {
-    background: linear-gradient(45deg, #004d40, #5FB157);
-    /* Adiciona o gradiente de cor no hover */
-    color: #ffffff;
-    /* Adiciona a cor do texto na transição */
-}
+
 
 .arrow {
     display: inline-block;
