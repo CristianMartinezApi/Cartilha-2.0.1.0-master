@@ -104,7 +104,7 @@ header h1 {
 }
 
 button {
-    background: #5FB157;
+    background: #1A73E8;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -113,7 +113,7 @@ button {
 }
 
 button:hover {
-    background: #004d40;
+    background: #0F5BB5;
 }
 
 .popup-actions {
@@ -451,32 +451,6 @@ h2 {
     font-size: 0.8rem;
 }
 
-/* Responsividade */
-@media (max-width: 992px) {
-    .tools-container {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .tools-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .tool-card {
-        max-width: 100%;
-    }
-}
-
-
-
-
-
-
-
-
 
 
 .cards-section {
@@ -609,7 +583,7 @@ h2 {
 .intro-text {
     margin: 0;
     font-weight: 500;
-    color: rgb(44, 44, 44);
+    color: rgb(36, 77, 32);
     /* Restaurando o estilo da fonte original */
     font-family: inherit; /* Usa a mesma fonte do resto do site */
     font-size: 1rem; /* Ou o tamanho que você preferia antes */
@@ -2135,3 +2109,21 @@ select option {
     }
 }
 
+/* Responsividade */
+@media (max-width: 992px) {
+    .tools-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tools-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .tool-card {
+        max-width: 100%;
+    }
+}
