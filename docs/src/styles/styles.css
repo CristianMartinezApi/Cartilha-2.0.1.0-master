@@ -325,7 +325,6 @@ h2 {
 }
 
 .admin-button {
-    font-size: 1.2rem !important;
     padding: 8px 12px !important;
     border-radius: 50% !important;
     display: flex !important;
@@ -334,9 +333,20 @@ h2 {
     transition: all 0.3s ease;
 }
 
+/* Estilo específico para o ícone Material */
+.admin-button .material-icons {
+    font-size: 24px !important;
+    color: white; /* ou a cor que combina com seu tema */
+     transition: transform 0.3s ease;
+}
+
 .admin-button:hover {
     background-color: #9e0621 !important;
-    transform: rotate(30deg);
+    
+}
+/* Efeito de hover mais adequado para o ícone de administração */
+.admin-button:hover .material-icons {
+    transform: scale(1.1); /* Leve aumento de tamanho em vez de rotação */
 }
 
 /* Estilo para o menu dropdown de administração */
@@ -350,6 +360,13 @@ h2 {
 .admin-menu a {
     font-size: 0.9rem;
     padding: 10px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.admin-menu .material-icons-outlined {
+    font-size: 18px;
+    margin-right: 8px;
 }
 
 /* Mostra o dropdown quando o ícone é clicado */
@@ -369,9 +386,8 @@ h2 {
         align-items: center;
     }
     
-    .admin-button {
-        font-size: 1rem !important; /* Ligeiramente menor em dispositivos móveis */
-        padding: 6px 10px !important; /* Padding reduzido */
+    .admin-button .material-icons {
+        font-size: 22px !important; /* Ligeiramente menor em dispositivos móveis */
     }
     
     /* Ajusta a posição do dropdown em telas pequenas */
@@ -385,9 +401,8 @@ h2 {
 
 /* Para telas muito pequenas */
 @media screen and (max-width: 480px) {
-    .admin-button {
-        font-size: 0.9rem !important;
-        padding: 5px 8px !important;
+    .admin-button .material-icons {
+        font-size: 20px !important;
     }
     
     .admin-icon .dropdown-menu {
@@ -399,6 +414,7 @@ h2 {
         padding: 8px 12px;
     }
 }
+
 
 
 
