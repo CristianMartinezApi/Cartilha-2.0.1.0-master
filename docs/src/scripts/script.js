@@ -147,17 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const feedbackNavLink = document.querySelector('a[href="#pesquisaSection"]');
-    console.log("feedbackNavLink:", feedbackNavLink);
-    if (feedbackNavLink) {
-        feedbackNavLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            console.log("FEEDBACK link clicado");
-        });
-    }
-});
-
 // Funcionalidades de armazenamento local para o espaço colaborativo e dos formulários de feedback, perguntas e sugestões
 document.addEventListener('DOMContentLoaded', function() {
     // Funcionalidade das tabs
