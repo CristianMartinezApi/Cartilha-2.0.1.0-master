@@ -885,7 +885,7 @@ li {
 
 li:hover {
     background-color: rgba(224, 247, 250, 0.8);
-    box-shadow: 0 4px 8px rgba(139, 231, 86, 0.4);
+    box-shadow: 0 4px 8px rgba(144, 145, 143, 0.4);
     transform: scale(1.02);
 }
 
