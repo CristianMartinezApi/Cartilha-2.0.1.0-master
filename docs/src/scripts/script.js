@@ -1,18 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     const header = document.querySelector('header');
     if (!header) {
-        console.error('Elemento header não encontrado.');
-        return;
+        console.warn('Elemento header não encontrado. Continuando a execução sem header.');
     }
 
     let lastScrollY = window.scrollY;
     let ticking = false;
 
     function onScroll() {
-        if (window.scrollY > lastScrollY) {
-            header.classList.add('header-small');
-        } else {
-            header.classList.remove('header-small');
+        if (header) {
+            if (window.scrollY > lastScrollY) {
+                header.classList.add('header-small');
+            } else {
+                header.classList.remove('header-small');
+            }
         }
         lastScrollY = window.scrollY;
         ticking = false;
@@ -23,10 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
             window.requestAnimationFrame(onScroll);
             ticking = true;
         }
-        if (window.scrollY > 50) {
-            header.classList.add('header-hidden');
-        } else {
-            header.classList.remove('header-hidden');
+        if (header) {
+            if (window.scrollY > 50) {
+                header.classList.add('header-hidden');
+            } else {
+                header.classList.remove('header-hidden');
+            }
         }
     });
 
@@ -110,19 +113,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mostrar e ocultar pesquisa
     const pesquisaSection = document.getElementById('pesquisaSection');
-    const surveyTrigger = document.getElementById('survey-trigger');
-    pesquisaSection.style.display = 'none';
-
-    surveyTrigger.addEventListener('click', () => {
-        if (pesquisaSection.style.display === 'block') {
-            pesquisaSection.style.display = 'none';
-        } else {
-            pesquisaSection.style.display = 'block';
+    const feedbackNavLink = document.querySelector('.main-navigation-bar a[href="#pesquisaSection"]');
+    
+    // Inicia fechado
+    if (pesquisaSection) {
+        pesquisaSection.classList.add('hidden');
+    }
+    
+    function togglePesquisa() {
+        if (!pesquisaSection) return;
+        pesquisaSection.classList.toggle('hidden');
+        if (!pesquisaSection.classList.contains('hidden')) {
             pesquisaSection.scrollIntoView({ behavior: 'smooth' });
         }
-    });
+        console.log("togglePesquisa executado. hidden:", pesquisaSection.classList.contains('hidden'));
+    }
+    
+    if (feedbackNavLink) {
+        feedbackNavLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            togglePesquisa();
+        });
+    }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOM carregado");
+    const feedbackNavLink = document.querySelector('.main-navigation-bar a[href="#pesquisaSection"]');
+    if (feedbackNavLink) {
+        console.log("Elemento FEEDBACK encontrado:", feedbackNavLink);
+    } else {
+        console.error("Elemento FEEDBACK não encontrado");
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const feedbackNavLink = document.querySelector('a[href="#pesquisaSection"]');
+    console.log("feedbackNavLink:", feedbackNavLink);
+    if (feedbackNavLink) {
+        feedbackNavLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log("FEEDBACK link clicado");
+        });
+    }
+});
 
 // Funcionalidades de armazenamento local para o espaço colaborativo e dos formulários de feedback, perguntas e sugestões
 document.addEventListener('DOMContentLoaded', function() {
@@ -147,61 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== FEEDBACK =====
-   /*  const submitFeedbackBtn = document.getElementById('submit-survey');
-    if (submitFeedbackBtn) {
-        submitFeedbackBtn.addEventListener('click', () => {
-            const feedbackText = document.getElementById('feedback').value;
-            let rating = null;
-
-            // Obter o valor da avaliação selecionada
-            const activeRatingBtn = document.querySelector('.rating-btn.active');
-            if (activeRatingBtn) {
-                rating = activeRatingBtn.getAttribute('data-value');
-            }
-
-            if (feedbackText.trim() !== '') {
-                if (rating === null) {
-                    alert('Por favor, selecione uma avaliação de 0 a 10.');
-                    return;
-                }
-
-                // Criar objeto de feedback
-                const feedback = {
-                    text: feedbackText,
-                    rating: rating,
-                    date: new Date().toLocaleDateString()
-                };
-
-                // Obter feedbacks existentes ou iniciar array vazio
-                const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
-
-                // Adicionar novo feedback
-                feedbacks.push(feedback);
-
-                // Salvar no localStorage
-                localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
-
-                alert('Feedback enviado com sucesso! Obrigado pela sua contribuição.');
-                document.getElementById('feedback').value = '';
-                document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('active'));
-
-                // Atualizar a lista de feedbacks recentes
-                updateRecentFeedbacks();
-            } else {
-                alert('Por favor, escreva seu feedback antes de enviar.');
-            }
-        });
-
-        // Adicionar classe 'active' ao botão de avaliação clicado
-        const ratingBtns = document.querySelectorAll('.rating-btn');
-        ratingBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                ratingBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    } */
+    
 
     // Função para atualizar a lista de feedbacks recentes
     function updateRecentFeedbacks() {
@@ -360,105 +340,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ===== SUGESTÕES =====
-    // Remova ou comente essa parte para evitar conflito com o suggestions.js
-    /*
-    const submitSuggestionBtn = document.getElementById('submit-suggestion');
-    if (submitSuggestionBtn) {
-        submitSuggestionBtn.addEventListener('click', () => {
-            const suggestionText = document.getElementById('suggestion-text').value;
-
-            if (suggestionText.trim() !== '') {
-                // Criar objeto de sugestão
-                const suggestion = {
-                    text: suggestionText,
-                    date: new Date().toLocaleDateString(),
-                    votes: 0
-                };
-
-                // Obter sugestões existentes ou iniciar array vazio
-                const suggestions = JSON.parse(localStorage.getItem('suggestions') || '[]');
-
-                // Adicionar nova sugestão
-                suggestions.push(suggestion);
-
-                // Salvar no localStorage
-                localStorage.setItem('suggestions', JSON.stringify(suggestions));
-
-                alert('Sua sugestão foi enviada! Obrigado pela contribuição.');
-                document.getElementById('suggestion-text').value = '';
-
-                // Atualizar a lista de sugestões
-                updateSuggestionsList();
-            } else {
-                alert('Por favor, escreva sua sugestão antes de enviar.');
-            }
-        });
-    }
-
-    function updateSuggestionsList() {
-        const suggestionsList = document.querySelector('.suggestions-list');
-        if (suggestionsList) {
-            // Limpar lista atual
-            suggestionsList.innerHTML = '';
-
-            // Obter sugestões do localStorage
-            const suggestions = JSON.parse(localStorage.getItem('suggestions') || '[]');
-
-            // Ordenar por número de votos (mais votadas primeiro)
-            const sortedSuggestions = [...suggestions].sort((a, b) => b.votes - a.votes);
-
-            if (sortedSuggestions.length > 0) {
-                sortedSuggestions.forEach((suggestion, index) => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.className = 'suggestion-item';
-                    suggestionItem.innerHTML = `
-                        <p>"${suggestion.text}"</p>
-                        <div class="suggestion-votes">
-                            <button class="vote-btn" data-index="${index}">👍 <span>${suggestion.votes}</span></button>
-                        </div>
-                        <span class="suggestion-date">${suggestion.date}</span>
-                    `;
-                    suggestionsList.appendChild(suggestionItem);
-                });
-
-                // Adicionar funcionalidade de voto aos botões (opcional)
-                const voteBtns = suggestionsList.querySelectorAll('.vote-btn');
-                voteBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const index = this.getAttribute('data-index');
-                        const suggestions = JSON.parse(localStorage.getItem('suggestions') || '[]');
-
-                        suggestions[index].votes += 1;
-                        localStorage.setItem('suggestions', JSON.stringify(suggestions));
-                        const voteCount = this.querySelector('span');
-                        voteCount.textContent = suggestions[index].votes;
-                        this.disabled = true;
-                        this.style.opacity = '0.7';
-                    });
-                });
-            } else {
-                suggestionsList.innerHTML = '<p>Nenhuma sugestão enviada ainda.</p>';
-            }
-        }
-    }
-
-    // Carregar dados existentes ao carregar a página
-    updateRecentFeedbacks();
-    updateQuestionsList();
-    updateSuggestionsList();
-    */
+   
 });
 
 
-// Manutenção da funcionalidade do link na navbar
+/* // Manutenção da funcionalidade do link na navbar
 (function() {
     window.addEventListener('load', function() {
         console.log("Página carregada, configurando link de feedback");
 
         var feedbackLink = document.querySelector('.main-navigation-bar a[href="#pesquisaSection"]');
         var pesquisaSection = document.getElementById('pesquisaSection');
-        var surveyTriggerBtn = document.getElementById('survey-trigger');
+        
 
         console.log("Elementos encontrados:", {
             feedbackLink: feedbackLink,
@@ -485,7 +378,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Um ou mais elementos não foram encontrados");
         }
     });
-})();
+})(); */
+
 document.addEventListener('DOMContentLoaded', function() {
     // Corrigir o comportamento de todos os dropdowns na navegação
     const dropdownLinks = document.querySelectorAll('.nav-item.dropdown > a');

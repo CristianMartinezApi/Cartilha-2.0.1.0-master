@@ -35,7 +35,7 @@ header {
 }
 main {
     padding: 10px 10px;
-    margin-top: 140px;
+    margin-top: 40px;
 }
 .header-img,
 .header-img-right {
@@ -154,19 +154,38 @@ button:hover {
 }
 
 
-/* Estilos para a barra de navegação principal */
+/* Navbar principal usando flexbox para distribuir os itens */
 .main-navigation-bar {
     background-color: #9e0621;
     width: 100%;
     padding: 10px 0;
-    text-align: center;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1001;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
+/* Ajusta o afastamento das imagens nas extremidades da navbar */
+.navbar-img-left {
+    margin-left: 10px;  /* ajuste conforme necessário */
+}
+
+.navbar-img-right {
+    margin-right: 10px; /* ajuste conforme necessário */
+}
+/* Contêiner que agrupa os nav-items; mantém os espaçamentos originais */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* ou use margin nos próprios links, como estava */
+}
+
+/* Estilização original dos links permanece inalterada */
 .main-navigation-bar a {
     color: white;
     text-decoration: none;
@@ -174,14 +193,27 @@ button:hover {
     margin: 0 5px;
     font-size: 16px;
     font-weight: 500;
-    border-radius: 4px;
+    border-radius: 1px;
     display: inline-block;
     cursor: pointer;
 }
 
-.main-navigation-bar a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+/* Estiliza os links mantendo os estilos atuais */
+.navbar-img-left,
+.navbar-img-right {
+    height: 30px; /* Reduz o tamanho para não aumentar a altura da navbar */
+    width: auto;
 }
+
+/* Caso seja necessário esconder as imagens em resoluções menores, use media queries */
+/* Exemplo:
+@media (max-width: 600px) {
+    .navbar-img-left,
+    .navbar-img-right {
+        display: none;
+    }
+}
+*/
 
 /* Mantém o estilo atual, adicionando regras somente para o dropdown */
 .main-navigation-bar .nav-item {
@@ -197,9 +229,10 @@ button:hover {
     left: 0;
     background: #9e0621; /* utiliza a cor de fundo da navbar */
     padding: 0.5rem 0;
-    border-radius: 4px;
+    border-radius: 1px;
     z-index: 1000;
-    min-width: 100%; /* Garante que o dropdown tenha no mínimo a largura do nav-item */
+    width: auto; /* Garante que o dropdown tenha no mínimo a largura do nav-item */
+    white-space: nowrap; /* Evita quebra de linha */
 }
 
 /* Cada link do submenu */
@@ -207,8 +240,13 @@ button:hover {
     display: block;
     padding: 0.5rem 1rem;
     color: #f7f3f3;
-    font-size: 12px;
+    font-size: 16px;
     text-decoration: none;
+    text-align: left; /* Alinha o texto à esquerda */
+}
+/* Adiciona uma linha separadora a cada link, exceto o último */
+.dropdown-menu a:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Ao passar o mouse no item com dropdown, exibe o submenu */
@@ -318,7 +356,7 @@ h2 {
 /* Estilo base para o ícone de administração */
 .admin-icon {
     position: absolute;
-    right: 15px;
+    right: calc(45px + 40px); /* 15px é a margem original e 40px a largura estimada da imagem */
     top: 50%;
     transform: translateY(-50%);
     z-index: 100; /* Garante que o ícone fique acima de outros elementos */
@@ -783,7 +821,6 @@ h2 {
     font-size: 1.5rem; /* ou 2rem, dependendo do quanto quiser aumentar */
     vertical-align: middle; /* alinha melhor com o texto */
 }
-
 
 
 
@@ -1739,13 +1776,6 @@ select option {
 .panel-overlay.active {
     display: block;
 }
-
-
-
-
-
-
-
 
 
 @media (max-width: 420px) {

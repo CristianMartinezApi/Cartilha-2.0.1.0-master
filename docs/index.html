@@ -50,60 +50,59 @@
     <div id="top"></div>
     <!-- Navbar deve estar aqui, antes do header -->
     <div class="main-navigation-bar">
-        <a href="#top">Inicio</a>
-        <div class="nav-item dropdown">
-            <a href="#top">
-                Documentos <span class="dropdown-indicator">⌵</span>
-            </a>
-            <div class="dropdown-menu">
-                <a href="./materia.pdf" target="_blank">Portaria GAB/PGE</a>
-                <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf"
-                    target="_blank">Cartilha Federal</a>
+        <!-- Imagem à esquerda -->
+        <img src="./src/img/pge.png" alt="Logo PGE" class="navbar-img-left">
+        
+        <!-- Contêiner dos links (nav-items) permanece inalterado -->
+        <div class="nav-links">
+            <a href="#top">INICIO</a>
+            <div class="nav-item dropdown">
+                <a href="#infoSection">ORIENTAÇÕES<span class="dropdown-indicator">⌵</span></a>
+                <div class="dropdown-menu">
+                    <a href="#boasPraticasSection">BOAS PRÁTICAS</a>
+                    <a href="#promptSection">PROMPTS</a>
+                </div>
             </div>
-        </div>
-
-        <div class="nav-item dropdown">
-            <a href="#infoSection">Ferramentas<span class="dropdown-indicator">⌵</span></a>
-            <div class="dropdown-menu">
-                <a href="https://gemini.google.com/app" target="_blank">Gemini</a>
-                <a href="https://notebooklm.google.com/" target="_blank">NotebookLM</a>
+            <div class="nav-item dropdown">
+                <a href="#top">DOCUMENTOS <span class="dropdown-indicator">⌵</span></a>
+                <div class="dropdown-menu">
+                    <a href="./materia.pdf" target="_blank">PORTARIA GAB/PGE - 19/2025</a>
+                    <a href="https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/ia-generativa-no-servico-publico.pdf" target="_blank">CARTILHA FEDERAL</a>
+                </div>
             </div>
-        </div>
-
-        <a href="#boasPraticasSection">Boas Práticas</a>
-        <a href="#promptSection">Prompts</a>
-        <a href="#" class="botao-tooltip">Portfólio de Prompt
-            <span class="tooltip-text">Em construção. <br> Em breve estará disponível um ambiente colaborativo!</span>
-        </a>
-
-        <!-- <a href="sugestoes.html" target="_blank">Portifólio de Prompt</a> -->
-        <a href="#pesquisaSection">Feedback</a>
-
-        <!-- Novo ícone de configurações no canto direito -->
-        <div class="admin-icon dropdown">
-            <a href="#" class="admin-button" aria-label="Área Administrativa">
-                <span class="material-icons">admin_panel_settings</span>
+            <div class="nav-item dropdown">
+                <a href="#infoSection">FERRAMENTAS <span class="dropdown-indicator">⌵</span></a>
+                <div class="dropdown-menu">
+                    <a href="https://gemini.google.com/app" target="_blank">GEMINI</a>
+                    <a href="https://notebooklm.google.com/" target="_blank">NOTEBOOKLM</a>
+                </div>
+            </div>
+            <a href="#" class="botao-tooltip">
+                PORTIFÓLIO DE PROMPTS
+                <span class="tooltip-text">Em construção. <br> Em breve estará disponível um ambiente colaborativo!</span>
             </a>
-            <div class="dropdown-menu admin-menu">
-                <a href="login.html">
-                    <span class="material-icons-outlined">login</span>
-                    <span class="admin-text">Área Administrativa</span>
+            <a href="#pesquisaSection">FEEDBACK</a>
+            <div class="admin-icon dropdown">
+                <a href="#" class="admin-button" aria-label="Área Administrativa">
+                    <span class="material-icons">admin_panel_settings</span>
                 </a>
+                <div class="dropdown-menu admin-menu">
+                    <a href="login.html">
+                        <span class="material-icons-outlined">login</span>
+                        <span class="admin-text">Área Administrativa</span>
+                    </a>
+                </div>
             </div>
         </div>
+        
+        <!-- Imagem à direita -->
+        <img src="./src/img/eppe-logo-color.png" alt="Logo EPPE" class="navbar-img-right">
     </div>
 
-
-
-
-    <header>
-        <img src="./src/img/pge.png" alt="Descrição da Imagem" class="header-img">
-        <h1><b>GUIA DE USO SEGURO DA IA NA PGE-SC</h1>
-        <img src="./src/img/eppe-logo-color.png" alt="Segunda Imagem" class="header-img-right">
-    </header>
-
     
-    <div class="popup" id="popup">
+
+
+    <!-- <div class="popup" id="popup">
         <div class="popup-content">
             <p><strong>Novidade:</strong> A funcionalidade para <strong>criar prompts com Inteligência
                     Artificial</strong> já está disponível nesta página. Explore e aproveite ao máximo essa ferramenta!
@@ -116,17 +115,18 @@
                 </label>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 
     <main>
         <section class="info-section" id="infoSection">
-            <h2><b>DOCUMENTOS E ORIENTAÇÕES</b></h2>
+            <h2><b>NOVIDADES</b></h2>
             <p> <strong>Novo conteúdo disponível:</strong> aprenda sete formas práticas de criar prompts eficazes e
-                melhore o uso de IA na PGE/SC. <a href="#promptSection">Confira a baixo!</a><span
-                    class="emoji-grande">🆕</span>
+                melhore o uso de IA na PGE/SC. <a href="#promptSection">Confira aqui!</a>
             </p>
+
+
             <!--  <p>
                 A PGE-SC definiu diretrizes de uso de Inteligencia Artificial, por meio da portaria <strong>GAB/PGE nº
                     19/2025</strong>.
@@ -177,9 +177,7 @@
                     <div class="tool-body">
                         <p>Inteligência artificial focada nos seus documentos de trabalho. Utilize-a para localizar
                             informações essenciais em pareceres, leis e outros documentos, economizando tempo de
-                            pesquisa, e obtenha respostas precisas e contextualizadas sobre seus arquivos. O NotebookLM
-                            também pode ser útil para identificar relações entre diferentes documentos jurídicos,
-                            contribuindo com a construção de novos argumentos.</p>
+                            pesquisa, e obtenha respostas precisas e contextualizadas sobre seus arquivos. </p>
                     </div>
                     <div class="tool-footer">
                         <a href="https://notebooklm.google.com/" target="_blank" class="tool-button subtle">
@@ -598,7 +596,7 @@
 
 
 
-        <section class="info-section" id="pesquisaSection">
+        <section id="pesquisaSection" class="info-section hidden">
             <h2>Espaço Colaborativo</h2>
             <div class="collaborative-space">
                 <div class="tabs">
@@ -643,7 +641,7 @@
                 </div>
             </div>
         </section>
-        <button id="survey-trigger">Feedback</button>
+        
 
 
     </main>
