@@ -1,150 +1,312 @@
-/* Estilos gerais para a página de sugestões */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: rgb(79, 77, 77);
-    color: #333;
-    line-height: 1.6;
+/* Variáveis CSS para facilitar a manutenção e consistência */
+:root {
+    /* Paleta de cores refinada */
+    --primary-color: #0ea5e9; /* Azul mais vibrante */
+    --primary-hover: #0284c7;
+    --secondary-color: #64748b; /* Cinza azulado */
+    --accent-color: #9e0621; /* Vermelho institucional */
+    --dark-color: #0f172a; /* Azul escuro quase preto */
+    --light-color: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+    
+    /* Gradiente de fundo refinado */
+    --bg-gradient-start: #1e293b;
+    --bg-gradient-end: #0f172a;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Arredondamento */
+    --border-radius-sm: 0.25rem;
+    --border-radius: 0.5rem;
+    --border-radius-lg: 1rem;
+    
+    /* Transições */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
 }
 
-/* Aumentar o uso do espaço da tela para 90% */
+/* Importação de fontes modernas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Estilos gerais para a página */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(145deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    color: var(--gray-700);
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+/* Layout horizontal para o cabeçalho com título centralizado */
+.header-container {
+    padding: 2rem 0;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.institutional-emblem {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    transition: transform var(--transition-normal);
+}
+
+.institutional-emblem:hover {
+    transform: scale(1.05);
+}
+
+/* Garantir que o título e subtítulo estejam centralizados */
+.col-md-9 .display-5,
+.col-md-9 .lead {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Limitar a largura do texto para melhor legibilidade */
+.col-md-9 .lead {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header-divider {
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    margin-top: 2rem;
+    border-radius: 3px;
+}
+
+/* Versão responsiva */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 1.5rem 0;
+    }
+    
+    .institutional-emblem {
+        width: 90px;
+        margin-bottom: 1rem;
+    }
+    
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    .col-md-9 .lead {
+        max-width: 100%;
+    }
+}
+
+
+/* Container principal com largura responsiva */
 .container {
     max-width: 90% !important;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 2.5rem 1.5rem;
+    transition: padding var(--transition-normal);
 }
 
 /* Estilos para o cabeçalho da página */
 .display-5 {
-    color: white;
-    margin-bottom: 1rem;
+    color: var(--light-color);
+    margin-bottom: 1.25rem;
     font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #ffffff, var(--gray-200));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Garantir que o título esteja centralizado */
 }
 
 .lead {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: white;
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+    color: var(--gray-300);
+    font-weight: 300;
+    max-width: 800px;
+    margin-left: auto; /* Centralizar o subtítulo */
+    margin-right: auto; /* Centralizar o subtítulo */
+    text-align: center; /* Alinhar o texto do subtítulo ao centro */
 }
 
-/* Estilos para os cards */
+/* Estilos para os cards com design moderno */
 .card {
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.75rem;
     border: none;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: white;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    overflow: hidden;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
 }
 
 .card-header {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-top-left-radius: 0.5rem !important;
-    border-top-right-radius: 0.5rem !important;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1.25rem;
+    background-color: var(--gray-100);
+    border-top-left-radius: var(--border-radius) !important;
+    border-top-right-radius: var(--border-radius) !important;
+    display: flex;
+    align-items: center;
 }
 
 .card-header.bg-primary {
-    background-color: #9e0621 !important;
+    background-color: var(--accent-color) !important;
+    color: white;
 }
 
 .card-header.bg-secondary {
-    background-color: #6c757d !important;
+    background-color: var(--secondary-color) !important;
+    color: white;
 }
 
 .card-body {
-    padding: 1.5rem;
+    padding: 1.75rem;
 }
 
 .card-footer {
-    background-color: #f8f9fa;
-    border-top: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 1rem;
-    border-bottom-left-radius: 0.5rem !important;
-    border-bottom-right-radius: 0.5rem !important;
+    background-color: var(--gray-100);
+    border-top: 1px solid var(--gray-200);
+    padding: 1.25rem;
+    border-bottom-left-radius: var(--border-radius) !important;
+    border-bottom-right-radius: var(--border-radius) !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-/* Estilos para o formulário */
+/* Estilos para o formulário com aparência moderna */
 .form-label {
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 0.5rem;
-    color: #495057;
+    color: var(--gray-700);
+    font-size: 0.95rem;
 }
 
 .form-control, .form-select {
-    border-radius: 0.375rem;
-    padding: 0.75rem;
-    border: 1px solid #ced4da;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border-radius: var(--border-radius-sm);
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--gray-300);
+    transition: all var(--transition-normal);
+    font-size: 0.95rem;
+    background-color: var(--gray-100);
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+    background-color: white;
+}
+
+.form-control:hover, .form-select:hover {
+    border-color: var(--gray-400);
 }
 
 textarea.form-control {
-    min-height: 100px;
+    min-height: 120px;
     resize: vertical;
+    line-height: 1.6;
 }
 
-/* Estilos para os botões */
+/* Melhorar a aparência dos placeholders */
+::placeholder {
+    color: var(--gray-500);
+    opacity: 0.7;
+}
+
+/* Estilos para os botões com design flat moderno */
 .btn {
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: var(--border-radius-sm);
     font-weight: 500;
-    transition: all 0.2s ease-in-out;
+    transition: all var(--transition-normal);
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .btn-primary {
-    background-color: #10b981;
-    border-color: #10b981;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
 }
 
 .btn-primary:hover {
-    background-color: #0da271;
-    border-color: #0da271;
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-outline-primary {
-    color: #0d6efd;
-    border-color: #0d6efd;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-outline-primary:hover {
-    background-color: #0d6efd;
+    background-color: var(--primary-color);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-outline-secondary {
-    color: #6c757d;
-    border-color: #6c757d;
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
 .btn-outline-secondary:hover {
-    background-color: #6c757d;
+    background-color: var(--secondary-color);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
-/* Estilos para as sugestões */
+/* Estilos para as sugestões com animações suaves */
 .suggestions-list {
     max-height: 800px;
     overflow-y: auto;
-    padding-right: 0.5rem;
+    padding-right: 0.75rem;
+    margin-right: -0.25rem;
 }
 
 .suggestion-item {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
     opacity: 0;
     animation: fadeIn 0.5s forwards;
+    border-radius: var(--border-radius);
+    overflow: hidden;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -155,32 +317,44 @@ textarea.form-control {
 .suggestion-item:nth-child(5) { animation-delay: 0.5s; }
 
 .prompt-text {
-    background-color: #f1f3f5;
-    padding: 1rem;
-    border-radius: 0.375rem;
-    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--gray-100);
+    padding: 1.25rem;
+    border-radius: var(--border-radius-sm);
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
     white-space: pre-wrap;
     word-break: break-word;
-    border-left: 4px solid #0d6efd;
+    border-left: 4px solid var(--primary-color);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--gray-800);
 }
 
-/* Estilos para os badges */
+/* Estilos para os badges com design flat */
 .badge {
     font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.35em 0.65em;
-    border-radius: 0.375rem;
+    font-weight: 500;
+    padding: 0.4em 0.7em;
+    border-radius: var(--border-radius-sm);
+    letter-spacing: 0.01em;
 }
 
-/* Estilos para alertas de feedback */
+.badge:hover {
+    transform: translateY(-1px);
+    transition: transform var(--transition-fast);
+}
+
+/* Estilos para alertas de feedback com animações */
 .alert-feedback {
     position: fixed;
     top: 20px;
     right: 20px;
     max-width: 350px;
     z-index: 1050;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
     animation: slideIn 0.3s forwards;
+    border-radius: var(--border-radius);
+    border: none;
+    padding: 1rem 1.25rem;
 }
 
 @keyframes slideIn {
@@ -188,38 +362,71 @@ textarea.form-control {
     to { transform: translateX(0); opacity: 1; }
 }
 
+/* Melhorar a aparência dos alertas */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
 /* Estilos para o indicador de carregamento */
 #loading-indicator {
     text-align: center;
-    padding: 2rem 0;
+    padding: 2.5rem 0;
+    color: var(--gray-500);
+}
+
+/* Melhorar a aparência do spinner de carregamento */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25rem;
 }
 
 /* Estilos para o modal de prompt compartilhado */
 .modal-content {
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius);
     border: none;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
 }
 
 .modal-header {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    background-color: var(--gray-100);
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-body {
+    padding: 1.75rem 1.5rem;
 }
 
 .modal-footer {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-top: 1px solid var(--gray-200);
+    background-color: var(--gray-100);
+    padding: 1.25rem 1.5rem;
 }
 
-/* Responsividade */
+/* Estilizar o grupo de input do filtro */
+.input-group {
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+}
+
+.input-group-text {
+    background-color: var(--gray-200);
+    border-color: var(--gray-300);
+    color: var(--gray-700);
+    font-weight: 500;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Responsividade aprimorada */
 @media (max-width: 992px) {
     .container {
         max-width: 95% !important;
-        padding: 1rem;
+        padding: 1.5rem 1rem;
     }
     
     .card-header {
@@ -228,7 +435,7 @@ textarea.form-control {
     }
     
     .card-header .badge {
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
     }
     
     .card-footer {
@@ -237,7 +444,7 @@ textarea.form-control {
     }
     
     .card-footer div {
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -252,43 +459,57 @@ textarea.form-control {
 @media (max-width: 768px) {
     .container {
         max-width: 100% !important;
-        padding: 0.5rem;
+        padding: 1rem 0.75rem;
     }
     
     .display-5 {
-        font-size: 1.75rem;
+        font-size: 1.85rem;
     }
     
     .lead {
-        font-size: 1rem;
+        font-size: 1.05rem;
+        margin-bottom: 2rem;
     }
     
     .suggestions-list {
-        max-height: 600px;
+        max-height: 650px;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    .card-header.bg-secondary {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .card-header .input-group {
+        width: 100%;
     }
 }
 
 /* Ajustes para melhor aproveitamento do espaço */
 .row {
-    margin-right: -10px;
-    margin-left: -10px;
+    margin-right: -12px;
+    margin-left: -12px;
 }
 
 .col-lg-5, .col-lg-7 {
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 12px;
+    padding-left: 12px;
 }
 
 /* Ajuste para o formulário ocupar mais espaço vertical */
 .card.h-100 {
     height: auto !important;
-    min-height: 600px;
+    min-height: 650px;
 }
 
 /* Ajuste para o formulário em telas menores */
 @media (max-width: 992px) {
     .col-lg-5 {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.75rem;
     }
     
     .card.h-100 {
@@ -296,21 +517,383 @@ textarea.form-control {
     }
 }
 
-/* Barra de rolagem personalizada */
+/* Barra de rolagem personalizada com estilo moderno */
 .suggestions-list::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 .suggestions-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--gray-200);
     border-radius: 10px;
 }
 
 .suggestions-list::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: var(--gray-400);
     border-radius: 10px;
 }
 
 .suggestions-list::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: var(--gray-500);
 }
+
+/* Adicionar efeito de foco nos cards */
+.card:focus-within {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25), var(--shadow-md);
+}
+
+/* Melhorar a aparência dos inputs em dispositivos móveis */
+@media (max-width: 576px) {
+    .form-control, .form-select {
+        font-size: 16px; /* Evita zoom automático em iOS */
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .card-header h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Adicionar efeitos sutis de hover em elementos interativos */
+.form-control:hover, .form-select:hover {
+    border-color: var(--gray-400);
+}
+
+/* Melhorar a aparência de elementos focados */
+*:focus {
+    outline: none;
+}
+
+/* Adicionar efeito de transição para links */
+a {
+    transition: color var(--transition-fast);
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* Melhorar a aparência de elementos desabilitados */
+.form-control:disabled, .form-select:disabled, .btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Adicionar estilo para texto selecionado */
+::selection {
+    background-color: rgba(14, 165, 233, 0.2);
+    color: var(--dark-color);
+}
+
+/* Melhorar a aparência de elementos de lista */
+ul, ol {
+    padding-left: 1.25rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+/* Melhorar a aparência de tabelas */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+th {
+    background-color: var(--gray-100);
+    font-weight: 600;
+    text-align: left;
+}
+
+/* Adicionar efeito de hover nas linhas da tabela */
+tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Melhorar a aparência de código inline */
+code {
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--accent-color);
+    background-color: var(--gray-100);
+    padding: 0.2em 0.4em;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Adicionar estilo para blockquotes */
+blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding: 0.5rem 0 0.5rem 1rem;
+    margin: 1.5rem 0;
+    color: var(--gray-700);
+    font-style: italic;
+}
+
+/* Melhorar a aparência de hr */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--gray-300);
+    margin: 2rem 0;
+}
+
+/* Adicionar efeito de transição para imagens */
+img {
+    transition: transform var(--transition-normal);
+    max-width: 100%;
+    height: auto;
+}
+
+img:hover {
+    transform: scale(1.01);
+}
+
+/* Ocultar imagens da navbar em telas pequenas */
+@media screen and (max-width: 768px) {
+    .navbar-img-right,
+    .navbar-img-left {
+        display: none !important;
+    }
+}
+/* Versão responsiva */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 1.5rem 0;
+    }
+    
+    .institutional-emblem {
+        width: 90px;
+        margin-bottom: 1rem;
+    }
+    
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    .col-md-9 .lead {
+        max-width: 100%;
+    }
+}
+
+/* Melhorar a aparência de tooltips */
+.tooltip {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+}
+
+.tooltip-inner {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Melhorar a aparência de popovers */
+.popover {
+    border-radius: var(--border-radius-sm);
+    border: none;
+    box-shadow: var(--shadow-md);
+}
+
+.popover-header {
+    background-color: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+    font-weight: 600;
+}
+
+.popover-body {
+    padding: 0.75rem 1rem;
+}
+
+/* Adicionar animação para elementos que aparecem na tela */
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Melhorar a aparência de dropdowns */
+.dropdown-menu {
+    border: none;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-md);
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.25rem;
+    transition: background-color var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: var(--gray-100);
+}
+
+.dropdown-item:active {
+    background-color: var(--primary-color);
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--gray-200);
+    margin: 0.5rem 0;
+}
+
+/* Melhorar a aparência de botões de paginação */
+.pagination {
+    gap: 0.25rem;
+}
+
+.page-link {
+    border: none;
+    border-radius: var(--border-radius-sm);
+    padding: 0.5rem 0.75rem;
+    color: var(--gray-700);
+    transition: all var(--transition-fast);
+}
+
+.page-link:hover {
+    background-color: var(--gray-200);
+    color: var(--gray-900);
+    transform: translateY(-1px);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Melhorar a aparência de breadcrumbs */
+.breadcrumb {
+    padding: 0.75rem 1rem;
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius-sm);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: var(--gray-500);
+}
+
+/* Melhorar a aparência de elementos de progresso */
+.progress {
+    height: 0.75rem;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--gray-200);
+    overflow: hidden;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    transition: width 0.6s ease;
+}
+
+/* Adicionar efeito de transição para colapsos */
+.collapse {
+    transition: height 0.35s ease;
+}
+
+/* Melhorar a aparência de acordeões */
+.accordion-item {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-button {
+    padding: 1rem 1.25rem;
+    background-color: var(--gray-100);
+    font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Adicionar efeito de transição para carrosséis */
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+/* Melhorar a aparência de notificações toast */
+.toast {
+    border: none;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-md);
+}
+
+.toast-header {
+    background-color: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+/* Melhorar a aparência de elementos de lista */
+.list-group-item {
+    border: 1px solid var(--gray-200);
+    padding: 0.75rem 1.25rem;
+    transition: background-color var(--transition-fast);
+}
+
+.list-group-item:hover {
+    background-color: var(--gray-100);
+}
+
+.list-group-item.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Adicionar efeito de transição para tabs */
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1rem;
+    color: var(--gray-700);
+    transition: all var(--transition-fast);
+}
+
+.nav-tabs .nav-link:hover {
+    border-bottom-color: var(--gray-400);
+}
+
+.nav-tabs .nav-link.active {
+    border-bottom-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: transparent;
+}
+
+/* Melhorar a aparência de elementos de formulário personalizados */
+.form-check-input {
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0.25em;
+    border: 1px solid var(--gray-400);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-check-label {
+    margin-left: 0.25rem;
+}
+
+/* Adicionar classes de utilidade para espaçamento */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 1rem; }
+.gap-4 { gap: 1.5rem; }
+.gap-5 { gap: 3rem; }

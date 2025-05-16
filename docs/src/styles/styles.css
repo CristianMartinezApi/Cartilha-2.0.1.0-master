@@ -199,21 +199,16 @@ button:hover {
 }
 
 /* Estiliza os links mantendo os estilos atuais */
-.navbar-img-left,
+
 .navbar-img-right {
-    height: 30px; /* Reduz o tamanho para não aumentar a altura da navbar */
+    height: 35px; /* Reduz o tamanho para não aumentar a altura da navbar */
     width: auto;
 }
-
-/* Caso seja necessário esconder as imagens em resoluções menores, use media queries */
-/* Exemplo:
-@media (max-width: 600px) {
-    .navbar-img-left,
-    .navbar-img-right {
-        display: none;
-    }
+.navbar-img-left {
+    height: 45px; /* Reduz o tamanho para não aumentar a altura da navbar */
+    width: auto; /* Ajusta a margem esquerda */
 }
-*/
+
 
 /* Mantém o estilo atual, adicionando regras somente para o dropdown */
 .main-navigation-bar .nav-item {
@@ -379,7 +374,7 @@ h2 {
 }
 
 .admin-button:hover {
-    background-color: #9e0621 !important;
+    background-color: #9e062200 !important;
     
 }
 /* Efeito de hover mais adequado para o ícone de administração */
@@ -491,8 +486,8 @@ h2 {
 
 .tools-warning p {
     margin: 0;
-    font-weight: 500;
-    color: #856404;
+    font-weight: 600;
+    color: #5c543d;
 }
 
 .tools-container {
@@ -2275,4 +2270,23 @@ select option {
     .tool-card {
         max-width: 100%;
     }
+}
+
+/* Reduzir tamanho em telas médias */
+@media screen and (max-width: 992px) {
+  .navbar-img-right {
+    height: 25px;
+  }
+  
+  .navbar-img-left {
+    height: 35px;
+  }
+}
+
+/* Ocultar completamente em telas pequenas */
+@media screen and (max-width: 768px) {
+  .navbar-img-right,
+  .navbar-img-left {
+    display: none !important;
+  }
 }

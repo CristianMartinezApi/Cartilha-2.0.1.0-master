@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sugestões e Interações - Guia de Uso Seguro da IA na PGE-SC</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -32,31 +32,40 @@
 
 <body>
     <div class="container py-5">
-        <div class="row mb-4">
-            <div class="col-12 text-center">
-                <h1 class="display-5 fw-bold">Compartilhe e Explore Prompts</h1>
-                <p class="lead">
-                    Contribua com seus prompts e ajude a construir um uso mais inteligente e eficiente da IA na PGE-SC.
-                </p>
-                
-            </div>
+        <div class="header-container">
+    <div class="row align-items-center">
+        <div class="col-md-3 text-center text-md-end">
+            <img src="./src/img/Apenas-brasao (1).png" alt="Brasão Oficial PGE-SC" class="institutional-emblem">
         </div>
+        <div class="col-md-9 text-center">
+            <h1 class="display-5 fw-bold">Compartilhe e Explore Prompts</h1>
+            <p class="lead mb-0">
+                Contribua com seus prompts e ajude a construir um uso mais inteligente e eficiente da IA na PGE-SC.
+            </p>
+        </div>
+    </div>
+    <div class="header-divider"></div>
+</div>
+
+
+
+
 
         <div class="row">
             <!-- Formulário de envio de sugestões -->
             <div class="col-lg-5">
                 <div class="card h-100 border-primary">
                     <div class="card-header bg-primary text-white">
-                        <h3 class="h5 mb-0">Compartilhe seu prompt</h3>
+                        <h3 class="h5 mb-0">COMPARTILHE SEU PROMPT</h3>
                     </div>
                     <div class="card-body">
                         <form id="suggestion-form">
                             <div class="mb-3">
                                 <label for="prompt-title" class="form-label">Finalidade do Prompt</label>
-                                <input type="text" class="form-control" id="prompt-title" 
+                                <input type="text" class="form-control" id="prompt-title"
                                     placeholder="Digite um título para seu prompt">
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="prompt-category" class="form-label">Categoria</label>
                                 <select class="form-select" id="prompt-category" required>
@@ -71,30 +80,30 @@
                                     <option value="Outros">Outros</option>
                                 </select>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="prompt-text" class="form-label">Texto do Prompt</label>
-                                <textarea class="form-control" id="prompt-text" rows="5" 
+                                <textarea class="form-control" id="prompt-text" rows="5"
                                     placeholder="Digite o texto do seu prompt"></textarea>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="prompt-comment" class="form-label">Comentário</label>
                                 <textarea class="form-control" id="prompt-comment" rows="3"
                                     placeholder="Adicione um comentário sobre o prompt"></textarea>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-primary w-100">Enviar Prompt</button>
                         </form>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Lista de sugestões aprovadas -->
             <div class="col-lg-7">
                 <div class="card h-100">
                     <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                        <h3 class="h5 mb-0">Prompts Aprovados</h3>
+                        <h3 class="h5 mb-0">PROMPTS APROVADOS</h3>
                         <div class="d-flex">
                             <div class="input-group">
                                 <label class="input-group-text" for="category-filter">Filtrar:</label>
@@ -130,7 +139,7 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Scripts específicos para a página de sugestões -->
     <script src="./src/scripts/sugestoes.js"></script>
 </body>
