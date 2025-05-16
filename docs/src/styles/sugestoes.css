@@ -60,15 +60,13 @@ body {
 }
 
 .institutional-emblem {
-    width: 120px;
+    width: 320px;
     height: auto;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-    transition: transform var(--transition-normal);
+    
 }
 
-.institutional-emblem:hover {
-    transform: scale(1.05);
-}
+
 
 /* Garantir que o título e subtítulo estejam centralizados */
 .col-md-9 .display-5,
@@ -675,7 +673,7 @@ img:hover {
     }
     
     .institutional-emblem {
-        width: 90px;
+        width: 180px;
         margin-bottom: 1rem;
     }
     
