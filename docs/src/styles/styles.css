@@ -205,7 +205,7 @@ button:hover {
     width: auto;
 }
 .navbar-img-left {
-    height: 70px; /* Reduz o tamanho para não aumentar a altura da navbar */
+    height: 65px; /* Reduz o tamanho para não aumentar a altura da navbar */
     width: auto; /* Ajusta a margem esquerda */
 }
 
