@@ -675,6 +675,7 @@ h2 {
 }
 
 
+
 /* Estilos gerais para a seção de prompts */
 #promptSection {
     max-width: 90%;
@@ -943,6 +944,22 @@ li .info-text {
     margin-left: 10px;
 }
 
+
+
+#pesquisaSection {
+    transition: max-height 0.5s ease, opacity 0.3s ease, padding 0.3s ease;
+    max-height: 2000px; /* Ajuste conforme necessário */
+    opacity: 1;
+    overflow: hidden;
+}
+
+#pesquisaSection.hidden {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+}
 
 
 
