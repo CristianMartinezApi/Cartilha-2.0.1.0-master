@@ -35,7 +35,7 @@ header {
 }
 main {
     padding: 10px 10px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 .header-img,
 .header-img-right {
@@ -158,7 +158,7 @@ button:hover {
 .main-navigation-bar {
     background-color: #9e0621;
     width: 100%;
-    padding: 10px 0;
+    padding: 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -205,7 +205,7 @@ button:hover {
     width: auto;
 }
 .navbar-img-left {
-    height: 45px; /* Reduz o tamanho para não aumentar a altura da navbar */
+    height: 70px; /* Reduz o tamanho para não aumentar a altura da navbar */
     width: auto; /* Ajusta a margem esquerda */
 }
 
@@ -422,24 +422,34 @@ h2 {
 .tools-warning {
     display: flex;
     align-items: center;
-    background-color: #fff3cd;
-    border-left: 4px solid #ffc107;
-    padding: 1rem;
+    background-color: #fff8e1; /* Amarelo muito suave */
+    border-left: 5px solid #ffa000; /* Borda âmbar mais discreta */
+    padding: 1.25rem;
     margin-bottom: 2rem;
     border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Sombra sutil */
 }
 
 .tools-warning i {
     font-size: 1.5rem;
-    color: #ffc107;
-    margin-right: 1rem;
+    color: #f57c00; /* Laranja mais discreto */
+    margin-right: 1.25rem;
 }
 
 .tools-warning p {
     margin: 0;
-    font-weight: 600;
-    color: #5c543d;
+    font-weight: 600; /* Semi-negrito - não tão pesado */
+    color: #424242; /* Cinza escuro - mais profissional que preto puro */
+    font-size: 1rem; /* Tamanho padrão */
+    line-height: 1.5;
 }
+
+/* Destacar apenas a palavra ATENÇÃO de forma sutil */
+.tools-warning p strong {
+    color: #e65100; /* Laranja escuro para a palavra ATENÇÃO */
+    font-weight: 700;
+}
+
 
 .tools-container {
     display: grid;
