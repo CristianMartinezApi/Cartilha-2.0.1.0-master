@@ -191,7 +191,7 @@ button:hover {
     text-decoration: none;
     padding: 8px 16px;
     margin: 0 5px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     border-radius: 1px;
     display: inline-block;
@@ -235,7 +235,7 @@ button:hover {
     display: block;
     padding: 0.5rem 1rem;
     color: #f7f3f3;
-    font-size: 16px;
+    font-size: 15px;
     text-decoration: none;
     text-align: left; /* Alinha o texto à esquerda */
 }
@@ -406,55 +406,6 @@ h2 {
 .admin-icon.show-dropdown .dropdown-menu {
     display: block;
 }
-
-/* Ajustes responsivos para telas menores */
-@media screen and (max-width: 768px) {
-    .admin-icon {
-        position: relative; /* Muda para posicionamento relativo em telas pequenas */
-        right: auto;
-        top: auto;
-        transform: none;
-        margin-left: auto; /* Empurra para a direita */
-        display: flex;
-        align-items: center;
-    }
-    
-    .admin-button .material-icons {
-        font-size: 22px !important; /* Ligeiramente menor em dispositivos móveis */
-    }
-    
-    /* Ajusta a posição do dropdown em telas pequenas */
-    .admin-icon .dropdown-menu {
-        position: absolute;
-        right: 0;
-        top: 100%;
-        width: 160px; /* Largura fixa menor para telas pequenas */
-    }
-}
-
-/* Para telas muito pequenas */
-@media screen and (max-width: 480px) {
-    .admin-button .material-icons {
-        font-size: 20px !important;
-    }
-    
-    .admin-icon .dropdown-menu {
-        width: 140px;
-    }
-    
-    .admin-menu a {
-        font-size: 0.8rem;
-        padding: 8px 12px;
-    }
-}
-
-
-
-
-
-
-
-
 
 
 /* Estilização da seção de ferramentas - mantendo consistência com info-section */
@@ -2290,3 +2241,46 @@ select option {
     display: none !important;
   }
 }
+
+
+/* Ajustes responsivos para telas menores */
+@media screen and (max-width: 768px) {
+    .admin-icon {
+        position: relative; /* Muda para posicionamento relativo em telas pequenas */
+        right: auto;
+        top: auto;
+        transform: none;
+        margin-left: auto; /* Empurra para a direita */
+        display: flex;
+        align-items: center;
+    }
+    
+    .admin-button .material-icons {
+        font-size: 22px !important; /* Ligeiramente menor em dispositivos móveis */
+    }
+    
+    /* Ajusta a posição do dropdown em telas pequenas */
+    .admin-icon .dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        width: 160px; /* Largura fixa menor para telas pequenas */
+    }
+}
+
+/* Para telas muito pequenas */
+@media screen and (max-width: 480px) {
+    .admin-button .material-icons {
+        font-size: 20px !important;
+    }
+    
+    .admin-icon .dropdown-menu {
+        width: 140px;
+    }
+    
+    .admin-menu a {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}
+
