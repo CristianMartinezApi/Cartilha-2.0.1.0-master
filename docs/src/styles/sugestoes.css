@@ -48,7 +48,7 @@
     /* Verde claro institucional - similar ao usado no brasão */
     --pge-green-pale: #e8f5e9;
     /* Verde muito claro para fundos */
-    --pge-green-accent: #1b5e20;
+    --pge-green-accent: #5FB157;
     /* Verde para destaques */
 
     /* NOVOS: Gradientes com verde */
@@ -286,7 +286,7 @@ body {
 
 .header-divider {
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    background: linear-gradient(90deg, var(--pge-green-accent), var(--accent-color));
     margin-top: 2rem;
     border-radius: 3px;
 }
@@ -398,7 +398,7 @@ body {
 }
 
 .card-header.bg-secondary {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--pge-green-accent) !important;
     color: white;
 }
 
