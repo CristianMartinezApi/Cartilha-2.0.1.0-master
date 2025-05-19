@@ -594,6 +594,18 @@ h2 {
     justify-content: space-between; /* Espalha o título e o indicador */
     align-items: center; /* Alinha verticalmente */
 }
+.certo {
+    color: #4caf50;  /* Verde */
+    font-weight: bold;
+}
+.errado {
+    color: #f44336; /* Vermelho */
+    font-weight: bold;
+}
+.dica {
+    color: #ff9800; /* Laranja */
+    font-style: italic;
+}
 /* Container específico para o título e botão */
 .section-heading {
     position: relative;
@@ -659,6 +671,19 @@ h2 {
     color: #004d40;
     font-size: 1.2rem;
 }
+.fas.fa-check-circle {
+    color: #4caf50;  /* verde */
+}
+
+.fas.fa-times-circle {
+    color: #f44336;  /* vermelho */
+}
+
+.fas.fa-lightbulb {
+    color: #ff9800;  /* amarelo */
+}
+
+/* Você pode adicionar outras regras para ícones ou elementos conforme sua necessidade */
 
 /* Estilo para dicas (tips) usando emoji - com alinhamento correto e fonte original */
 .prompt-intro-alert {

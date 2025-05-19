@@ -1,6 +1,6 @@
-/* Variáveis CSS para facilitar a manutenção e consistência */
+/* Adicionando tons de verde institucionais às variáveis existentes */
 :root {
-    /* Paleta de cores refinada */
+    /* Paleta de cores refinada (existente) */
     --primary-color: #0ea5e9; /* Azul mais vibrante */
     --primary-hover: #0284c7;
     --secondary-color: #64748b; /* Cinza azulado */
@@ -34,7 +34,194 @@
     /* Transições */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
+    
+    /* NOVOS: Tons de verde institucionais */
+    --pge-green-dark: #004d40;    /* Verde escuro institucional */
+    --pge-green: #00796b;         /* Verde médio institucional */
+    --pge-green-light: #5FB157;   /* Verde claro institucional - similar ao usado no brasão */
+    --pge-green-pale: #e8f5e9;    /* Verde muito claro para fundos */
+    --pge-green-accent: #1b5e20;  /* Verde para destaques */
+    
+    /* NOVOS: Gradientes com verde */
+    --green-gradient: linear-gradient(135deg, var(--pge-green) 0%, var(--pge-green-dark) 100%);
+    --green-light-gradient: linear-gradient(135deg, var(--pge-green-light) 0%, var(--pge-green) 100%);
 }
+
+/* Classes utilitárias para os novos tons de verde */
+.bg-pge-green {
+    background-color: var(--pge-green);
+    color: white;
+}
+
+.bg-pge-green-dark {
+    background-color: var(--pge-green-dark);
+    color: white;
+}
+
+.bg-pge-green-light {
+    background-color: var(--pge-green-light);
+    color: white;
+}
+
+.bg-pge-green-pale {
+    background-color: var(--pge-green-pale);
+    color: var(--pge-green-dark);
+}
+
+.bg-green-gradient {
+    background: var(--green-gradient);
+    color: white;
+}
+
+.text-pge-green {
+    color: var(--pge-green);
+}
+
+.text-pge-green-dark {
+    color: var(--pge-green-dark);
+}
+
+.text-pge-green-light {
+    color: var(--pge-green-light);
+}
+
+.border-pge-green {
+    border-color: var(--pge-green) !important;
+}
+
+/* Botões com tema verde */
+.btn-pge-green {
+    background-color: var(--pge-green);
+    border-color: var(--pge-green);
+    color: white;
+    transition: var(--transition-normal);
+}
+
+.btn-pge-green:hover, 
+.btn-pge-green:focus {
+    background-color: var(--pge-green-dark);
+    border-color: var(--pge-green-dark);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-pge-green-light {
+    background-color: var(--pge-green-light);
+    border-color: var(--pge-green-light);
+    color: white;
+    transition: var(--transition-normal);
+}
+
+.btn-pge-green-light:hover,
+.btn-pge-green-light:focus {
+    background-color: var(--pge-green);
+    border-color: var(--pge-green);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-pge-green {
+    background-color: transparent;
+    border-color: var(--pge-green);
+    color: var(--pge-green);
+    transition: var(--transition-normal);
+}
+
+.btn-outline-pge-green:hover,
+.btn-outline-pge-green:focus {
+    background-color: var(--pge-green);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+/* Cards com tema verde */
+.card.card-pge-green {
+    border-color: var(--pge-green);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+}
+
+.card.card-pge-green .card-header {
+    background-color: var(--pge-green);
+    color: white;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.card.card-pge-green:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* Badges com tema verde */
+.badge.badge-pge-green {
+    background-color: var(--pge-green);
+    color: white;
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
+}
+
+.badge.badge-pge-green-light {
+    background-color: var(--pge-green-light);
+    color: white;
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
+}
+
+.badge.badge-pge-green-pale {
+    background-color: var(--pge-green-pale);
+    color: var(--pge-green-dark);
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
+}
+
+/* Alertas com tema verde */
+.alert-pge-green {
+    background-color: var(--pge-green-pale);
+    border-left: 4px solid var(--pge-green);
+    color: var(--pge-green-dark);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+/* Estilo para links em verde */
+a.link-pge-green {
+    color: var(--pge-green);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+a.link-pge-green:hover {
+    color: var(--pge-green-dark);
+    text-decoration: underline;
+}
+
+/* Estilo para o filtro de categorias com tema verde */
+.input-group.input-group-pge-green .input-group-text {
+    background-color: var(--pge-green);
+    color: white;
+    border-color: var(--pge-green);
+}
+
+.form-select.select-pge-green:focus {
+    border-color: var(--pge-green);
+    box-shadow: 0 0 0 0.25rem rgba(0, 121, 107, 0.25);
+}
+
+/* Estilo para sugestões com tema verde */
+.suggestion-item.suggestion-pge-green {
+    border-left: 4px solid var(--pge-green);
+    transition: var(--transition-normal);
+}
+
+.suggestion-item.suggestion-pge-green:hover {
+    background-color: var(--pge-green-pale);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+
 
 /* Importação de fontes modernas */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
