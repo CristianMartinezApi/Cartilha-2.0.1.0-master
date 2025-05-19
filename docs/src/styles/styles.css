@@ -2147,6 +2147,84 @@ select option {
 
 
 
+/* Ajustes de responsividade para tablets - reduzindo tamanhos */
+@media screen and (min-width: 481px) and (max-width: 991px) {
+    /* Navbar principal - mantém tudo em uma linha */
+    .main-navigation-bar {
+        padding: 5px 0;
+    }
+    
+    /* Reduz significativamente o tamanho da fonte */
+    .main-navigation-bar a {
+        padding: 6px 6px;
+        font-size: 11px;
+        margin: 0 2px;
+        white-space: nowrap;
+    }
+    
+    /* Reduz o tamanho das imagens mas mantém visíveis */
+    .navbar-img-left {
+        height: 30px;
+        margin-left: 5px;
+    }
+    
+    .navbar-img-right {
+        height: 20px;
+        margin-right: 5px;
+    }
+    
+    /* Ajusta o espaçamento entre os itens */
+    .nav-links {
+        gap: 0;
+    }
+    
+    /* Reduz o tamanho do indicador de dropdown */
+    .nav-item.dropdown .dropdown-indicator {
+        font-size: 0.7em;
+        margin-left: 2px;
+    }
+    
+    /* Ajusta o dropdown para o novo tamanho */
+    .dropdown-menu {
+        min-width: 150px;
+    }
+    
+    .dropdown-menu a {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    
+    /* Ajusta o header para tablets */
+    header {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+    }
+    
+    /* Garante espaço adequado para o conteúdo */
+    main {
+        margin-top: 120px;
+    }
+}
+
+/* Ajuste específico para tablets menores */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    .main-navigation-bar a {
+        padding: 5px 4px;
+        font-size: 10px;
+        margin: 0 1px;
+    }
+    
+    .navbar-img-left {
+        height: 25px;
+    }
+    
+    .navbar-img-right {
+        height: 18px;
+    }
+}
 
 
 @media screen and (max-width: 768px) {
