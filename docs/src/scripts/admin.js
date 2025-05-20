@@ -252,84 +252,92 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Renderizar sugestões aprovadas
     function renderApprovedSuggestions() {
-      if (allApprovedSuggestions.length === 0) {
-        approvedSuggestions.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-info-circle"></i>
-            <span>Não há sugestões aprovadas no momento.</span>
-          </div>
-        `;
-        return;
+  if (allApprovedSuggestions.length === 0) {
+    approvedSuggestions.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-info-circle"></i>
+        <span>Não há sugestões aprovadas no momento.</span>
+      </div>
+    `;
+    return;
+  }
+  
+  // Filtrar sugestões
+  const filteredSuggestions = filterSuggestions(allApprovedSuggestions);
+  
+  if (filteredSuggestions.length === 0) {
+    approvedSuggestions.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <span>Nenhuma sugestão encontrada com os filtros atuais.</span>
+      </div>
+    `;
+    return;
+  }
+  
+  approvedSuggestions.innerHTML = '';
+  
+  filteredSuggestions.forEach(suggestion => {
+    // Usar os nomes corretos dos campos
+    const title = suggestion.title || 'Sem título';
+    const text = suggestion.text || 'Sem descrição';
+    const category = suggestion.category || '';
+    
+    // Formatar data
+    let dateStr = 'Data não disponível';
+    if (suggestion.date) {
+      try {
+        dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString('pt-BR');
+      } catch (e) {
+        console.error("Erro ao formatar data:", e);
       }
-      
-      // Filtrar sugestões
-      const filteredSuggestions = filterSuggestions(allApprovedSuggestions);
-      
-      if (filteredSuggestions.length === 0) {
-        approvedSuggestions.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-search"></i>
-            <span>Nenhuma sugestão encontrada com os filtros atuais.</span>
-          </div>
-        `;
-        return;
-      }
-      
-      approvedSuggestions.innerHTML = '';
-      
-      filteredSuggestions.forEach(suggestion => {
-        // Usar os nomes corretos dos campos
-        const title = suggestion.title || 'Sem título';
-        const text = suggestion.text || 'Sem descrição';
-        const category = suggestion.category || '';
-        
-        // Formatar data
-        let dateStr = 'Data não disponível';
-        if (suggestion.date) {
-          try {
-            dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString('pt-BR');
-          } catch (e) {
-            console.error("Erro ao formatar data:", e);
-          }
-        }
-        
-        // Formatar data de aprovação
-        let approvedDateStr = 'Data não disponível';
-        if (suggestion.approvalDate) {
-          try {
-            approvedDateStr = new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR');
-          } catch (e) {
-            console.error("Erro ao formatar data de aprovação:", e);
-          }
-        }
-        
-        const categoryName = getCategoryName(category);
-        
-        const suggestionElement = document.createElement('div');
-        suggestionElement.className = 'suggestion-item';
-        suggestionElement.innerHTML = `
-          <h3 class="suggestion-title">${title}</h3>
-          <div class="suggestion-details">
-            <p>${text.substring(0, 150)}${text.length > 150 ? '...' : ''}</p>
-            <span class="category-tag">${categoryName}</span>
-            <span class="suggestion-date">Enviado em: ${dateStr}</span>
-            <span class="suggestion-date">Aprovado em: ${approvedDateStr}</span>
-          </div>
-          <div class="suggestion-actions">
-            <button class="view-btn" data-id="${suggestion.id}">
-              <i class="fas fa-eye"></i> Ver detalhes
-            </button>
-          </div>
-        `;
-        
-        approvedSuggestions.appendChild(suggestionElement);
-        
-        // Adicionar event listener
-        suggestionElement.querySelector('.view-btn').addEventListener('click', () => {
-          openSuggestionModal(suggestion, 'approved');
-        });
-      });
     }
+    
+    // Formatar data de aprovação
+    let approvedDateStr = 'Data não disponível';
+    if (suggestion.approvalDate) {
+      try {
+        approvedDateStr = new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR');
+      } catch (e) {
+        console.error("Erro ao formatar data de aprovação:", e);
+      }
+    }
+    
+    const categoryName = getCategoryName(category);
+    
+    const suggestionElement = document.createElement('div');
+    suggestionElement.className = 'suggestion-item';
+    suggestionElement.innerHTML = `
+      <h3 class="suggestion-title">${title}</h3>
+      <div class="suggestion-details">
+        <p>${text.substring(0, 150)}${text.length > 150 ? '...' : ''}</p>
+        <span class="category-tag">${categoryName}</span>
+        <span class="suggestion-date">Enviado em: ${dateStr}</span>
+        <span class="suggestion-date">Aprovado em: ${approvedDateStr}</span>
+      </div>
+      <div class="suggestion-actions">
+        <button class="view-btn" data-id="${suggestion.id}">
+          <i class="fas fa-eye"></i> Ver detalhes
+        </button>
+        <button class="delete-btn" data-id="${suggestion.id}">
+          <i class="fas fa-trash"></i> Excluir
+        </button>
+      </div>
+    `;
+    
+    approvedSuggestions.appendChild(suggestionElement);
+    
+    // Adicionar event listener para o botão de visualização
+    suggestionElement.querySelector('.view-btn').addEventListener('click', () => {
+      openSuggestionModal(suggestion, 'approved');
+    });
+    
+    // Adicionar event listener para o botão de exclusão
+    suggestionElement.querySelector('.delete-btn').addEventListener('click', () => {
+      deleteSuggestion(suggestion.id);
+    });
+  });
+}
     
     // Carregar feedbacks
     function loadFeedbacks() {
@@ -473,68 +481,79 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Abrir modal de sugestão
     function openSuggestionModal(suggestion, type) {
-      const title = suggestion.title || 'Sem título';
-      const text = suggestion.text || 'Sem descrição';
-      const comment = suggestion.comment || '';
-      const category = suggestion.category || '';
-      const categoryName = getCategoryName(category);
-      
-      // Formatar data
-      let dateStr = 'Data não disponível';
-      if (suggestion.date) {
-        try {
-          dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString('pt-BR');
-        } catch (e) {
-          console.error("Erro ao formatar data:", e);
-        }
-      }
-      
-      modalTitle.textContent = title;
-      
-      modalBody.innerHTML = `
-        <div class="modal-suggestion-details">
-          <p><strong>Descrição:</strong></p>
-          <p>${text}</p>
-          ${comment ? `
-            <p><strong>Comentário adicional:</strong></p>
-            <p>${comment}</p>
-          ` : ''}
-          <p><strong>Categoria:</strong> ${categoryName}</p>
-          <p><strong>Data de envio:</strong> ${dateStr}</p>
-          ${suggestion.author ? `<p><strong>Autor:</strong> ${suggestion.author}</p>` : ''}
-          ${suggestion.email ? `<p><strong>Email:</strong> ${suggestion.email}</p>` : ''}
-          ${suggestion.status === 'approved' && suggestion.approvalDate ? 
-            `<p><strong>Data de aprovação:</strong> ${new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR')}</p>` : ''}
-        </div>
-      `;
-      
-      // Adicionar botões de ação
-      modalFooter.innerHTML = '';
-      
-      if (type === 'pending') {
-        const approveButton = document.createElement('button');
-        approveButton.className = 'approve-btn';
-        approveButton.innerHTML = '<i class="fas fa-check"></i> Aprovar';
-        approveButton.addEventListener('click', () => {
-          approveSuggestion(suggestion.id);
-          modal.classList.remove('active');
-        });
-        
-        const rejectButton = document.createElement('button');
-        rejectButton.className = 'reject-btn';
-        rejectButton.innerHTML = '<i class="fas fa-times"></i> Rejeitar';
-        rejectButton.addEventListener('click', () => {
-          rejectSuggestion(suggestion.id);
-          modal.classList.remove('active');
-        });
-        
-        modalFooter.appendChild(approveButton);
-        modalFooter.appendChild(rejectButton);
-      }
-      
-      // Mostrar modal
-      modal.classList.add('active');
+  const title = suggestion.title || 'Sem título';
+  const text = suggestion.text || 'Sem descrição';
+  const comment = suggestion.comment || '';
+  const category = suggestion.category || '';
+  const categoryName = getCategoryName(category);
+  
+  // Formatar data
+  let dateStr = 'Data não disponível';
+  if (suggestion.date) {
+    try {
+      dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString('pt-BR');
+    } catch (e) {
+      console.error("Erro ao formatar data:", e);
     }
+  }
+  
+  modalTitle.textContent = title;
+  
+  modalBody.innerHTML = `
+    <div class="modal-suggestion-details">
+      <p><strong>Descrição:</strong></p>
+      <p>${text}</p>
+      ${comment ? `
+        <p><strong>Comentário adicional:</strong></p>
+        <p>${comment}</p>
+      ` : ''}
+      <p><strong>Categoria:</strong> ${categoryName}</p>
+      <p><strong>Data de envio:</strong> ${dateStr}</p>
+      ${suggestion.author ? `<p><strong>Autor:</strong> ${suggestion.author}</p>` : ''}
+      ${suggestion.email ? `<p><strong>Email:</strong> ${suggestion.email}</p>` : ''}
+      ${suggestion.status === 'approved' && suggestion.approvalDate ? 
+        `<p><strong>Data de aprovação:</strong> ${new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR')}</p>` : ''}
+    </div>
+  `;
+  
+  // Adicionar botões de ação
+  modalFooter.innerHTML = '';
+  
+  if (type === 'pending') {
+    const approveButton = document.createElement('button');
+    approveButton.className = 'approve-btn';
+    approveButton.innerHTML = '<i class="fas fa-check"></i> Aprovar';
+    approveButton.addEventListener('click', () => {
+      approveSuggestion(suggestion.id);
+      modal.classList.remove('active');
+    });
+    
+    const rejectButton = document.createElement('button');
+    rejectButton.className = 'reject-btn';
+    rejectButton.innerHTML = '<i class="fas fa-times"></i> Rejeitar';
+    rejectButton.addEventListener('click', () => {
+      rejectSuggestion(suggestion.id);
+      modal.classList.remove('active');
+    });
+    
+    modalFooter.appendChild(approveButton);
+    modalFooter.appendChild(rejectButton);
+  }
+  
+  // Adicionar botão de exclusão para todos os tipos de sugestões
+  const deleteButton = document.createElement('button');
+  deleteButton.className = 'delete-btn';
+  deleteButton.innerHTML = '<i class="fas fa-trash"></i> Excluir';
+  deleteButton.addEventListener('click', () => {
+    modal.classList.remove('active');
+    deleteSuggestion(suggestion.id);
+  });
+  
+  modalFooter.appendChild(deleteButton);
+  
+  // Mostrar modal
+  modal.classList.add('active');
+}
     
     // Configurar modal
     function setupModal() {
@@ -1163,3 +1182,20 @@ menuToggle.addEventListener('click', () => {
   // Alterna a classe 'active' na sidebar
   sidebar.classList.toggle('active');
 });
+
+// Função para excluir sugestões (versão alternativa)
+function deleteSuggestion(id) {
+  if (confirm('Tem certeza que deseja excluir esta sugestão? Esta ação não pode ser desfeita.')) {
+    db.collection('sugestoes').doc(id).delete()
+      .then(() => {
+        alert('Sugestão excluída com sucesso!');
+        
+        // Recarregar a página atual
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Erro ao excluir sugestão:', error);
+        alert('Erro ao excluir sugestão. Tente novamente.');
+      });
+  }
+}
