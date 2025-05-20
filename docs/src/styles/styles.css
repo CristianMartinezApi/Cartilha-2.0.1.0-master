@@ -334,7 +334,7 @@ h2 {
     right: calc(45px + 40px); /* 15px é a margem original e 40px a largura estimada da imagem */
     top: 50%;
     transform: translateY(-50%);
-    z-index: 1002; /* Garante que o ícone fique acima de outros elementos */
+    z-index: 100; /* Garante que o ícone fique acima de outros elementos */
 }
 
 .admin-button {
@@ -385,7 +385,6 @@ h2 {
 /* Mostra o dropdown quando o ícone é clicado */
 .admin-icon.show-dropdown .dropdown-menu {
     display: block;
-    z-index: 9000
 }
 
 
@@ -2347,37 +2346,6 @@ select option {
         margin-left: auto; /* Empurra para a direita */
         display: flex;
         align-items: center;
-        z-index: 1002;
-    }
-    /* Aumentar a área de toque */
-    .admin-button {
-        padding: 10px;
-        min-height: 44px; /* Recomendação para área de toque mínima */
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-     .admin-icon.show-dropdown .dropdown-menu {
-        position: fixed;
-        top: auto; /* Será definido via JavaScript */
-        right: 10px;
-        z-index: 9999;
-        width: 180px;
-        background-color: white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    /* Melhorar a aparência dos itens do dropdown */
-    .admin-menu a {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 15px;
-        transition: background-color 0.2s;
-    }
-    
-    .admin-menu a:active {
-        background-color: #f0f0f0; /* Feedback visual ao tocar */
     }
     
     .admin-button .material-icons {
