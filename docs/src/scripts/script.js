@@ -654,3 +654,111 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+
+// Adicione este código ao seu arquivo script.js ou substitua a parte existente relacionada ao botão de administração
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Selecionar o botão de administração
+    const adminButton = document.querySelector('.admin-button');
+    const adminIcon = document.querySelector('.admin-icon');
+    
+    if (adminButton && adminIcon) {
+        console.log('Botão de administração encontrado');
+        
+        // Detectar se é um dispositivo de toque
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Configurar o evento de clique/toque no botão de administração
+        adminButton.addEventListener('click', handleAdminButtonClick);
+        
+        // Para dispositivos de toque, adicionar também o evento touchstart
+        if (isTouchDevice) {
+            adminButton.addEventListener('touchstart', handleAdminButtonClick);
+        }
+        
+        // Função para lidar com o clique/toque no botão de administração
+        function handleAdminButtonClick(e) {
+            // Prevenir apenas a navegação para o href
+            if (this.getAttribute('href') === '#' || this.getAttribute('href')) {
+                e.preventDefault();
+            }
+            
+            console.log('Botão de administração clicado/tocado');
+            
+            // Alternar a classe show-dropdown
+            adminIcon.classList.toggle('show-dropdown');
+            
+            // Se o dropdown estiver aberto, posicioná-lo corretamente
+            if (adminIcon.classList.contains('show-dropdown')) {
+                positionAdminDropdown();
+                
+                // Configurar o fechamento ao clicar fora
+                setupOutsideClickHandler();
+            }
+        }
+        
+        // Função para posicionar o dropdown corretamente
+        function positionAdminDropdown() {
+            const dropdown = adminIcon.querySelector('.dropdown-menu');
+            if (!dropdown) return;
+            
+            const rect = adminButton.getBoundingClientRect();
+            
+            // Em dispositivos móveis, ajustar a posição
+            if (window.innerWidth <= 768) {
+                console.log('Posicionando dropdown para mobile');
+                
+                // Garantir que o dropdown tenha um z-index alto
+                dropdown.style.zIndex = '9999';
+                
+                // Ajustar a posição para garantir que fique visível
+                dropdown.style.position = 'absolute';
+                dropdown.style.top = '100%';
+                dropdown.style.right = '0';
+                
+                // Adicionar uma classe específica para o dropdown mobile
+                dropdown.classList.add('mobile-dropdown');
+            } else {
+                // Em desktop, verificar se o dropdown vai sair da tela
+                if (window.innerWidth < rect.right + dropdown.offsetWidth) {
+                    dropdown.style.right = '0';
+                    dropdown.style.left = 'auto';
+                }
+            }
+        }
+        
+        // Função para configurar o handler para fechar o dropdown ao clicar fora
+        function setupOutsideClickHandler() {
+            // Função para fechar o dropdown quando clicar fora
+            function closeDropdown(event) {
+                if (!adminIcon.contains(event.target)) {
+                    adminIcon.classList.remove('show-dropdown');
+                    document.removeEventListener('click', closeDropdown);
+                    document.removeEventListener('touchstart', closeDropdown);
+                }
+            }
+            
+            // Remover handlers existentes para evitar duplicação
+            document.removeEventListener('click', closeDropdown);
+            document.removeEventListener('touchstart', closeDropdown);
+            
+            // Adicionar novos handlers com pequeno atraso
+            setTimeout(() => {
+                document.addEventListener('click', closeDropdown);
+                if (isTouchDevice) {
+                    document.addEventListener('touchstart', closeDropdown);
+                }
+            }, 10);
+        }
+        
+        // Atualizar a posição do dropdown quando a tela for redimensionada
+        window.addEventListener('resize', function() {
+            if (adminIcon.classList.contains('show-dropdown')) {
+                positionAdminDropdown();
+            }
+        });
+    } else {
+        console.warn('Botão de administração não encontrado');
+    }
+});
