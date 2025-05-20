@@ -354,7 +354,7 @@ h2 {
     right: calc(45px + 40px); /* 15px é a margem original e 40px a largura estimada da imagem */
     top: 50%;
     transform: translateY(-50%);
-    z-index: 100; /* Garante que o ícone fique acima de outros elementos */
+    z-index: 1000; /* Garante que o ícone fique acima de outros elementos */
 }
 
 .admin-button {
