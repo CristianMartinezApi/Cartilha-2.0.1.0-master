@@ -91,9 +91,7 @@ function initCategoryFilter() {
     });
 }
 
-/**
- * Função para carregar e exibir os prompts aprovados
- */
+
 /**
  * Função para carregar e exibir os prompts aprovados
  */
