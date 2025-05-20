@@ -394,50 +394,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Adicionar comportamento específico para o ícone de administração
     const adminButton = document.querySelector('.admin-button');
-
-    if (adminButton) {
-        // Detectar se é um dispositivo de toque
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-        adminButton.addEventListener(isTouchDevice ? 'touchstart' : 'click', function (e) {
-            e.preventDefault();
-
-            const adminIcon = this.parentElement;
-            const isVisible = adminIcon.classList.contains('show-dropdown');
-
-            // Fechar todos os outros dropdowns primeiro
-            document.querySelectorAll('.dropdown').forEach(item => {
-                if (item !== adminIcon) {
-                    item.classList.remove('show-dropdown');
-                }
-            });
-
-            // Alternar a visibilidade do dropdown atual
-            adminIcon.classList.toggle('show-dropdown');
-
-            // Se abriu o dropdown, configurar o listener para fechar ao clicar fora
-            if (!isVisible) {
-                const closeDropdown = function (event) {
-                    if (!adminIcon.contains(event.target)) {
-                        adminIcon.classList.remove('show-dropdown');
-                        document.removeEventListener(isTouchDevice ? 'touchstart' : 'click', closeDropdown);
-                    }
-                };
-
-                // Pequeno atraso para evitar que o evento atual feche imediatamente o dropdown
-                setTimeout(() => {
-                    document.addEventListener(isTouchDevice ? 'touchstart' : 'click', closeDropdown);
-                }, 10);
+    
+if (adminButton) {
+    // Detectar se é um dispositivo de toque
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Usar o evento apropriado com base no tipo de dispositivo
+    const eventType = isTouchDevice ? 'touchstart' : 'click';
+    
+    adminButton.addEventListener(eventType, function (e) {
+        e.preventDefault();
+        e.stopPropagation(); // Impedir propagação do evento
+        
+        const adminIcon = this.closest('.admin-icon');
+        if (!adminIcon) return;
+        
+        // Alternar a classe show-dropdown
+        adminIcon.classList.toggle('show-dropdown');
+        
+        // Fechar ao tocar/clicar fora
+        const closeDropdown = function (event) {
+            // Para eventos de toque, verificar o primeiro toque
+            const target = event.touches ? event.touches[0].target : event.target;
+            
+            if (!adminIcon.contains(target)) {
+                adminIcon.classList.remove('show-dropdown');
+                document.removeEventListener(eventType, closeDropdown);
             }
+        };
+        
+        // Adicionar listener com pequeno atraso
+        setTimeout(() => {
+            document.addEventListener(eventType, closeDropdown);
+        }, 10);
+    });
+    
+    // Para dispositivos de toque, prevenir comportamento padrão no touchend
+    if (isTouchDevice) {
+        adminButton.addEventListener('touchend', function (e) {
+            e.preventDefault();
         });
-
-        // Prevenir comportamento padrão para dispositivos de toque
-        if (isTouchDevice) {
-            adminButton.addEventListener('touchend', function (e) {
-                e.preventDefault();
-            });
-        }
     }
+}
+
 
     // Ajustar posição do dropdown em caso de rolagem ou redimensionamento
     window.addEventListener('resize', adjustDropdownPosition);

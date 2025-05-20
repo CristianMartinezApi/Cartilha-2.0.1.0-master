@@ -527,7 +527,7 @@ textarea.form-control {
     overflow: hidden;
     background-color: white;
     box-shadow: var(--shadow-md);
-    border-left: 4px solid var(--pge-green); /* Adicionar borda lateral */
+    border-left: 4px solid var(--secondary-color); /* Adicionar borda lateral */
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
     padding: 1.5rem; /* Adicionar padding interno */
 }

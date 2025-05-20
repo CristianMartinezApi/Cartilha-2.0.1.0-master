@@ -2367,6 +2367,35 @@ select option {
         display: flex;
         align-items: center;
     }
+    /* Aumentar a área de toque */
+    .admin-button {
+        padding: 10px;
+        min-height: 44px; /* Recomendação para área de toque mínima */
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .admin-icon.show-dropdown .dropdown-menu {
+        display: block;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        border-radius: 4px;
+        z-index: 1000; /* Garantir que fique acima de outros elementos */
+    }
+    
+    /* Melhorar a aparência dos itens do dropdown */
+    .admin-menu a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 15px;
+        transition: background-color 0.2s;
+    }
+    
+    .admin-menu a:active {
+        background-color: #f0f0f0; /* Feedback visual ao tocar */
+    }
     
     .admin-button .material-icons {
         font-size: 22px !important; /* Ligeiramente menor em dispositivos móveis */
