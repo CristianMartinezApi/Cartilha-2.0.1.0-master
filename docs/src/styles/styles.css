@@ -405,6 +405,7 @@ h2 {
 /* Mostra o dropdown quando o ícone é clicado */
 .admin-icon.show-dropdown .dropdown-menu {
     display: block;
+    z-index: 9999
 }
 
 
@@ -2366,6 +2367,7 @@ select option {
         margin-left: auto; /* Empurra para a direita */
         display: flex;
         align-items: center;
+        z-index: 1000;
     }
     /* Aumentar a área de toque */
     .admin-button {
