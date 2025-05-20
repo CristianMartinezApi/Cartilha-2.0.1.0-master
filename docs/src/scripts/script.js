@@ -653,3 +653,90 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+
+
+
+// Adicione esta função ao seu código JavaScript existente
+function positionAdminDropdown() {
+    const adminButton = document.querySelector('.admin-button');
+    const adminIcon = document.querySelector('.admin-icon.show-dropdown');
+    const dropdown = adminIcon ? adminIcon.querySelector('.dropdown-menu') : null;
+    
+    if (adminButton && dropdown && window.innerWidth <= 768) {
+        const rect = adminButton.getBoundingClientRect();
+        
+        // Posicionar o dropdown abaixo do botão
+        dropdown.style.position = 'fixed';
+        dropdown.style.top = (rect.bottom + 5) + 'px';
+        dropdown.style.right = '10px';
+        dropdown.style.maxHeight = (window.innerHeight - rect.bottom - 20) + 'px';
+        dropdown.style.overflowY = 'auto';
+    }
+}
+
+// Modificar o event listener do botão admin para chamar a função de posicionamento
+document.addEventListener('DOMContentLoaded', function () {
+    const adminButton = document.querySelector('.admin-button');
+    
+    if (adminButton) {
+        // Detectar se é um dispositivo de toque
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Usar o evento apropriado com base no tipo de dispositivo
+        const eventType = isTouchDevice ? 'touchstart' : 'click';
+        
+        adminButton.addEventListener(eventType, function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const adminIcon = this.closest('.admin-icon');
+            if (!adminIcon) return;
+            
+            // Alternar a classe show-dropdown
+            adminIcon.classList.toggle('show-dropdown');
+            
+            // Se o dropdown estiver aberto, posicioná-lo corretamente
+            if (adminIcon.classList.contains('show-dropdown')) {
+                setTimeout(positionAdminDropdown, 0);
+            }
+            
+            // Fechar ao tocar/clicar fora
+            const closeDropdown = function (event) {
+                // Para eventos de toque, verificar o primeiro toque
+                const target = event.touches ? event.touches[0].target : event.target;
+                
+                if (!adminIcon.contains(target)) {
+                    adminIcon.classList.remove('show-dropdown');
+                    document.removeEventListener(eventType, closeDropdown);
+                }
+            };
+            
+            // Adicionar listener com pequeno atraso
+            setTimeout(() => {
+                document.addEventListener(eventType, closeDropdown);
+            }, 10);
+        });
+        
+        // Para dispositivos de toque, prevenir comportamento padrão no touchend
+        if (isTouchDevice) {
+            adminButton.addEventListener('touchend', function (e) {
+                e.preventDefault();
+            });
+        }
+    }
+    
+    // Atualizar a posição do dropdown ao rolar ou redimensionar
+    window.addEventListener('resize', function() {
+        if (document.querySelector('.admin-icon.show-dropdown')) {
+            positionAdminDropdown();
+        }
+    });
+    
+    window.addEventListener('scroll', function() {
+        if (document.querySelector('.admin-icon.show-dropdown')) {
+            positionAdminDropdown();
+        }
+    });
+});
