@@ -12,27 +12,7 @@ html {
     scroll-behavior: smooth;
 }
 
-header {
-    background-color: rgba(246, 252, 246);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #231F20;
-    padding: 20px;
-    text-align: center;
-    animation: slideIn 1s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 10px;
-    width: 100%;
-    z-index: 100;
-    transition: padding 0.3s ease, top 0.3s ease, background 0.5s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    flex-direction: row;
-    margin-top: 30px;
-}
+
 main {
     padding: 10px 10px;
     margin-top: 60px;
