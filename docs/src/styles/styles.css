@@ -2381,7 +2381,7 @@ select option {
         background-color: white;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         border-radius: 4px;
-        z-index: 1000; /* Garantir que fique acima de outros elementos */
+        z-index: 9999; /* Garantir que fique acima de outros elementos */
     }
     
     /* Melhorar a aparência dos itens do dropdown */
