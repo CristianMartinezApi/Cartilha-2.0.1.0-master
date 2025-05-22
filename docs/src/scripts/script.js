@@ -88,31 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Pop-up com opção "Não mostrar novamente"
-    const popup = document.getElementById('popup');
-    if (popup) {
-        const okButton = document.getElementById('ok-btn');
-        const dontShowAgain = document.getElementById('dontShowAgain');
-        if (localStorage.getItem('hidePopup') === 'true') {
-            popup.style.display = 'none';
-        } else {
-            popup.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        if (okButton) {
-            okButton.addEventListener('click', function () {
-                popup.classList.add('fechar');
-                document.body.style.overflow = 'auto';
-                setTimeout(() => {
-                    popup.style.display = 'none';
-                    if (dontShowAgain && dontShowAgain.checked) {
-                        localStorage.setItem('hidePopup', 'true');
-                    }
-                }, 500);
-            });
-        }
-    }
+    
 
     // CORREÇÃO: Mostrar e ocultar pesquisa
     const pesquisaSection = document.getElementById('pesquisaSection');
@@ -656,3 +632,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+// Código para o popup overlay
+document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('popup');
+    const okBtn = document.getElementById('ok-btn');
+    const dontShowAgain = document.getElementById('dontShowAgain');
+    
+    // Verifica se o usuário já fechou o popup anteriormente
+    const popupClosed = localStorage.getItem('popupClosed');
+    
+    // Se o usuário não fechou o popup anteriormente, mostra-o
+    if (!popupClosed) {
+        // Pequeno atraso para garantir que a página carregue primeiro
+        setTimeout(() => {
+            popup.classList.add('active');
+        }, 1000);
+    }
+    
+    // Fecha o popup quando o botão OK é clicado
+    okBtn.addEventListener('click', function() {
+        popup.classList.remove('active');
+        
+        // Se a opção "Não mostrar novamente" estiver marcada, salva essa preferência
+        if (dontShowAgain.checked) {
+            localStorage.setItem('popupClosed', 'true');
+        }
+    });
+    
+    // Fecha o popup quando o usuário clica fora dele (no overlay)
+    popup.addEventListener('click', function(e) {
+        // Verifica se o clique foi no overlay e não no conteúdo do popup
+        if (e.target === popup) {
+            popup.classList.remove('active');
+            
+            if (dontShowAgain.checked) {
+                localStorage.setItem('popupClosed', 'true');
+            }
+        }
+    });
+});
