@@ -159,83 +159,80 @@ function loadApprovedPrompts() {
                 suggestionElement.className = 'suggestion-item accordion-item';
 
                 suggestionElement.innerHTML = `
-                    <div class="card mb-2">
-                        <!-- Cabeçalho clicável do acordeão -->
-                        <div class="card-header p-0">
-                            <button class="btn btn-link w-100 p-3 text-decoration-none accordion-toggle border-0" 
-                                    type="button" 
-                                    data-bs-toggle="collapse" 
-                                    data-bs-target="#prompt-${uniqueId}" 
-                                    aria-expanded="false" 
-                                    aria-controls="prompt-${uniqueId}"
-                                    style="text-align: left !important;">
-                                <div class="d-flex justify-content-between align-items-center w-100">
-                                    <div class="text-start flex-grow-1">
-                                        <h6 class="mb-1 text-dark fw-bold text-start">
-                                            <i class="fas fa-lightbulb me-2 text-warning"></i>
-                                            ${data.title || 'Sem título'}
-                                        </h6>
-                                        <div class="d-flex align-items-center text-start">
-                                            <small class="text-muted me-3">📋 Finalidade do Prompt</small>
-                                            <span class="badge bg-primary">${data.category || 'Não categorizado'}</span>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <i class="fas fa-chevron-down accordion-arrow transition-all"></i>
-                                    </div>
-                                </div>
-                            </button>
-                        </div>
-                        
-                        <!-- Conteúdo expansível -->
-                        <div id="prompt-${uniqueId}" class="collapse" data-bs-parent="#suggestions-accordion">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <h6 class="text-primary mb-2">
-                                        <i class="fas fa-pen me-1"></i> Texto do Prompt:
-                                    </h6>
-                                    <div class="prompt-text bg-light p-3 rounded border" style="font-family: 'Courier New', monospace; font-size: 16px; text-align: justify;">
-    ${data.text || 'Sem conteúdo'}
+<div class="card mb-2">
+    <!-- Cabeçalho clicável do acordeão -->
+    <div class="card-header p-0">
+        <button class="btn btn-link w-100 p-3 text-decoration-none accordion-toggle border-0" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#prompt-${uniqueId}" 
+                aria-expanded="false" 
+                aria-controls="prompt-${uniqueId}"
+                style="text-align: left !important;">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="text-start flex-grow-1">
+                    <h6 class="mb-1 text-dark fw-bold text-start">
+                        <i class="fas fa-file-alt text-primary"></i>
+                        ${data.title || 'Sem título'}
+                    </h6>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary">${data.category || 'Não categorizado'}</span>
+                    <i class="fas fa-chevron-down accordion-arrow transition-all"></i>
+                </div>
+            </div>
+        </button>
+    </div>
+    
+    <!-- Conteúdo expansível -->
+    <div id="prompt-${uniqueId}" class="collapse" data-bs-parent="#suggestions-accordion">
+        <div class="card-body">
+            <div class="mb-3">
+                <h6 class="text-primary mb-2">
+                    <i class="fas fa-pen me-1"></i> Texto do Prompt:
+                </h6>
+                <div class="prompt-text bg-light p-3 rounded border" style="font-family: 'Courier New', monospace; font-size: 16px; text-align: justify;">
+${data.text || 'Sem conteúdo'}
 </div>
+            </div>
+            ${data.comment && data.comment !== 'Sem comentário' ? `
+            <div class="mb-3">
+                <h6 class="text-info mb-2">
+                    <i class="fas fa-comment me-1"></i> Comentário:
+                </h6>
+                <p class="card-text text-muted bg-info bg-opacity-10 p-3 rounded">
+                    ${data.comment}
+                </p>
+            </div>
+            ` : ''}
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <small class="text-muted">Publicado em ${formattedDate}</small>
+                <small class="ms-2 text-secondary">
+                    <i class="fas fa-eye me-1"></i>${data.views || 0} visualizações
+                </small>
+            </div>
+            <div>
+                <button class="btn btn-sm ${likeButtonClass} like-btn" 
+                    data-id="${doc.id}" title="Curtir" ${likeButtonDisabled}>
+                    <i class="fas fa-heart"></i> 
+                    <span class="like-count">${data.likes || 0}</span>
+                </button>
+                <button class="btn btn-sm btn-outline-primary copy-btn" 
+                    data-id="${doc.id}" title="Copiar prompt">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+                <button class="btn btn-sm btn-outline-secondary share-btn" 
+                    data-id="${doc.id}" title="Compartilhar">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+`;
 
-                                </div>
-                                ${data.comment && data.comment !== 'Sem comentário' ? `
-                                <div class="mb-3">
-                                    <h6 class="text-info mb-2">
-                                        <i class="fas fa-comment me-1"></i> Comentário:
-                                    </h6>
-                                    <p class="card-text text-muted bg-info bg-opacity-10 p-3 rounded">
-                                        ${data.comment}
-                                    </p>
-                                </div>
-                                ` : ''}
-                            </div>
-                            <div class="card-footer d-flex justify-content-between align-items-center">
-                                <div>
-                                    <small class="text-muted">Publicado em ${formattedDate}</small>
-                                    <small class="ms-2 text-secondary">
-                                        <i class="fas fa-eye me-1"></i>${data.views || 0} visualizações
-                                    </small>
-                                </div>
-                                <div>
-                                    <button class="btn btn-sm ${likeButtonClass} like-btn" 
-                                        data-id="${doc.id}" title="Curtir" ${likeButtonDisabled}>
-                                        <i class="fas fa-heart"></i> 
-                                        <span class="like-count">${data.likes || 0}</span>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-primary copy-btn" 
-                                        data-id="${doc.id}" title="Copiar prompt">
-                                        <i class="fas fa-copy"></i> Copiar
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-secondary share-btn" 
-                                        data-id="${doc.id}" title="Compartilhar">
-                                        <i class="fas fa-share-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
 
                 suggestionsList.appendChild(suggestionElement);
 
