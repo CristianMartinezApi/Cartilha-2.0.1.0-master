@@ -460,6 +460,19 @@ textarea.form-control {
     opacity: 0.7;
 }
 
+.accordion-arrow {
+    transition: transform 0.3s ease;
+}
+
+.accordion-toggle:not(.collapsed) .accordion-arrow {
+    transform: rotate(180deg);
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+
 /* Estilos para os botões com design flat moderno */
 .btn {
     padding: 0.65rem 1.25rem;
