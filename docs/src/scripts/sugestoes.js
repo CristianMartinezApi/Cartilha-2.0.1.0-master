@@ -221,7 +221,7 @@ ${data.text || 'Sem conteúdo'}
                 </button>
                 <button class="btn btn-sm btn-outline-primary copy-btn" 
                     data-id="${doc.id}" title="Copiar prompt">
-                    <i class="fas fa-copy"></i> Copiar
+                    <i class="fas fa-copy"></i> Copiar prompt
                 </button>
                 <button class="btn btn-sm btn-outline-secondary share-btn" 
                     data-id="${doc.id}" title="Compartilhar">
