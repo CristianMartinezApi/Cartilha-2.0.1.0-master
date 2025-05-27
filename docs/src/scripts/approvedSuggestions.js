@@ -7,7 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Container de sugestões aprovadas não encontrado nesta página - ignorando.");
         return; // Saia da função sem mostrar erro
     }
-    
+    // Verificar se o Firebase/db está disponível
+    if (typeof window.db === 'undefined') {
+        console.log("Firebase não inicializado ainda - aguardando...");
+        return;
+    }
     console.log("Carregando sugestões aprovadas...");
     
     // O resto do seu código para carregar sugestões aprovadas...

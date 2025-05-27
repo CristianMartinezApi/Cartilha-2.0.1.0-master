@@ -6,13 +6,14 @@
   <title>Admin - Revisão de Sugestões</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="./src/styles/admin.css" />
-
-  <!-- Firebase -->
+  
+  <!-- Firebase - ORDEM CORRETA -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Inicialização do Firebase -->
   <script src="./src/scripts/firebase-init.js"></script>
-  <script src="scripts/auth-check.js"></script>
-  <script src="./src/scripts/admin.js" defer></script>
 </head>
 
 <body>
@@ -168,6 +169,7 @@
   <footer class="admin-footer">
     <p>© 2025 - Todos os direitos reservados</p>
   </footer>
-  
+   <script src="./src/scripts/auth-check.js"></script>
+  <script src="./src/scripts/admin.js"></script>
 </body>
 </html>
