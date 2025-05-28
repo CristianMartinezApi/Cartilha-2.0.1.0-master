@@ -879,6 +879,7 @@ function startFeedbackMonitoring() {
                 
                 // SEMPRE atualizar contadores (primeira carga ou não)
                 updateFeedbackStats(snapshot);
+                updateFeedbackTabCounter(currentCount);
                 
                 // Se não é primeira carga e houve mudança
                 if (!isFirstLoad && currentCount > lastFeedbackCount) {
@@ -893,6 +894,10 @@ function startFeedbackMonitoring() {
                     if (typeof loadFeedbacks === 'function') {
                         loadFeedbacks();
                     }
+                    
+                    // Destacar a aba de feedback brevemente
+                    highlightFeedbackTab();
+                    
                 } else if (isFirstLoad) {
                     console.log('📊 Primeira carga - definindo contagem inicial');
                     isFirstLoad = false;
@@ -946,6 +951,37 @@ function updateFeedbackStats(snapshot) {
         
     } catch (error) {
         console.error('❌ Erro ao atualizar estatísticas:', error);
+    }
+}
+
+/**
+ * Atualizar contador na aba de feedback
+ */
+function updateFeedbackTabCounter(count) {
+    const feedbackCountElement = document.getElementById('feedback-count');
+    if (feedbackCountElement) {
+        feedbackCountElement.textContent = count;
+        console.log(`✅ Contador da aba atualizado: ${count}`);
+    }
+}
+
+/**
+ * Destacar aba de feedback quando chegar novo feedback
+ */
+function highlightFeedbackTab() {
+    const feedbackTab = document.querySelector('[data-tab="feedback"]');
+    const feedbackBadge = document.getElementById('feedback-count');
+    
+    if (feedbackTab && feedbackBadge) {
+        // Adicionar classe de destaque
+        feedbackBadge.style.backgroundColor = '#ff4444';
+        feedbackBadge.style.animation = 'pulse 1s ease-in-out 3';
+        
+        // Remover destaque após 3 segundos
+        setTimeout(() => {
+            feedbackBadge.style.backgroundColor = '';
+            feedbackBadge.style.animation = '';
+        }, 3000);
     }
 }
 
