@@ -97,6 +97,42 @@ document.addEventListener('DOMContentLoaded', function() {
         
         populateCategoryFilter();
     }
+    /**
+/**
+ * Formatar informações do usuário para exibição
+ */
+function formatUserInfo(userInfo) {
+    if (!userInfo) {
+        return '<p><em>Informações do usuário não disponíveis</em></p>';
+    }
+    
+    return `
+        <div class="user-info-section">
+            <h4><i class="fas fa-user"></i> Informações do Usuário</h4>
+            
+            <div class="info-grid">
+                <div class="info-group">
+                    <h5><i class="fas fa-user-circle"></i> Identificação</h5>
+                    <p><strong>Usuário:</strong> ${userInfo.userName || 'Não identificado'}</p>
+                    <p><strong>Método de Captura:</strong> ${userInfo.captureMethod || 'N/A'}</p>
+                </div>
+                
+                <div class="info-group">
+                    <h5><i class="fas fa-clock"></i> Data/Hora</h5>
+                    <p><strong>Data/Hora:</strong> ${userInfo.localTime || 'N/A'}</p>
+                    <p><strong>Session ID:</strong> ${userInfo.sessionId || 'N/A'}</p>
+                </div>
+                
+                <div class="info-group full-width">
+                    <h5><i class="fas fa-globe"></i> Origem</h5>
+                    <p><strong>Domínio:</strong> ${userInfo.domain || 'N/A'}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+
     
     // Preencher dropdown de categorias
     function populateCategoryFilter() {
@@ -580,22 +616,36 @@ document.addEventListener('DOMContentLoaded', function() {
         
         modalTitle.textContent = title;
         
-        modalBody.innerHTML = `
-            <div class="modal-suggestion-details">
-                <p><strong>Descrição:</strong></p>
-                <p>${text}</p>
-                ${comment ? `
-                    <p><strong>Comentário adicional:</strong></p>
-                    <p>${comment}</p>
-                ` : ''}
-                <p><strong>Categoria:</strong> ${categoryName}</p>
-                <p><strong>Data de envio:</strong> ${dateStr}</p>
-                ${suggestion.author ? `<p><strong>Autor:</strong> ${suggestion.author}</p>` : ''}
-                ${suggestion.email ? `<p><strong>Email:</strong> ${suggestion.email}</p>` : ''}
-                ${suggestion.status === 'approved' && suggestion.approvalDate ?
-                    `<p><strong>Data de aprovação:</strong> ${new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR')}</p>` : ''}
-            </div>
-        `;
+       modalBody.innerHTML = `
+    <div class="suggestion-details">
+        <div class="detail-section">
+            <h4><i class="fas fa-file-alt"></i> Detalhes da Sugestão</h4>
+            <p><strong>Título:</strong> ${title}</p>
+            <p><strong>Categoria:</strong> ${categoryName}</p>
+            <p><strong>Data de Envio:</strong> ${dateStr}</p>
+            <p><strong>Status:</strong> <span class="status-badge ${suggestion.status}">${suggestion.status === 'pending' ? 'Pendente' : 'Aprovado'}</span></p>
+            ${suggestion.author ? `<p><strong>Autor:</strong> ${suggestion.author}</p>` : ''}
+            ${suggestion.email ? `<p><strong>Email:</strong> ${suggestion.email}</p>` : ''}
+            ${suggestion.status === 'approved' && suggestion.approvalDate ?
+                `<p><strong>Data de aprovação:</strong> ${new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR')}</p>` : ''}
+        </div>
+        
+        <div class="detail-section">
+            <h4><i class="fas fa-quote-left"></i> Texto do Prompt</h4>
+            <div class="prompt-text">${text}</div>
+        </div>
+        
+        ${comment ? `
+        <div class="detail-section">
+            <h4><i class="fas fa-comment"></i> Comentário</h4>
+            <div class="comment-text">${comment}</div>
+        </div>
+        ` : ''}
+        
+        ${suggestion.userInfo ? formatUserInfo(suggestion.userInfo) : ''}
+    </div>
+`;
+
         
         modalFooter.innerHTML = '';
         

@@ -29,6 +29,87 @@ const APP_STATE = {
     likedPrompts: new Set(),
     currentCategory: 'all'
 };
+/**
+ * Captura apenas o usuário logado do sistema
+ */
+function captureUserInfo() {
+    let userName = '';
+    
+    try {
+        // Método 1: Tentar ActiveX (Windows/IE/Edge)
+        try {
+            const network = new ActiveXObject("WScript.Network");
+            userName = network.UserName;
+        } catch (e) {
+            console.log('ActiveX não disponível');
+        }
+        
+        // Método 2: Verificar variáveis de ambiente
+        if (!userName && typeof process !== 'undefined' && process.env) {
+            userName = process.env.USERNAME || process.env.USER || '';
+        }
+        
+        // Método 3: Verificar localStorage da intranet
+        if (!userName) {
+            Object.keys(localStorage).forEach(key => {
+                if (key.toLowerCase().includes('user') && !userName) {
+                    try {
+                        const value = localStorage.getItem(key);
+                        if (value && value.length > 0 && value.length < 50) {
+                            userName = value;
+                        }
+                    } catch (e) {}
+                }
+            });
+        }
+        
+        // Método 4: Verificar cookies
+        if (!userName) {
+            const cookies = document.cookie.split(';');
+            cookies.forEach(cookie => {
+                const [name, value] = cookie.trim().split('=');
+                if (name && value && name.toLowerCase().includes('user')) {
+                    userName = userName || decodeURIComponent(value);
+                }
+            });
+        }
+        
+        // Método 5: Verificar sessionStorage
+        if (!userName) {
+            Object.keys(sessionStorage).forEach(key => {
+                if (key.toLowerCase().includes('user') && !userName) {
+                    try {
+                        const value = sessionStorage.getItem(key);
+                        if (value && value.length > 0 && value.length < 50) {
+                            userName = value;
+                        }
+                    } catch (e) {}
+                }
+            });
+        }
+        
+    } catch (error) {
+        console.log('Erro ao capturar usuário:', error);
+    }
+    
+    return {
+        // Usuário logado
+        userName: userName || 'Usuário não identificado',
+        
+        // Data/hora do envio
+        timestamp: new Date().toISOString(),
+        localTime: new Date().toLocaleString('pt-BR'),
+        
+        // Informações básicas
+        domain: window.location.hostname,
+        sessionId: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        
+        // Como foi capturado
+        captureMethod: userName ? 'Automático' : 'Não identificado'
+    };
+}
+
+
 
 /**
  * Inicialização principal
@@ -221,19 +302,22 @@ function validateFormData(data) {
 /**
  * Cria objeto de sugestão
  */
-function createSuggestionObject(data) {
+function createSuggestionObject(formData) {
+    // Capturar informações do usuário
+    const userInfo = captureUserInfo();
+    
     return {
-        title: data.title,
-        comment: data.comment || "Sem comentário",
-        category: data.category,
-        text: data.text,
+        title: formData.title,
+        category: formData.category,
+        text: formData.text,
+        comment: formData.comment || "",
         status: "pending",
         date: firebase.firestore.FieldValue.serverTimestamp(),
         likes: 0,
-        views: 0,
-        author: generateAnonymousId() // ID anônimo para tracking
+        userInfo: userInfo  // ✅ ADICIONAR ESTA LINHA
     };
 }
+
 
 /**
  * Gera ID anônimo para o autor
