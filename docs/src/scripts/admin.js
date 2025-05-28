@@ -856,5 +856,117 @@ function formatUserInfo(userInfo) {
         link.click();
         document.body.removeChild(link);
     }
+/**
+ * Monitorar novos feedbacks e atualizar contadores automaticamente
+ */
+let lastFeedbackCount = 0;
+let feedbackListener = null;
+let isFirstLoad = true;
+
+function startFeedbackMonitoring() {
+    console.log('🔍 Iniciando monitoramento de feedbacks...');
+    
+    if (feedbackListener) {
+        feedbackListener();
+    }
+
+    try {
+        feedbackListener = db.collection('feedback')
+            .onSnapshot((snapshot) => {
+                console.log(`📊 Total de feedbacks: ${snapshot.size}`);
+                
+                const currentCount = snapshot.size;
+                
+                // SEMPRE atualizar contadores (primeira carga ou não)
+                updateFeedbackStats(snapshot);
+                
+                // Se não é primeira carga e houve mudança
+                if (!isFirstLoad && currentCount > lastFeedbackCount) {
+                    const newFeedbacksCount = currentCount - lastFeedbackCount;
+                    
+                    console.log(`🎉 NOVO FEEDBACK DETECTADO! Quantidade: ${newFeedbacksCount}`);
+                    
+                    // Alerta visual
+                    alert(`🎉 Novo Feedback Recebido!\n\n${newFeedbacksCount} novo${newFeedbacksCount > 1 ? 's' : ''} feedback${newFeedbacksCount > 1 ? 's' : ''} foi${newFeedbacksCount > 1 ? 'ram' : ''} enviado${newFeedbacksCount > 1 ? 's' : ''}!`);
+                    
+                    // Recarregar lista automaticamente
+                    if (typeof loadFeedbacks === 'function') {
+                        loadFeedbacks();
+                    }
+                } else if (isFirstLoad) {
+                    console.log('📊 Primeira carga - definindo contagem inicial');
+                    isFirstLoad = false;
+                }
+                
+                lastFeedbackCount = currentCount;
+                
+            }, (error) => {
+                console.error('❌ Erro no monitoramento:', error);
+            });
+            
+    } catch (error) {
+        console.error('❌ Erro ao configurar listener:', error);
+    }
+}
+
+/**
+ * Atualizar estatísticas de feedback
+ */
+function updateFeedbackStats(snapshot) {
+    try {
+        const totalFeedbacks = snapshot.size;
+        let totalRating = 0;
+        let validRatings = 0;
+        
+        // Calcular média das avaliações
+        snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            const rating = parseInt(data.rating);
+            if (!isNaN(rating)) {
+                totalRating += rating;
+                validRatings++;
+            }
+        });
+        
+        const averageRating = validRatings > 0 ? (totalRating / validRatings).toFixed(1) : 0.0;
+        
+        // Atualizar elementos na tela
+        const totalElement = document.getElementById('total-feedback-count');
+        const averageElement = document.getElementById('avg-rating');
+        
+        if (totalElement) {
+            totalElement.textContent = totalFeedbacks;
+            console.log(`✅ Total atualizado: ${totalFeedbacks}`);
+        }
+        
+        if (averageElement) {
+            averageElement.textContent = averageRating;
+            console.log(`✅ Média atualizada: ${averageRating}`);
+        }
+        
+    } catch (error) {
+        console.error('❌ Erro ao atualizar estatísticas:', error);
+    }
+}
+
+function stopFeedbackMonitoring() {
+    if (feedbackListener) {
+        feedbackListener();
+        feedbackListener = null;
+    }
+}
+
+// Inicializar monitoramento
+setTimeout(() => {
+    if (typeof db !== 'undefined' && db) {
+        startFeedbackMonitoring();
+        console.log('✅ Monitoramento de feedbacks ativado');
+    }
+}, 3000);
+
+// Parar monitoramento ao sair da página
+window.addEventListener('beforeunload', stopFeedbackMonitoring);
+
+
 });
   
