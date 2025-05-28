@@ -108,13 +108,14 @@ function formatUserInfo(userInfo) {
     
     return `
         <div class="user-info-section">
-            <h4><i class="fas fa-user"></i> Informações do Usuário</h4>
+            <h4><i class="fas fa-user"></i> Conta do Navegador</h4>
             
             <div class="info-grid">
                 <div class="info-group">
                     <h5><i class="fas fa-user-circle"></i> Identificação</h5>
-                    <p><strong>Usuário:</strong> ${userInfo.userName || 'Não identificado'}</p>
-                    <p><strong>Método de Captura:</strong> ${userInfo.captureMethod || 'N/A'}</p>
+                    <p><strong>Nome:</strong> ${userInfo.userName || 'Não identificado'}</p>
+                    <p><strong>Email:</strong> ${userInfo.userEmail || 'Não identificado'}</p>
+                    <p><strong>Conta Institucional:</strong> ${userInfo.isInstitutional ? '✅ Sim' : '❌ Não'}</p>
                 </div>
                 
                 <div class="info-group">
@@ -124,13 +125,15 @@ function formatUserInfo(userInfo) {
                 </div>
                 
                 <div class="info-group full-width">
-                    <h5><i class="fas fa-globe"></i> Origem</h5>
+                    <h5><i class="fas fa-info-circle"></i> Captura</h5>
+                    <p><strong>Método:</strong> ${userInfo.captureMethod || 'N/A'}</p>
                     <p><strong>Domínio:</strong> ${userInfo.domain || 'N/A'}</p>
                 </div>
             </div>
         </div>
     `;
 }
+
 
 
     

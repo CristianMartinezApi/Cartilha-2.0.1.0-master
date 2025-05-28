@@ -30,84 +30,174 @@ const APP_STATE = {
     currentCategory: 'all'
 };
 /**
- * Captura apenas o usuário logado do sistema
+ * Captura a conta institucional logada no navegador
  */
-function captureUserInfo() {
+async function captureUserInfo() {
     let userName = '';
+    let userEmail = '';
+    let captureMethod = 'Não identificado';
     
     try {
-        // Método 1: Tentar ActiveX (Windows/IE/Edge)
+        // Método 1: Google Account (se logado no Google)
         try {
-            const network = new ActiveXObject("WScript.Network");
-            userName = network.UserName;
-        } catch (e) {
-            console.log('ActiveX não disponível');
-        }
-        
-        // Método 2: Verificar variáveis de ambiente
-        if (!userName && typeof process !== 'undefined' && process.env) {
-            userName = process.env.USERNAME || process.env.USER || '';
-        }
-        
-        // Método 3: Verificar localStorage da intranet
-        if (!userName) {
-            Object.keys(localStorage).forEach(key => {
-                if (key.toLowerCase().includes('user') && !userName) {
-                    try {
-                        const value = localStorage.getItem(key);
-                        if (value && value.length > 0 && value.length < 50) {
-                            userName = value;
+            // Verificar se há informações do Google no localStorage/sessionStorage
+            const googleKeys = Object.keys(localStorage).filter(key => 
+                key.includes('google') || key.includes('gapi') || key.includes('oauth')
+            );
+            
+            for (let key of googleKeys) {
+                try {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        const parsed = JSON.parse(value);
+                        if (parsed.email || parsed.name) {
+                            userEmail = parsed.email || userEmail;
+                            userName = parsed.name || parsed.given_name || userName;
+                            captureMethod = 'Google Account (localStorage)';
                         }
-                    } catch (e) {}
-                }
-            });
+                    }
+                } catch (e) {}
+            }
+        } catch (e) {
+            console.log('Erro ao verificar Google Account:', e);
         }
         
-        // Método 4: Verificar cookies
-        if (!userName) {
+        // Método 2: Microsoft Account (se logado no Microsoft)
+        try {
+            const msKeys = Object.keys(localStorage).filter(key => 
+                key.includes('microsoft') || key.includes('msal') || key.includes('azure') || key.includes('office')
+            );
+            
+            for (let key of msKeys) {
+                try {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        const parsed = JSON.parse(value);
+                        if (parsed.username || parsed.preferred_username || parsed.name) {
+                            userEmail = parsed.username || parsed.preferred_username || userEmail;
+                            userName = parsed.name || parsed.given_name || userName;
+                            captureMethod = 'Microsoft Account (localStorage)';
+                        }
+                    }
+                } catch (e) {}
+            }
+        } catch (e) {
+            console.log('Erro ao verificar Microsoft Account:', e);
+        }
+        
+        // Método 3: Verificar cookies de autenticação
+        try {
             const cookies = document.cookie.split(';');
-            cookies.forEach(cookie => {
+            for (let cookie of cookies) {
                 const [name, value] = cookie.trim().split('=');
-                if (name && value && name.toLowerCase().includes('user')) {
-                    userName = userName || decodeURIComponent(value);
+                if (name && value) {
+                    // Cookies comuns de autenticação
+                    if (name.includes('email') || name.includes('user') || name.includes('login')) {
+                        const decodedValue = decodeURIComponent(value);
+                        if (decodedValue.includes('@')) {
+                            userEmail = decodedValue;
+                            captureMethod = `Cookie: ${name}`;
+                        } else if (!userName && decodedValue.length > 2 && decodedValue.length < 50) {
+                            userName = decodedValue;
+                            captureMethod = `Cookie: ${name}`;
+                        }
+                    }
                 }
-            });
+            }
+        } catch (e) {
+            console.log('Erro ao verificar cookies:', e);
         }
         
-        // Método 5: Verificar sessionStorage
-        if (!userName) {
-            Object.keys(sessionStorage).forEach(key => {
-                if (key.toLowerCase().includes('user') && !userName) {
+        // Método 4: Verificar se há elementos na página com informações do usuário
+        try {
+            // Procurar por elementos que podem conter email
+            const emailSelectors = [
+                '[data-email]',
+                '.user-email',
+                '.email',
+                '#userEmail'
+            ];
+            
+            for (let selector of emailSelectors) {
+                const element = document.querySelector(selector);
+                if (element && element.textContent.includes('@')) {
+                    userEmail = element.textContent.trim();
+                    captureMethod = `Elemento: ${selector}`;
+                    break;
+                }
+            }
+        } catch (e) {
+            console.log('Erro ao verificar elementos:', e);
+        }
+        
+        // Método 5: Tentar via Credential Management API (experimental)
+        try {
+            if ('credentials' in navigator && navigator.credentials.get) {
+                // Nota: Isso pode não funcionar em todos os navegadores/contextos
+                console.log('Credential Management API disponível');
+            }
+        } catch (e) {
+            console.log('Credential Management API não disponível:', e);
+        }
+        
+        // Método 6: Verificar sessionStorage para contas institucionais
+        try {
+            const sessionKeys = Object.keys(sessionStorage);
+            for (let key of sessionKeys) {
+                if (key.includes('user') || key.includes('account') || key.includes('profile')) {
                     try {
                         const value = sessionStorage.getItem(key);
-                        if (value && value.length > 0 && value.length < 50) {
-                            userName = value;
+                        const parsed = JSON.parse(value);
+                        if (parsed.email && parsed.email.includes('pge.sc.gov.br')) {
+                            userEmail = parsed.email;
+                            userName = parsed.name || parsed.displayName || userName;
+                            captureMethod = `SessionStorage: ${key}`;
+                            break;
                         }
                     } catch (e) {}
                 }
-            });
+            }
+        } catch (e) {
+            console.log('Erro ao verificar sessionStorage:', e);
+        }
+        
+        // Inferir nome a partir do email se necessário
+        if (userEmail && !userName) {
+            const emailParts = userEmail.split('@')[0];
+            userName = emailParts.replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        // Verificar se é email institucional
+        if (userEmail && userEmail.includes('pge.sc.gov.br')) {
+            captureMethod += ' (Conta Institucional)';
         }
         
     } catch (error) {
-        console.log('Erro ao capturar usuário:', error);
+        console.error('Erro geral ao capturar conta do navegador:', error);
     }
     
+    // Log para debug
+    console.log('Captura de conta do navegador:', {
+        userName: userName || 'Não identificado',
+        userEmail: userEmail || 'Não identificado',
+        method: captureMethod,
+        localStorage: Object.keys(localStorage).length,
+        sessionStorage: Object.keys(sessionStorage).length,
+        cookies: document.cookie.length > 0
+    });
+    
     return {
-        // Usuário logado
         userName: userName || 'Usuário não identificado',
-        
-        // Data/hora do envio
+        userEmail: userEmail || 'Email não identificado',
         timestamp: new Date().toISOString(),
         localTime: new Date().toLocaleString('pt-BR'),
-        
-        // Informações básicas
         domain: window.location.hostname,
         sessionId: Date.now().toString(36) + Math.random().toString(36).substr(2),
-        
-        // Como foi capturado
-        captureMethod: userName ? 'Automático' : 'Não identificado'
+        captureMethod: captureMethod,
+        isInstitutional: userEmail ? userEmail.includes('pge.sc.gov.br') : false
     };
 }
+
 
 
 
@@ -248,20 +338,21 @@ async function handleFormSubmit(e) {
     APP_STATE.isLoading = true;
     
     try {
-        const suggestion = createSuggestionObject(formData);
-        await window.db.collection("sugestoes").add(suggestion);
-        
-        showFeedback("Sua sugestão foi enviada e está aguardando aprovação. Obrigado pela contribuição!", "success");
-        DOM_CACHE.suggestionForm.reset();
-        clearFormValidation();
-        
-    } catch (error) {
-        console.error("Erro ao enviar sugestão:", error);
-        showFeedback("Erro ao enviar sugestão. Tente novamente.", "danger");
-    } finally {
-        setSubmitButtonState(submitButton, false);
-        APP_STATE.isLoading = false;
-    }
+    const suggestion = await createSuggestionObject(formData); // ✅ Adicionar await
+    await window.db.collection("sugestoes").add(suggestion);
+           
+    showFeedback("Sua sugestão foi enviada e está aguardando aprovação. Obrigado pela contribuição!", "success");
+    DOM_CACHE.suggestionForm.reset();
+    clearFormValidation();
+       
+} catch (error) {
+    console.error("Erro ao enviar sugestão:", error);
+    showFeedback("Erro ao enviar sugestão. Tente novamente.", "danger");
+} finally {
+    setSubmitButtonState(submitButton, false);
+    APP_STATE.isLoading = false;
+}
+
 }
 
 /**
@@ -302,10 +393,10 @@ function validateFormData(data) {
 /**
  * Cria objeto de sugestão
  */
-function createSuggestionObject(formData) {
-    // Capturar informações do usuário
-    const userInfo = captureUserInfo();
-    
+async function createSuggestionObject(formData) {
+    // ✅ Aguardar a captura das informações do usuário
+    const userInfo = await captureUserInfo();
+       
     return {
         title: formData.title,
         category: formData.category,
@@ -314,9 +405,10 @@ function createSuggestionObject(formData) {
         status: "pending",
         date: firebase.firestore.FieldValue.serverTimestamp(),
         likes: 0,
-        userInfo: userInfo  // ✅ ADICIONAR ESTA LINHA
+        userInfo: userInfo  // ✅ Agora é um objeto, não uma Promise
     };
 }
+
 
 
 /**
