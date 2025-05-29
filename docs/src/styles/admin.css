@@ -608,10 +608,26 @@
     gap: 5px;
     transition: background-color 0.2s;
   }
-  
   .reject-feedback-btn:hover {
     background-color: #d97706;
   }
+  .delete-feedback-btn {
+    background-color: #f5130b;
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+  }
+  .delete-feedback-btn:hover {
+    background-color: #ca0d0d;
+  }
+  
   
   .feedback-actions {
     display: flex;

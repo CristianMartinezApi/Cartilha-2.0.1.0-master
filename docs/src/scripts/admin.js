@@ -442,6 +442,20 @@ function formatUserInfo(userInfo) {
             const text = feedback.text || 'Sem mensagem';
             const rating = feedback.rating || 'N/A';
             const status = feedback.status || 'pending';
+             let statusText = '';
+        switch(status) {
+            case 'approved':
+                statusText = 'Aprovado';
+                break;
+            case 'pending':
+                statusText = 'Pendente';
+                break;
+            case 'rejected':
+                statusText = 'Rejeitado';
+                break;
+            default:
+                statusText = 'Pendente';
+        }
             
             let ratingClass = '';
             const ratingValue = parseInt(rating);
@@ -479,31 +493,31 @@ function formatUserInfo(userInfo) {
                               feedbackElement.classList.add('rejected');
             }
             
-            feedbackElement.innerHTML = `
-                <div class="feedback-header">
-                    <div class="feedback-rating ${ratingClass}">Avaliação: <strong>${rating}/10</strong></div>
-                    <span class="feedback-date">Data: ${dateStr}</span>
-                </div>
-                <p class="feedback-text">"${text}"</p>
-                <div class="feedback-meta">
-                    <span class="feedback-status">Status: ${status}</span>
-                </div>
-                <div class="feedback-actions">
-                    ${status !== 'approved' ? `
-                        <button class="approve-feedback-btn" data-id="${feedback.id}">
-                            <i class="fas fa-check"></i> Aprovar
-                        </button>
-                    ` : ''}
-                    ${status !== 'rejected' ? `
-                        <button class="reject-feedback-btn" data-id="${feedback.id}">
-                            <i class="fas fa-times"></i> Rejeitar
-                        </button>
-                    ` : ''}
-                    <button class="delete-feedback-btn" data-id="${feedback.id}">
-                        <i class="fas fa-trash"></i> Excluir
+           feedbackElement.innerHTML = `
+            <div class="feedback-header">
+                <div class="feedback-rating ${ratingClass}">Avaliação: <strong>${rating}/10</strong></div>
+                <span class="feedback-date">Data: ${dateStr}</span>
+            </div>
+            <p class="feedback-text">"${text}"</p>
+            <div class="feedback-meta">
+                <span class="feedback-status">Status: ${statusText}</span>
+            </div>
+            <div class="feedback-actions">
+                ${status !== 'approved' ? `
+                    <button class="approve-feedback-btn" data-id="${feedback.id}">
+                        <i class="fas fa-check"></i> Aprovar
                     </button>
-                </div>
-            `;
+                ` : ''}
+                ${status !== 'rejected' ? `
+                    <button class="reject-feedback-btn" data-id="${feedback.id}">
+                        <i class="fas fa-times"></i> Rejeitar
+                    </button>
+                ` : ''}
+                <button class="delete-feedback-btn" data-id="${feedback.id}">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            </div>
+        `;
             
             feedbackList.appendChild(feedbackElement);
             
@@ -998,7 +1012,7 @@ setTimeout(() => {
         startFeedbackMonitoring();
         console.log('✅ Monitoramento de feedbacks ativado');
     }
-}, 3000);
+}, 500);
 
 // Parar monitoramento ao sair da página
 window.addEventListener('beforeunload', stopFeedbackMonitoring);
