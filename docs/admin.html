@@ -1,177 +1,213 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Revisão de Sugestões</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="./src/styles/admin.css" />
-  
-  <!-- Firebase - ORDEM CORRETA -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  
-  <!-- Inicialização do Firebase -->
-  <script src="./src/scripts/firebase-init.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Revisão de Sugestões</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./src/styles/admin.css" />
 
-<body>
-  <!-- Add this to your admin.html in the header or navigation area -->
- <!-- Botão de menu (hambúrguer) -->
-<div class="menu-toggle" id="menu-toggle">
-  <i class="fas fa-bars"></i>
-</div>
+    <!-- Firebase - ORDEM CORRETA -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+    <!-- Bibliotecas para exportação -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
-  <div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="sidebar-header">
-        <h2>Painel Admin</h2>
-      </div>
-      <nav class="sidebar-nav">
-        <ul>
-          <li class="nav-item active" data-tab="pending">
-            <i class="fas fa-clock"></i>
-            <span>Pendentes</span>
-            <span class="badge" id="pending-count">0</span>
-          </li>
-          <li class="nav-item" data-tab="approved">
-            <i class="fas fa-check-circle"></i>
-            <span>Aprovadas</span>
-            <span class="badge" id="approved-count">0</span>
-          </li>
-          <li class="nav-item" data-tab="feedback">
-  <i class="fas fa-comments"></i>
-  <span>Feedbacks</span>
-  <span class="badge" id="feedback-count">0</span>
-</li>
-
-        </ul>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="index.html" class="back-link">
-          <i class="fas fa-arrow-left"></i>
-          <span>Voltar ao site</span>
-        </a>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="admin-content">
-      <header class="admin-header">
-        <h1>Área Administrativa</h1>
-        <div class="header-actions">
-          <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" id="search-input" placeholder="Pesquisar sugestões..." />
-          </div>
-          <div class="filter-container">
-            <select id="category-filter">
-              <option value="all">Todas as categorias</option>
-              <!-- Categorias serão adicionadas via JavaScript -->
-            </select>
-          </div>
-        </div>
-      </header>
-
-      <!-- Pending Suggestions Tab -->
-      <section id="pending-tab" class="content-tab active">
-        <div class="section-header">
-          <h2>Sugestões Pendentes</h2>
-          <div class="section-actions">
-            <button id="refresh-pending" class="action-btn refresh-btn">
-              <i class="fas fa-sync-alt"></i> Atualizar
-            </button>
-          </div>
-        </div>
-        <div id="pending-suggestions" class="suggestions-list">
-          <!-- Sugestões pendentes serão carregadas aqui via JavaScript -->
-          <div class="loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span>Carregando sugestões...</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Approved Suggestions Tab -->
-      <section id="approved-tab" class="content-tab">
-        <div class="section-header">
-          <h2>Sugestões Aprovadas</h2>
-          <div class="section-actions">
-            <button id="export-approved" class="action-btn export-btn">
-              <i class="fas fa-file-export"></i> Exportar
-            </button>
-            <button id="refresh-approved" class="action-btn refresh-btn">
-              <i class="fas fa-sync-alt"></i> Atualizar
-            </button>
-          </div>
-        </div>
-        <div id="approved-suggestions" class="suggestions-list">
-          <!-- Sugestões aprovadas serão carregadas aqui via JavaScript -->
-          <div class="loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span>Carregando sugestões...</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Feedback Tab -->
-      <!-- Modifique a seção de feedback para incluir o botão de atualizar e estatísticas -->
-<section id="feedback-tab" class="content-tab">
-  <div class="section-header">
-    <h2>Feedbacks dos Usuários</h2>
-    <div class="section-actions">
-      <button id="refresh-feedback" class="action-btn refresh-btn">
-        <i class="fas fa-sync-alt"></i> Atualizar
-      </button>
+    <!-- Inicialização do Firebase -->
+    <script src="./src/scripts/firebase-init.js"></script>
+  </head>
+  <body>
+    <!-- Botão de menu (hambúrguer) -->
+    <div class="menu-toggle" id="menu-toggle">
+      <i class="fas fa-bars"></i>
     </div>
-  </div>
-  
-  <div class="feedback-stats">
-    <div class="stat-card">
-      <div class="stat-value" id="total-feedback-count">0</div>
-      <div class="stat-label">Total de Feedbacks</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="avg-rating">0.0</div>
-      <div class="stat-label">Avaliação Média</div>
-    </div>
-  </div>
-  
-  <div id="feedback-list" class="feedback-list">
-    <!-- Feedbacks serão carregados aqui via JavaScript -->
-    <div class="loading">
-      <i class="fas fa-spinner fa-spin"></i>
-      <span>Carregando feedbacks...</span>
-    </div>
-  </div>
-</section>
 
-    </main>
-  </div>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <h2>Painel Admin</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li class="nav-item active" data-tab="pending">
+              <i class="fas fa-clock"></i>
+              <span>Pendentes</span>
+              <span class="badge" id="pending-count">0</span>
+            </li>
+            <li class="nav-item" data-tab="approved">
+              <i class="fas fa-check-circle"></i>
+              <span>Aprovadas</span>
+              <span class="badge" id="approved-count">0</span>
+            </li>
+            <li class="nav-item" data-tab="feedback">
+              <i class="fas fa-comments"></i>
+              <span>Feedbacks</span>
+              <span class="badge" id="feedback-count">0</span>
+            </li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Voltar ao site</span>
+          </a>
+        </div>
+      </aside>
 
-  <!-- Modal para visualizar detalhes -->
-  <div id="suggestion-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modal-title">Detalhes da Sugestão</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body" id="modal-body">
-        <!-- Conteúdo do modal será preenchido via JavaScript -->
-      </div>
-      <div class="modal-footer" id="modal-footer">
-        <!-- Botões de ação serão adicionados via JavaScript -->
+      <!-- Main Content -->
+      <main class="admin-content">
+        <header class="admin-header">
+          <h1>Área Administrativa</h1>
+          <div class="header-actions">
+            <div class="search-container">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar sugestões..."
+              />
+            </div>
+            <div class="filter-container">
+              <select id="category-filter">
+                <option value="all">Todas as categorias</option>
+              </select>
+            </div>
+          </div>
+        </header>
+
+        <!-- Pending Suggestions Tab -->
+        <section id="pending-tab" class="content-tab active">
+          <div class="section-header">
+            <h2>Sugestões Pendentes</h2>
+            <div class="section-actions">
+              <button id="refresh-pending" class="action-btn refresh-btn">
+                <i class="fas fa-sync-alt"></i> Atualizar
+              </button>
+            </div>
+          </div>
+          <div id="pending-suggestions" class="suggestions-list">
+            <div class="loading">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Carregando sugestões...</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Approved Suggestions Tab -->
+        <section id="approved-tab" class="content-tab">
+          <div class="section-header">
+            <h2>Sugestões Aprovadas</h2>
+            <div class="section-actions">
+              <!-- Dropdown de exportação -->
+              <div class="export-dropdown">
+                <button id="export-dropdown-btn" class="export-btn">
+                  <i class="fas fa-chart-bar"></i> Relatório
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="export-options" class="export-options">
+                  <!-- <button class="export-option" data-format="csv">
+                    <i class="fas fa-file-csv"></i>
+                    <div>
+                      <strong>CSV</strong>
+                      <small>Planilha simples</small>
+                    </div>
+                  </button>
+                  <button class="export-option" data-format="excel">
+                    <i class="fas fa-file-excel"></i>
+                    <div>
+                      <strong>Excel</strong>
+                      <small>Múltiplas abas</small>
+                    </div>
+                  </button> -->
+                  <button class="export-option" data-format="pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <div>
+                      <strong>PDF</strong>
+                      <small>Relatório visual</small>
+                    </div>
+                  </button>
+                  <!-- <button class="export-option" data-format="json">
+                    <i class="fas fa-file-code"></i>
+                    <div>
+                      <strong>JSON</strong>
+                      <small>Dados estruturados</small>
+                    </div>
+                  </button> -->
+                </div>
+              </div>
+
+              <button id="refresh-approved" class="action-btn refresh-btn">
+                <i class="fas fa-sync-alt"></i> Atualizar
+              </button>
+            </div>
+          </div>
+          <div id="approved-suggestions" class="suggestions-list">
+            <div class="loading">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Carregando sugestões...</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Feedback Tab -->
+        <section id="feedback-tab" class="content-tab">
+          <div class="section-header">
+            <h2>Feedbacks dos Usuários</h2>
+            <div class="section-actions">
+              <button id="refresh-feedback" class="action-btn refresh-btn">
+                <i class="fas fa-sync-alt"></i> Atualizar
+              </button>
+            </div>
+          </div>
+
+          <div class="feedback-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="total-feedback-count">0</div>
+              <div class="stat-label">Total de Feedbacks</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="avg-rating">0.0</div>
+              <div class="stat-label">Avaliação Média</div>
+            </div>
+          </div>
+
+          <div id="feedback-list" class="feedback-list">
+            <div class="loading">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Carregando feedbacks...</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal para visualizar detalhes -->
+    <div id="suggestion-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title">Detalhes da Sugestão</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer" id="modal-footer"></div>
       </div>
     </div>
-  </div>
 
-  <footer class="admin-footer">
-    <p>© 2025 - Todos os direitos reservados</p>
-  </footer>
-   <script src="./src/scripts/auth-check.js"></script>
-  <script src="./src/scripts/admin.js"></script>
-</body>
+    <footer class="admin-footer">
+      <p>© 2025 - Todos os direitos reservados</p>
+    </footer>
+
+    <script src="./src/scripts/auth-check.js"></script>
+    <script src="./src/scripts/admin.js"></script>
+  </body>
 </html>

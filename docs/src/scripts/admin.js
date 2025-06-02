@@ -46,41 +46,333 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentFilter = 'all';
     let currentSearch = '';
     
+       // Adicionar seletor de período no HTML
+    function addPeriodSelector() {
+        // Procurar onde adicionar o seletor
+        const exportContainer = document.querySelector('.export-container') || 
+                               document.querySelector('#export-dropdown-btn')?.parentElement ||
+                               document.querySelector('.admin-header') ||
+                               document.querySelector('.content-header');
+        
+        if (exportContainer && !document.getElementById('period-selector')) {
+            const selectorHTML = `
+                <div id="period-selector" class="period-selector" style="
+                    margin: 15px 0;
+                    padding: 15px;
+                    background: white;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    flex-wrap: wrap;
+                ">
+                    <label for="report-period" style="
+                        font-weight: 600;
+                        color: #333;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        <i class="fas fa-calendar-alt" style="color: #0066cc;"></i>
+                        Período do Relatório:
+                    </label>
+                    <select id="report-period" style="
+                        padding: 10px 15px;
+                        border-radius: 8px;
+                        border: 2px solid #e1e5e9;
+                        background: white;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #333;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 200px;
+                    ">
+                        <option value="30">📊 Últimos 30 dias</option>
+                        <option value="90">📈 Últimos 3 meses</option>
+                        <option value="current-month">📅 Mês atual</option>
+                        <option value="365">📆 Último ano</option>
+                        <option value="all" selected>🗂️ Todos os dados</option>
+                    </select>
+                    <span id="period-info" style="
+                        color: #666;
+                        font-size: 13px;
+                        font-style: italic;
+                    ">
+                        Selecione o período para análise
+                    </span>
+                </div>
+            `;
+            
+            exportContainer.insertAdjacentHTML('afterend', selectorHTML);
+            
+            // Adicionar event listener para mudança de período
+            const selector = document.getElementById('report-period');
+            if (selector) {
+                selector.addEventListener('change', updatePeriodInfo);
+                updatePeriodInfo(); // Atualizar info inicial
+            }
+            
+            console.log('✅ Seletor de período adicionado');
+        }
+    }
+
+    // Atualizar informações do período selecionado
+    function updatePeriodInfo() {
+        const period = getSelectedPeriod();
+        const infoElement = document.getElementById('period-info');
+        
+        if (infoElement && period) {
+            const fromDate = period.from.toLocaleDateString('pt-BR');
+            const toDate = period.to.toLocaleDateString('pt-BR');
+            
+            infoElement.innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                ${period.label} (${fromDate} até ${toDate})
+            `;
+        }
+    }
+
+    // Obter período selecionado
+    function getSelectedPeriod() {
+        const selector = document.getElementById('report-period');
+        const periodType = selector ? selector.value : 'all';
+        
+        const now = new Date();
+        let startDate, endDate, label;
+        
+        switch (periodType) {
+            case '30':
+                startDate = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+                endDate = now;
+                label = 'Últimos 30 dias';
+                break;
+                
+            case '90':
+                startDate = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));
+                endDate = now;
+                label = 'Últimos 3 meses';
+                break;
+                
+            case 'current-month':
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = now;
+                label = 'Mês atual';
+                break;
+                
+            case '365':
+                startDate = new Date(now.getTime() - (365 * 24 * 60 * 60 * 1000));
+                endDate = now;
+                label = 'Último ano';
+                break;
+                
+            case 'all':
+            default:
+                const allDates = getAllAvailableDates();
+                startDate = allDates.min;
+                endDate = allDates.max;
+                label = 'Período completo';
+                break;
+        }
+        
+        return {
+            from: startDate,
+            to: endDate,
+            label: label,
+            type: periodType
+        };
+    }
+
+    // Obter todas as datas disponíveis
+    function getAllAvailableDates() {
+        const allSuggestions = [
+            ...(allApprovedSuggestions || []), 
+            ...(allPendingSuggestions || [])
+        ];
+        
+        const dates = allSuggestions
+            .map(s => {
+                try {
+                    return s.date?.seconds ? new Date(s.date.seconds * 1000) : new Date(s.date);
+                } catch (e) {
+                    return null;
+                }
+            })
+            .filter(d => d && !isNaN(d));
+        
+        if (dates.length === 0) {
+            const now = new Date();
+            return { min: now, max: now };
+        }
+        
+        return {
+            min: new Date(Math.min(...dates)),
+            max: new Date(Math.max(...dates))
+        };
+    }
+
+    // Filtrar dados por período
+    function filterDataByPeriod(data, period) {
+        if (!data || !Array.isArray(data)) return [];
+        
+        return data.filter(item => {
+            try {
+                const itemDate = item.date?.seconds ? 
+                    new Date(item.date.seconds * 1000) : 
+                    new Date(item.date);
+                
+                return itemDate >= period.from && itemDate <= period.to;
+            } catch (e) {
+                return false;
+            }
+        });
+    }
+
+    // Estatísticas padrão para período específico
+    function getDefaultStatsForPeriod(period) {
+        console.log('📊 Usando estatísticas padrão para período específico');
+        
+        return {
+            general: {
+                totalSuggestions: 0,
+                totalApproved: 0,
+                totalPending: 0,
+                totalRejected: 0,
+                overallApprovalRate: 0,
+                avgApprovalTime: 0
+            },
+            byCategory: {
+                'Nenhum dado no período': {
+                    total: 0,
+                    approved: 0,
+                    pending: 0,
+                    approvalRate: 0
+                }
+            },
+            monthly: {
+                [new Date().toLocaleDateString('pt-BR', { year: 'numeric', month: 'short' })]: 0
+            },
+            feedback: {
+                total: 0,
+                approved: 0,
+                pending: 0,
+                rejected: 0,
+                averageRating: '0.0'
+            },
+            currentMonth: {
+                total: 0,
+                approved: 0
+            },
+            period: {
+                from: period.from.toISOString(),
+                to: period.to.toISOString(),
+                label: period.label,
+                type: period.type
+            }
+        };
+    }
+
+    // Função para mostrar feedback de sucesso
+    function showExportSuccess(message) {
+        // Remover notificação anterior se existir
+        const existingNotification = document.querySelector('.export-success-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+        
+        // Criar nova notificação
+        const notification = document.createElement('div');
+        notification.className = 'export-success-notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+            z-index: 10000;
+            font-weight: 600;
+            animation: slideDown 0.3s ease-out;
+        `;
+        
+        notification.innerHTML = `
+            <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+            ${message}
+        `;
+        
+        // Adicionar animação CSS
+        if (!document.querySelector('#export-success-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'export-success-styles';
+            styles.textContent = `
+                @keyframes slideDown {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-50%) translateY(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 4 segundos
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.style.animation = 'slideDown 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 4000);
+    }
+
     // Inicialização
     init();
     
     // Função de inicialização
-    function init() {
-        // Carregar categorias
-        loadCategories();
-        
-        // Carregar sugestões pendentes
-        loadPendingSuggestions();
-        
-        // Carregar sugestões aprovadas
-        loadApprovedSuggestions();
-        
-        // Carregar feedbacks
-        loadFeedbacks();
-        
-        // Configurar navegação
-        setupNavigation();
-        
-        // Configurar pesquisa e filtros
-        setupSearchAndFilters();
-        
-        // Configurar modal
-        setupModal();
-        
-        // Configurar botões de atualização
-        const refreshPending = document.getElementById('refresh-pending');
-        const refreshApproved = document.getElementById('refresh-approved');
-        const exportApproved = document.getElementById('export-approved');
-        
-        if (refreshPending) refreshPending.addEventListener('click', loadPendingSuggestions);
-        if (refreshApproved) refreshApproved.addEventListener('click', loadApprovedSuggestions);
-        if (exportApproved) exportApproved.addEventListener('click', exportApprovedSuggestions);
-    }
+function init() {
+    // Carregar categorias
+    loadCategories();
+    
+    // Carregar sugestões pendentes
+    loadPendingSuggestions();
+    
+    // Carregar sugestões aprovadas
+    loadApprovedSuggestions();
+    
+    // Carregar feedbacks
+    loadFeedbacks();
+    
+    // Configurar navegação
+    setupNavigation();
+    
+    // Configurar pesquisa e filtros
+    setupSearchAndFilters();
+    
+    // Configurar modal
+    setupModal();
+    
+    // Configurar botões de atualização
+    const refreshPending = document.getElementById('refresh-pending');
+    const refreshApproved = document.getElementById('refresh-approved');
+    const refreshFeedback = document.getElementById('refresh-feedback');
+    
+    if (refreshPending) refreshPending.addEventListener('click', loadPendingSuggestions);
+    if (refreshApproved) refreshApproved.addEventListener('click', loadApprovedSuggestions);
+    if (refreshFeedback) refreshFeedback.addEventListener('click', loadFeedbacks);
+    
+    // Configurar dropdown de exportação
+    setupExportDropdown();
+}
+
     
     // Carregar categorias
     function loadCategories() {
@@ -802,74 +1094,1379 @@ function formatUserInfo(userInfo) {
         }
     }
     
-    // Exportar sugestões aprovadas
-    function exportApprovedSuggestions() {
-        if (allApprovedSuggestions.length === 0) {
-            alert('Não há sugestões aprovadas para exportar.');
-            return;
-        }
-        
-        const filteredSuggestions = filterSuggestions(allApprovedSuggestions);
-        
-        if (filteredSuggestions.length === 0) {
-            alert('Não há sugestões que correspondam aos filtros atuais.');
-            return;
-        }
-        
-        const csvData = [
-            ['Título', 'Descrição', 'Comentário', 'Categoria', 'Data de Envio', 'Data de Aprovação']
-        ];
-        
-        filteredSuggestions.forEach(suggestion => {
-            const title = suggestion.title || '';
-            const text = suggestion.text || '';
-            const comment = suggestion.comment || '';
-            const categoryName = getCategoryName(suggestion.category || '');
-            
-            let dateStr = '';
-            if (suggestion.date) {
-                try {
-                    dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString('pt-BR');
-                } catch (e) {}
-            }
-            
-            let approvedDateStr = '';
-            if (suggestion.approvalDate) {
-                try {
-                    approvedDateStr = new Date(suggestion.approvalDate.seconds * 1000).toLocaleDateString('pt-BR');
-                } catch (e) {}
-            }
-            
-            csvData.push([
-                title,
-                text,
-                comment,
-                categoryName,
-                dateStr,
-                approvedDateStr
-            ]);
-        });
-        
-        let csvContent = "data:text/csv;charset=utf-8,";
-        
-        csvData.forEach(row => {
-            const formattedRow = row.map(cell => {
-                const escaped = String(cell).replace(/"/g, '""');
-                return `"${escaped}"`;
-            });
-            
-            csvContent += formattedRow.join(',') + '\r\n';
-        });
-        
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `sugestoes_aprovadas_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        
-        link.click();
-        document.body.removeChild(link);
+// Configurar dropdown de relatórios (substitui setupExportDropdown)
+function setupExportDropdown() {
+    const exportDropdownBtn = document.getElementById('export-dropdown-btn');
+    const exportOptions = document.getElementById('export-options');
+    const exportOptionButtons = document.querySelectorAll('.export-option');
+    
+    if (!exportDropdownBtn || !exportOptions) {
+        console.warn('Elementos de relatório não encontrados');
+        return;
     }
+    
+    // Toggle do dropdown
+    exportDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportOptions.classList.toggle('show');
+        console.log('Dropdown de relatórios clicado');
+    });
+    
+    // Fechar dropdown ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.export-dropdown')) {
+            exportOptions.classList.remove('show');
+        }
+    });
+    
+    // Configurar cada opção de relatório
+    exportOptionButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const format = button.getAttribute('data-format');
+            
+            console.log('Relatório selecionado:', format);
+            
+            // Fechar dropdown
+            exportOptions.classList.remove('show');
+            
+            // Gerar relatório
+            switch(format) {
+                case 'excel':
+                    generateStatisticsReport('excel');
+                    break;
+                case 'pdf':
+                    generateStatisticsReport('pdf');
+                    break;
+                case 'csv':
+                    generateStatisticsReport('csv');
+                    break;
+                case 'json':
+                    generateStatisticsReport('json');
+                    break;
+                default:
+                    console.warn('Formato não reconhecido:', format);
+            }
+        });
+    });
+    
+    console.log('✅ Dropdown de relatórios configurado');
+}
+
+// Gerar relatório de estatísticas (substitui exportApprovedSuggestions)
+function generateStatisticsReport(format) {
+    console.log(`📊 Gerando relatório no formato: ${format}`);
+    
+    // Mostrar loading
+    const exportBtn = document.getElementById('export-dropdown-btn');
+    if (exportBtn) {
+        exportBtn.classList.add('loading');
+        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+    }
+    
+    // Calcular estatísticas
+    const stats = calculateStatistics();
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    
+    setTimeout(() => {
+        try {
+            switch (format) {
+                case 'csv':
+                    exportStatisticsToCSV(stats, timestamp);
+                    break;
+                case 'excel':
+                    exportStatisticsToExcel(stats, timestamp);
+                    break;
+                case 'pdf':
+                    generateInteractiveDashboard(stats, timestamp); // Nova função!
+                    break;
+                case 'json':
+                    exportStatisticsToJSON(stats, timestamp);
+                    break;
+                default:
+                    console.error('Formato não suportado:', format);
+                    alert('Formato não suportado!');
+                    return;
+            }
+        } catch (error) {
+            console.error('Erro ao gerar relatório:', error);
+            alert('Erro ao gerar relatório. Tente novamente.');
+        } finally {
+            // Restaurar botão
+            if (exportBtn) {
+                exportBtn.classList.remove('loading');
+                exportBtn.innerHTML = '<i class="fas fa-download"></i> Exportar Dados <i class="fas fa-chevron-down"></i>';
+            }
+        }
+    }, 1000);
+}
+// Mostrar feedback de sucesso na exportação
+function showExportSuccess(message) {
+    const exportBtn = document.getElementById('export-dropdown-btn');
+    if (exportBtn) {
+        exportBtn.classList.add('success');
+        exportBtn.innerHTML = '<i class="fas fa-check"></i> Sucesso!';
+        
+        setTimeout(() => {
+            exportBtn.classList.remove('success');
+            exportBtn.innerHTML = '<i class="fas fa-download"></i> Exportar Dados <i class="fas fa-chevron-down"></i>';
+        }, 2000);
+    }
+    
+    // Mostrar notificação
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-weight: 600;
+    `;
+    notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+
+// Calcular estatísticas completas
+function calculateStatistics() {
+    console.log('📊 Calculando estatísticas...');
+    
+    try {
+        // Verificar se os dados existem
+        if (!allApprovedSuggestions || !allPendingSuggestions || !allFeedbacks) {
+            console.warn('⚠️ Dados não carregados completamente');
+            return getDefaultStats();
+        }
+        
+        const allSuggestions = [...allApprovedSuggestions, ...allPendingSuggestions];
+        const totalSuggestions = allSuggestions.length;
+        
+        if (totalSuggestions === 0) {
+            console.warn('⚠️ Nenhuma sugestão encontrada');
+            return getDefaultStats();
+        }
+        
+        // Estatísticas gerais
+        const totalApproved = allApprovedSuggestions.length;
+        const totalPending = allPendingSuggestions.length;
+        const totalRejected = 0; // Assumindo que rejeitadas são excluídas
+        
+        const approvalRate = totalSuggestions > 0 ? 
+            Math.round((totalApproved / totalSuggestions) * 100) : 0;
+        
+        // Calcular tempo médio de aprovação
+        let avgApprovalTime = 0;
+        if (totalApproved > 0) {
+            const approvalTimes = allApprovedSuggestions
+                .filter(s => s.date && s.approvalDate)
+                .map(s => {
+                    try {
+                        const submitDate = s.date.seconds ? 
+                            new Date(s.date.seconds * 1000) : new Date(s.date);
+                        const approvalDate = s.approvalDate.seconds ? 
+                            new Date(s.approvalDate.seconds * 1000) : new Date(s.approvalDate);
+                        return Math.abs(approvalDate - submitDate) / (1000 * 60 * 60 * 24);
+                    } catch (e) {
+                        return 0;
+                    }
+                })
+                .filter(time => time > 0);
+            
+            avgApprovalTime = approvalTimes.length > 0 ? 
+                Math.round(approvalTimes.reduce((a, b) => a + b, 0) / approvalTimes.length) : 0;
+        }
+        
+        // Estatísticas por categoria
+        const byCategory = {};
+        allCategories.forEach(category => {
+            const categoryId = category.id;
+            const categoryName = category.nome;
+            
+            const totalInCategory = allSuggestions.filter(s => s.category === categoryId).length;
+            const approvedInCategory = allApprovedSuggestions.filter(s => s.category === categoryId).length;
+            const approvalRateCategory = totalInCategory > 0 ? 
+                Math.round((approvedInCategory / totalInCategory) * 100) : 0;
+            
+            if (totalInCategory > 0) {
+                byCategory[categoryName] = {
+                    total: totalInCategory,
+                    approved: approvedInCategory,
+                    pending: allPendingSuggestions.filter(s => s.category === categoryId).length,
+                    approvalRate: approvalRateCategory
+                };
+            }
+        });
+        
+        // Se não há categorias, criar uma categoria padrão
+        if (Object.keys(byCategory).length === 0) {
+            byCategory['Geral'] = {
+                total: totalSuggestions,
+                approved: totalApproved,
+                pending: totalPending,
+                approvalRate: approvalRate
+            };
+        }
+        
+        // Estatísticas mensais
+        const monthly = {};
+        allApprovedSuggestions.forEach(suggestion => {
+            try {
+                const date = suggestion.approvalDate?.seconds ? 
+                    new Date(suggestion.approvalDate.seconds * 1000) : 
+                    suggestion.date?.seconds ? 
+                    new Date(suggestion.date.seconds * 1000) : 
+                    new Date();
+                
+                const monthKey = date.toLocaleDateString('pt-BR', { 
+                    year: 'numeric', 
+                    month: 'short' 
+                });
+                
+                monthly[monthKey] = (monthly[monthKey] || 0) + 1;
+            } catch (e) {
+                console.warn('Erro ao processar data:', e);
+            }
+        });
+        
+        // Se não há dados mensais, criar mês atual
+        if (Object.keys(monthly).length === 0) {
+            const currentMonth = new Date().toLocaleDateString('pt-BR', { 
+                year: 'numeric', 
+                month: 'short' 
+            });
+            monthly[currentMonth] = totalApproved;
+        }
+        
+        // Estatísticas de feedback
+        const feedbackStats = {
+            total: allFeedbacks.length,
+            approved: allFeedbacks.filter(f => f.status === 'approved').length,
+            pending: allFeedbacks.filter(f => f.status === 'pending' || !f.status).length,
+            rejected: allFeedbacks.filter(f => f.status === 'rejected').length,
+            averageRating: 0
+        };
+        
+        // Calcular média de rating
+        const validRatings = allFeedbacks
+            .map(f => parseInt(f.rating))
+            .filter(r => !isNaN(r) && r > 0);
+        
+        if (validRatings.length > 0) {
+            feedbackStats.averageRating = (
+                validRatings.reduce((a, b) => a + b, 0) / validRatings.length
+            ).toFixed(1);
+        }
+        
+        // Estatísticas do mês atual
+        const currentDate = new Date();
+        const currentMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        
+        const currentMonthSuggestions = allSuggestions.filter(s => {
+            try {
+                const suggestionDate = s.date?.seconds ? 
+                    new Date(s.date.seconds * 1000) : new Date(s.date);
+                return suggestionDate >= currentMonthStart;
+            } catch (e) {
+                return false;
+            }
+        });
+        
+        // Período dos dados
+        const dates = allSuggestions
+            .map(s => {
+                try {
+                    return s.date?.seconds ? new Date(s.date.seconds * 1000) : new Date(s.date);
+                } catch (e) {
+                    return new Date();
+                }
+            })
+            .filter(d => d instanceof Date && !isNaN(d));
+        
+        const minDate = dates.length > 0 ? new Date(Math.min(...dates)) : new Date();
+        const maxDate = dates.length > 0 ? new Date(Math.max(...dates)) : new Date();
+        
+        const stats = {
+            general: {
+                totalSuggestions,
+                totalApproved,
+                totalPending,
+                totalRejected,
+                overallApprovalRate: approvalRate,
+                avgApprovalTime: avgApprovalTime || 0
+            },
+            byCategory,
+            monthly,
+            feedback: feedbackStats,
+            currentMonth: {
+                total: currentMonthSuggestions.length,
+                approved: currentMonthSuggestions.filter(s => 
+                    allApprovedSuggestions.some(a => a.id === s.id)
+                ).length
+            },
+            period: {
+                from: minDate.toISOString(),
+                to: maxDate.toISOString()
+            }
+        };
+        
+        console.log('✅ Estatísticas calculadas:', stats);
+        return stats;
+        
+    } catch (error) {
+        console.error('❌ Erro ao calcular estatísticas:', error);
+        return getDefaultStats();
+    }
+}
+
+// Estatísticas padrão quando há erro ou dados insuficientes
+function getDefaultStats() {
+    console.log('📊 Usando estatísticas padrão');
+    
+    return {
+        general: {
+            totalSuggestions: 0,
+            totalApproved: 0,
+            totalPending: 0,
+            totalRejected: 0,
+            overallApprovalRate: 0,
+            avgApprovalTime: 0
+        },
+        byCategory: {
+            'Sem dados': {
+                total: 0,
+                approved: 0,
+                pending: 0,
+                approvalRate: 0
+            }
+        },
+        monthly: {
+            [new Date().toLocaleDateString('pt-BR', { year: 'numeric', month: 'short' })]: 0
+        },
+        feedback: {
+            total: 0,
+            approved: 0,
+            pending: 0,
+            rejected: 0,
+            averageRating: '0.0'
+        },
+        currentMonth: {
+            total: 0,
+            approved: 0
+        },
+        period: {
+            from: new Date().toISOString(),
+            to: new Date().toISOString()
+        }
+    };
+}
+
+
+// Função auxiliar para obter chave da semana
+function getWeekKey(date) {
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - startOfYear) / 86400000;
+    const weekNumber = Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+    return `${date.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;
+}
+
+// Função auxiliar para obter data mais antiga
+function getEarliestDate() {
+    const allDates = [];
+    
+    allApprovedSuggestions.forEach(s => {
+        if (s.date && s.date.seconds) {
+            allDates.push(new Date(s.date.seconds * 1000));
+        }
+    });
+    
+    allPendingSuggestions.forEach(s => {
+        if (s.date && s.date.seconds) {
+            allDates.push(new Date(s.date.seconds * 1000));
+        }
+    });
+    
+    if (allDates.length === 0) return new Date().toISOString();
+    
+    const earliest = new Date(Math.min(...allDates));
+    return earliest.toISOString();
+}
+
+// Exportar estatísticas para CSV
+function exportStatisticsToCSV(stats, timestamp) {
+    console.log('📊 Exportando estatísticas para CSV...');
+    
+    let csvContent = '\uFEFF'; // BOM para UTF-8
+    
+    // Cabeçalho do relatório
+    csvContent += `"RELATÓRIO DE ESTATÍSTICAS - PGE-SC"\n`;
+    csvContent += `"Gerado em: ${new Date().toLocaleString('pt-BR')}"\n`;
+    csvContent += `"Período: ${new Date(stats.period.from).toLocaleDateString('pt-BR')} até ${new Date(stats.period.to).toLocaleDateString('pt-BR')}"\n\n`;
+    
+    // Estatísticas gerais
+    csvContent += `"ESTATÍSTICAS GERAIS"\n`;
+    csvContent += `"Métrica","Valor"\n`;
+    csvContent += `"Total de Sugestões","${stats.general.totalSuggestions}"\n`;
+    csvContent += `"Sugestões Pendentes","${stats.general.totalPending}"\n`;
+    csvContent += `"Sugestões Aprovadas","${stats.general.totalApproved}"\n`;
+    csvContent += `"Sugestões Rejeitadas","${stats.general.totalRejected}"\n`;
+    csvContent += `"Taxa de Aprovação","${stats.general.overallApprovalRate}%"\n`;
+    csvContent += `"Tempo Médio de Aprovação","${stats.general.avgApprovalTime} dias"\n\n`;
+    
+    // Estatísticas do mês atual
+    csvContent += `"ESTATÍSTICAS DO MÊS ATUAL"\n`;
+    csvContent += `"Métrica","Valor"\n`;
+    csvContent += `"Aprovadas este mês","${stats.currentMonth.approved}"\n`;
+    csvContent += `"Pendentes este mês","${stats.currentMonth.pending}"\n`;
+    csvContent += `"Total este mês","${stats.currentMonth.total}"\n\n`;
+    
+    // Estatísticas por categoria
+    csvContent += `"ESTATÍSTICAS POR CATEGORIA"\n`;
+    csvContent += `"Categoria","Pendentes","Aprovadas","Total","Taxa de Aprovação (%)"\n`;
+    Object.entries(stats.categories).forEach(([category, data]) => {
+        csvContent += `"${category}","${data.pending}","${data.approved}","${data.total}","${data.approvalRate}%"\n`;
+    });
+    csvContent += '\n';
+    
+    // Estatísticas mensais
+    csvContent += `"ESTATÍSTICAS MENSAIS"\n`;
+    csvContent += `"Mês","Sugestões Aprovadas"\n`;
+    Object.entries(stats.monthly)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .forEach(([month, count]) => {
+            csvContent += `"${month}","${count}"\n`;
+        });
+    csvContent += '\n';
+    
+    // Estatísticas de feedback
+    csvContent += `"ESTATÍSTICAS DE FEEDBACK"\n`;
+    csvContent += `"Métrica","Valor"\n`;
+    csvContent += `"Total de Feedbacks","${stats.feedback.total}"\n`;
+    csvContent += `"Feedbacks Aprovados","${stats.feedback.approved}"\n`;
+    csvContent += `"Feedbacks Pendentes","${stats.feedback.pending}"\n`;
+    csvContent += `"Feedbacks Rejeitados","${stats.feedback.rejected}"\n`;
+    csvContent += `"Avaliação Média","${stats.feedback.averageRating}/10"\n`;
+    
+    // Criar e baixar arquivo
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    link.href = url;
+    link.download = `relatorio_estatisticas_${timestamp}.csv`;
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ Relatório CSV gerado com sucesso!\n\n📊 Resumo:\n• ${stats.general.totalSuggestions} sugestões totais\n• ${stats.general.overallApprovalRate}% taxa de aprovação\n• ${stats.feedback.averageRating}/10 avaliação média`);
+}
+
+// Exportar estatísticas para JSON
+function exportStatisticsToJSON(stats, timestamp) {
+    console.log('📄 Exportando estatísticas para JSON...');
+    
+    const reportData = {
+        metadata: {
+            title: 'Relatório de Estatísticas - PGE-SC',
+            generatedAt: stats.generatedAt,
+            period: stats.period,
+            version: '1.0'
+        },
+        summary: {
+            totalSuggestions: stats.general.totalSuggestions,
+            approvalRate: `${stats.general.overallApprovalRate}%`,
+            avgApprovalTime: `${stats.general.avgApprovalTime} dias`,
+            averageRating: `${stats.feedback.averageRating}/10`
+        },
+        statistics: stats
+    };
+    
+        const jsonString = JSON.stringify(reportData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `relatorio_estatisticas_${timestamp}.json`;
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ Relatório JSON gerado com sucesso!\n\n📊 Resumo:\n• ${stats.general.totalSuggestions} sugestões totais\n• ${stats.general.overallApprovalRate}% taxa de aprovação\n• ${stats.feedback.averageRating}/10 avaliação média`);
+}
+
+// Exportar estatísticas para Excel
+function exportStatisticsToExcel(stats, timestamp) {
+    console.log('📊 Exportando estatísticas para Excel...');
+    
+    // Verificar se a biblioteca XLSX está disponível
+    if (typeof XLSX === 'undefined') {
+        alert('Biblioteca de exportação Excel não carregada. Usando CSV como alternativa.');
+        exportStatisticsToCSV(stats, timestamp);
+        return;
+    }
+    
+    // Criar workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Aba 1: Resumo Executivo
+    const summaryData = [
+        ['RELATÓRIO DE ESTATÍSTICAS - PGE-SC'],
+        [`Gerado em: ${new Date().toLocaleString('pt-BR')}`],
+        [`Período: ${new Date(stats.period.from).toLocaleDateString('pt-BR')} até ${new Date(stats.period.to).toLocaleDateString('pt-BR')}`],
+        [''],
+        ['RESUMO EXECUTIVO'],
+        ['Métrica', 'Valor'],
+        ['Total de Sugestões', stats.general.totalSuggestions],
+        ['Sugestões Pendentes', stats.general.totalPending],
+        ['Sugestões Aprovadas', stats.general.totalApproved],
+        ['Sugestões Rejeitadas', stats.general.totalRejected],
+        ['Taxa de Aprovação', `${stats.general.overallApprovalRate}%`],
+        ['Tempo Médio de Aprovação', `${stats.general.avgApprovalTime} dias`],
+        [''],
+        ['FEEDBACK'],
+        ['Total de Feedbacks', stats.feedback.total],
+        ['Avaliação Média', `${stats.feedback.averageRating}/10`],
+        ['Feedbacks Aprovados', stats.feedback.approved],
+        ['Feedbacks Pendentes', stats.feedback.pending]
+    ];
+    
+    const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+    wsSummary['!cols'] = [{ wch: 25 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumo');
+    
+    // Aba 2: Estatísticas por Categoria
+    const categoryData = [
+        ['ESTATÍSTICAS POR CATEGORIA'],
+        [''],
+        ['Categoria', 'Pendentes', 'Aprovadas', 'Total', 'Taxa de Aprovação (%)']
+    ];
+    
+    Object.entries(stats.categories).forEach(([category, data]) => {
+        categoryData.push([category, data.pending, data.approved, data.total, parseFloat(data.approvalRate)]);
+    });
+    
+    const wsCategory = XLSX.utils.aoa_to_sheet(categoryData);
+    wsCategory['!cols'] = [{ wch: 25 }, { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(wb, wsCategory, 'Por Categoria');
+    
+    // Aba 3: Evolução Mensal
+    const monthlyData = [
+        ['EVOLUÇÃO MENSAL'],
+        [''],
+        ['Mês', 'Sugestões Aprovadas']
+    ];
+    
+    Object.entries(stats.monthly)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .forEach(([month, count]) => {
+            monthlyData.push([month, count]);
+        });
+    
+    const wsMonthly = XLSX.utils.aoa_to_sheet(monthlyData);
+    wsMonthly['!cols'] = [{ wch: 15 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(wb, wsMonthly, 'Evolução Mensal');
+    
+    // Aba 4: Dados do Mês Atual
+    const currentMonthData = [
+        ['ESTATÍSTICAS DO MÊS ATUAL'],
+        [`Mês: ${new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`],
+        [''],
+        ['Métrica', 'Valor'],
+        ['Aprovadas este mês', stats.currentMonth.approved],
+        ['Pendentes este mês', stats.currentMonth.pending],
+        ['Total este mês', stats.currentMonth.total]
+    ];
+    
+    const wsCurrentMonth = XLSX.utils.aoa_to_sheet(currentMonthData);
+    wsCurrentMonth['!cols'] = [{ wch: 20 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsCurrentMonth, 'Mês Atual');
+    
+    // Salvar arquivo
+    const fileName = `relatorio_estatisticas_${timestamp}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    
+    alert(`✅ Relatório Excel gerado com sucesso!\n\n📊 Resumo:\n• ${stats.general.totalSuggestions} sugestões totais\n• ${stats.general.overallApprovalRate}% taxa de aprovação\n• ${stats.feedback.averageRating}/10 avaliação média\n\n📋 4 abas criadas: Resumo, Por Categoria, Evolução Mensal, Mês Atual`);
+}
+
+
+// Gerar Dashboard HTML Interativo
+function generateInteractiveDashboard(stats, timestamp) {
+    console.log('🎨 Gerando Dashboard HTML Interativo...');
+    
+    const dashboardHTML = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard PGE-SC - Relatório de Estatísticas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .dashboard-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0066cc, #004499, #0066cc);
+        }
+        
+        .dashboard-header h1 {
+            color: #0066cc;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .dashboard-header h2 {
+            color: #666;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .header-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .header-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .header-info-item i {
+            color: #0066cc;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-color);
+        }
+        
+        .kpi-card.primary { --accent-color: #0066cc; }
+        .kpi-card.success { --accent-color: #28a745; }
+        .kpi-card.warning { --accent-color: #ffc107; }
+        .kpi-card.info { --accent-color: #17a2b8; }
+        
+        .kpi-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 20px;
+            background: var(--accent-color);
+        }
+        
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .kpi-label {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .kpi-trend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .chart-card h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-card h3 i {
+            color: #0066cc;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .table-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .table-card h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #0066cc, #004499);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+        }
+        
+        .data-table tr:hover td {
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+        
+        .footer {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            color: #666;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .print-btn:hover {
+            background: #0052a3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,102,204,0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .print-btn {
+                position: relative;
+                margin: 20px auto;
+                display: block;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .print-btn {
+                display: none;
+            }
+            
+            .chart-card, .kpi-card, .table-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: #666;
+        }
+        
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">
+        <i class="fas fa-print"></i> Imprimir/Salvar PDF
+    </button>
+    
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header fade-in">
+            <h1><i class="fas fa-chart-line"></i> Dashboard PGE-SC</h1>
+            <h2>Relatório de Estatísticas - Sistema de Sugestões</h2>
+            <div class="header-info">
+                <div class="header-info-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Gerado em: ${new Date().toLocaleString('pt-BR')}</span>
+                </div>
+                <div class="header-info-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Período: ${new Date(stats.period.from).toLocaleDateString('pt-BR')} até ${new Date(stats.period.to).toLocaleDateString('pt-BR')}</span>
+                </div>
+                <div class="header-info-item">
+                    <i class="fas fa-database"></i>
+                    <span>Dados em tempo real</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- KPIs -->
+        <div class="kpi-grid fade-in">
+            <div class="kpi-card primary">
+                <div class="kpi-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="kpi-value">${stats.general.totalSuggestions}</div>
+                <div class="kpi-label">Total de Sugestões</div>
+                <div class="kpi-trend">+${stats.currentMonth.total} este mês</div>
+            </div>
+            
+            <div class="kpi-card success">
+                <div class="kpi-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="kpi-value">${stats.general.overallApprovalRate}%</div>
+                <div class="kpi-label">Taxa de Aprovação</div>
+                <div class="kpi-trend">${stats.general.totalApproved} aprovadas</div>
+            </div>
+            
+            <div class="kpi-card warning">
+                <div class="kpi-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="kpi-value">${stats.general.avgApprovalTime}</div>
+                <div class="kpi-label">Dias Médios para Aprovação</div>
+                <div class="kpi-trend">${stats.general.totalPending} pendentes</div>
+            </div>
+            
+            <div class="kpi-card info">
+                <div class="kpi-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="kpi-value">${stats.feedback.averageRating}/10</div>
+                <div class="kpi-label">Avaliação Média</div>
+                <div class="kpi-trend">${stats.feedback.total} feedbacks</div>
+            </div>
+        </div>
+        
+        <!-- Gráficos -->
+        <div class="charts-grid fade-in">
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-pie"></i> Distribuição
+por Status</h3>
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-bar"></i> Sugestões por Categoria</h3>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card full-width">
+                <h3><i class="fas fa-chart-line"></i> Evolução Mensal</h3>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabela Detalhada -->
+        <div class="table-card fade-in">
+            <h3><i class="fas fa-table"></i> Análise Detalhada por Categoria</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Total</th>
+                        <th>Aprovadas</th>
+                        <th>Taxa de Aprovação</th>
+                        <th>Progresso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Object.entries(stats.byCategory).map(([category, data]) => `
+                        <tr>
+                            <td><strong>${category}</strong></td>
+                            <td>${data.total}</td>
+                            <td>${data.approved}</td>
+                            <td>${data.approvalRate}%</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${data.approvalRate}%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Estatísticas de Feedback -->
+        <div class="table-card fade-in">
+            <h3><i class="fas fa-comments"></i> Análise de Feedback</h3>
+            <div class="kpi-grid" style="margin-bottom: 20px;">
+                <div class="kpi-card success">
+                    <div class="kpi-icon">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <div class="kpi-value">${stats.feedback.approved}</div>
+                    <div class="kpi-label">Feedbacks Aprovados</div>
+                </div>
+                
+                <div class="kpi-card warning">
+                    <div class="kpi-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="kpi-value">${stats.feedback.pending}</div>
+                    <div class="kpi-label">Feedbacks Pendentes</div>
+                </div>
+                
+                <div class="kpi-card info">
+                    <div class="kpi-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="kpi-value">${stats.feedback.rejected}</div>
+                    <div class="kpi-label">Feedbacks Rejeitados</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer fade-in">
+            <p><strong>© ${new Date().getFullYear()} - Procuradoria Geral do Estado de Santa Catarina</strong></p>
+            <p>Relatório gerado automaticamente pelo Sistema de Administração PGE-SC</p>
+            <p style="margin-top: 10px; color: #999; font-size: 0.9rem;">
+                <i class="fas fa-info-circle"></i> 
+                Este dashboard é interativo - passe o mouse sobre os gráficos para mais detalhes
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Dados para os gráficos
+        const statsData = ${JSON.stringify(stats)};
+        
+        // Configuração global dos gráficos
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = '#666';
+        
+        // Gráfico de Status (Pizza)
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aprovadas', 'Pendentes', 'Rejeitadas'],
+                datasets: [{
+                    data: [
+                        statsData.general.totalApproved,
+                        statsData.general.totalPending,
+                        statsData.general.totalRejected
+                    ],
+                    backgroundColor: [
+                        '#28a745',
+                        '#ffc107',
+                        '#dc3545'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: {
+                                size: 13,
+                                weight: '600'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#0066cc',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    duration: 2000
+                }
+            }
+        });
+        
+        // Gráfico de Categorias (Barras)
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        const categoryLabels = Object.keys(statsData.byCategory);
+        const categoryData = Object.values(statsData.byCategory).map(cat => cat.total);
+        
+        new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    label: 'Sugestões',
+                    data: categoryData,
+                    backgroundColor: 'rgba(0, 102, 204, 0.8)',
+                    borderColor: '#0066cc',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#0066cc',
+                        borderWidth: 1,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxRotation: 45
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+        
+        // Gráfico de Evolução Mensal (Linha)
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        const monthlyLabels = Object.keys(statsData.monthly).sort();
+        const monthlyData = monthlyLabels.map(month => statsData.monthly[month]);
+        
+        new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'Sugestões Aprovadas',
+                    data: monthlyData,
+                    borderColor: '#0066cc',
+                    backgroundColor: 'rgba(0, 102, 204, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#0066cc',
+                    pointBorderColor: 'white',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#0066cc',
+                        borderWidth: 1,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+        
+        // Animações de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.fade-in');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+        
+        // Função para imprimir
+        function printDashboard() {
+            window.print();
+        }
+        
+        console.log('📊 Dashboard HTML Interativo carregado com sucesso!');
+    </script>
+</body>
+</html>`;
+    
+    // Abrir dashboard em nova janela
+    const dashboardWindow = window.open('', '_blank');
+    dashboardWindow.document.write(dashboardHTML);
+    dashboardWindow.document.close();
+    
+    // Focar na nova janela
+    dashboardWindow.focus();
+    
+    console.log('✅ Dashboard HTML Interativo gerado com sucesso!');
+    
+    // Feedback visual
+    showExportSuccess('Dashboard HTML gerado com sucesso!');
+}
+
+ 
+
 /**
  * Monitorar novos feedbacks e atualizar contadores automaticamente
  */
