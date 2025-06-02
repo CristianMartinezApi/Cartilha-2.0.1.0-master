@@ -54,6 +54,10 @@
               <span>Feedbacks</span>
               <span class="badge" id="feedback-count">0</span>
             </li>
+            <li class="nav-item" data-tab="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </li>
           </ul>
         </nav>
         <div class="sidebar-footer">
@@ -109,13 +113,13 @@
             <h2>Sugestões Aprovadas</h2>
             <div class="section-actions">
               <!-- Dropdown de exportação -->
-              <div class="export-dropdown">
+              <!-- <div class="export-dropdown">
                 <button id="export-dropdown-btn" class="export-btn">
                   <i class="fas fa-chart-bar"></i> Relatório
                   <i class="fas fa-chevron-down"></i>
                 </button>
                 <div id="export-options" class="export-options">
-                  <!-- <button class="export-option" data-format="csv">
+                  <button class="export-option" data-format="csv">
                     <i class="fas fa-file-csv"></i>
                     <div>
                       <strong>CSV</strong>
@@ -128,7 +132,7 @@
                       <strong>Excel</strong>
                       <small>Múltiplas abas</small>
                     </div>
-                  </button> -->
+                  </button>
                   <button class="export-option" data-format="pdf">
                     <i class="fas fa-file-pdf"></i>
                     <div>
@@ -136,15 +140,15 @@
                       <small>Relatório visual</small>
                     </div>
                   </button>
-                  <!-- <button class="export-option" data-format="json">
+                  <button class="export-option" data-format="json">
                     <i class="fas fa-file-code"></i>
                     <div>
                       <strong>JSON</strong>
                       <small>Dados estruturados</small>
                     </div>
-                  </button> -->
+                  </button>
                 </div>
-              </div>
+              </div> -->
 
               <button id="refresh-approved" class="action-btn refresh-btn">
                 <i class="fas fa-sync-alt"></i> Atualizar
@@ -188,6 +192,123 @@
             </div>
           </div>
         </section>
+                <!-- Dashboard Tab - NOVA SEÇÃO -->
+        <section id="dashboard-tab" class="content-tab">
+          <div class="section-header">
+            <h2>Dashboard em Tempo Real</h2>
+            <div class="section-actions">
+              <!-- Filtros de Período -->
+              <div class="dashboard-period-filter">
+                <select id="dashboard-period-select" class="period-select">
+                  <option value="7">Últimos 7 dias</option>
+                  <option value="30" selected>Últimos 30 dias</option>
+                  <option value="90">Últimos 3 meses</option>
+                  <option value="custom">Período personalizado</option>
+                </select>
+              </div>
+              
+              <!-- Datas Personalizadas (oculto inicialmente) -->
+              <div id="custom-period-inputs" class="custom-period-inputs" style="display: none;">
+                <input type="date" id="dashboard-start-date" class="date-input" title="Data inicial">
+                <input type="date" id="dashboard-end-date" class="date-input" title="Data final">
+                <button id="apply-custom-period" class="action-btn apply-btn">
+                  <i class="fas fa-check"></i> Aplicar
+                </button>
+              </div>
+              
+              <button id="refresh-dashboard" class="action-btn refresh-btn">
+                <i class="fas fa-sync-alt"></i> Atualizar
+              </button>
+              
+              <!-- Botão para Relatório Completo (mantém sistema atual) -->
+              <button id="open-full-report" class="action-btn export-btn">
+                <i class="fas fa-chart-line"></i> Relatório Completo
+              </button>
+            </div>
+          </div>
+
+          <!-- Info do Período Selecionado -->
+          <div id="dashboard-period-info" class="dashboard-period-info">
+            <i class="fas fa-calendar"></i>
+            <span id="period-display">Últimos 30 dias</span>
+          </div>
+
+          <!-- KPIs Principais -->
+          <div class="dashboard-kpis">
+            <div class="kpi-card kpi-primary">
+              <div class="kpi-icon">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <div class="kpi-content">
+                <div class="kpi-value" id="kpi-total-suggestions">-</div>
+                <div class="kpi-label">Total de Sugestões</div>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-success">
+              <div class="kpi-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="kpi-content">
+                <div class="kpi-value" id="kpi-approved">-</div>
+                <div class="kpi-label">Aprovadas</div>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-warning">
+              <div class="kpi-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="kpi-content">
+                <div class="kpi-value" id="kpi-pending">-</div>
+                <div class="kpi-label">Pendentes</div>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-info">
+              <div class="kpi-icon">
+                <i class="fas fa-percentage"></i>
+              </div>
+              <div class="kpi-content">
+                <div class="kpi-value" id="kpi-approval-rate">-</div>
+                <div class="kpi-label">Taxa de Aprovação</div>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-feedback">
+              <div class="kpi-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="kpi-content">
+                <div class="kpi-value" id="kpi-avg-rating">-</div>
+                <div class="kpi-label">Avaliação Média</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resumo por Categoria -->
+          <div class="dashboard-categories">
+            <h3><i class="fas fa-chart-pie"></i> Resumo por Categoria</h3>
+            <div id="categories-summary" class="categories-grid">
+              <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Carregando dados...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Atividade Recente -->
+          <div class="dashboard-recent">
+            <h3><i class="fas fa-history"></i> Atividade Recente</h3>
+            <div id="recent-activity" class="recent-activity-list">
+              <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Carregando atividades...</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </main>
     </div>
 
