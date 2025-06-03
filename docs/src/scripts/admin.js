@@ -391,6 +391,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configurar dropdown de exportação
     setupExportDropdown();
     setupSimpleDashboard();
+       console.log('🔍 Debug inicial dos dados:');
+    console.log('Sugestões aprovadas carregadas:', allApprovedSuggestions?.length || 0);
+    console.log('Sugestões pendentes carregadas:', allPendingSuggestions?.length || 0);
+    console.log('Feedbacks carregados:', allFeedbacks?.length || 0);
+
   }
 
   // Carregar categorias
@@ -496,7 +501,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (pendingCount)
           pendingCount.textContent = allPendingSuggestions.length;
         renderPendingSuggestions();
+        setTimeout(loadSimpleDashboard, 500);
       })
+
       .catch((error) => {
         console.error("Erro ao carregar sugestões pendentes:", error);
         pendingSuggestions.innerHTML = `
@@ -625,6 +632,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (approvedCount)
           approvedCount.textContent = allApprovedSuggestions.length;
         renderApprovedSuggestions();
+        setTimeout(loadSimpleDashboard, 500);
       })
       .catch((error) => {
         console.error("Erro ao carregar sugestões aprovadas:", error);
@@ -753,6 +761,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }));
 
         renderFeedbacks();
+        setTimeout(loadSimpleDashboard, 500);
       })
       .catch((error) => {
         console.error("Erro ao carregar feedbacks:", error);
@@ -3113,10 +3122,16 @@ function applyCustomDashboardPeriod() {
     
     console.log('Período personalizado aplicado:', dashboardPeriod);
 }
-
 // Carregar dados do dashboard simplificado
 function loadSimpleDashboard() {
-    console.log('Carregando dashboard simplificado para período:', dashboardPeriod);
+    console.log('🔄 Carregando dashboard simplificado para período:', dashboardPeriod);
+    
+    // Verificar se os dados estão carregados
+    if (!allApprovedSuggestions || !allPendingSuggestions || !allFeedbacks) {
+        console.warn('⚠️ Dados ainda não carregados, tentando novamente em 1 segundo...');
+        setTimeout(loadSimpleDashboard, 1000);
+        return;
+    }
     
     // Mostrar loading nos KPIs
     showDashboardLoading();
@@ -3124,15 +3139,31 @@ function loadSimpleDashboard() {
     // Filtrar dados baseado no período selecionado
     const filteredData = filterDataByDashboardPeriod();
     
-    // Atualizar KPIs
-    updateDashboardKPIs(filteredData);
+    // Verificar se há dados
+    if (filteredData.total === 0 && filteredData.feedbacks.length === 0) {
+        console.log('📊 Nenhum dado encontrado para o período selecionado');
+        
+        // Mostrar zeros nos KPIs
+        updateDashboardKPIs({
+            total: 0,
+            approved: [],
+            pending: [],
+            feedbacks: []
+        });
+    } else {
+        // Atualizar KPIs
+        updateDashboardKPIs(filteredData);
+    }
     
     // Atualizar resumo por categoria
     updateCategoriesSummary(filteredData);
     
     // Atualizar atividade recente
     updateRecentActivity(filteredData);
+    
+    console.log('✅ Dashboard atualizado com sucesso!');
 }
+
 
 // Mostrar loading no dashboard
 function showDashboardLoading() {
@@ -3153,9 +3184,17 @@ function showDashboardLoading() {
 }
 
 // Filtrar dados baseado no período do dashboard
+// Filtrar dados baseado no período do dashboard
 function filterDataByDashboardPeriod() {
     const startTime = dashboardPeriod.startDate.getTime();
     const endTime = dashboardPeriod.endDate.getTime();
+    
+    console.log('🔍 Filtrando dados para período:', {
+        inicio: dashboardPeriod.startDate.toLocaleDateString('pt-BR'),
+        fim: dashboardPeriod.endDate.toLocaleDateString('pt-BR'),
+        totalAprovadas: allApprovedSuggestions.length,
+        totalPendentes: allPendingSuggestions.length
+    });
     
     // Filtrar sugestões aprovadas
     const filteredApproved = allApprovedSuggestions.filter(suggestion => {
@@ -3166,6 +3205,7 @@ function filterDataByDashboardPeriod() {
                 new Date(suggestion.date).getTime();
             return suggestionTime >= startTime && suggestionTime <= endTime;
         } catch (e) {
+            console.warn('Erro ao processar data da sugestão aprovada:', e);
             return false;
         }
     });
@@ -3179,6 +3219,7 @@ function filterDataByDashboardPeriod() {
                 new Date(suggestion.date).getTime();
             return suggestionTime >= startTime && suggestionTime <= endTime;
         } catch (e) {
+            console.warn('Erro ao processar data da sugestão pendente:', e);
             return false;
         }
     });
@@ -3192,33 +3233,62 @@ function filterDataByDashboardPeriod() {
                 new Date(feedback.date).getTime();
             return feedbackTime >= startTime && feedbackTime <= endTime;
         } catch (e) {
+            console.warn('Erro ao processar data do feedback:', e);
             return false;
         }
     });
     
-    return {
+    const result = {
         approved: filteredApproved,
         pending: filteredPending,
         feedbacks: filteredFeedbacks,
         total: filteredApproved.length + filteredPending.length
     };
+    
+    console.log('📊 Dados filtrados:', {
+        aprovadas: result.approved.length,
+        pendentes: result.pending.length,
+        total: result.total,
+        feedbacks: result.feedbacks.length
+    });
+    
+    return result;
 }
 
 // Atualizar KPIs do dashboard
+// Atualizar KPIs do dashboard
 function updateDashboardKPIs(data) {
+    console.log('📈 Atualizando KPIs com dados:', data);
+    
     // Total de sugestões
-    document.getElementById('kpi-total-suggestions').textContent = data.total;
+    const totalElement = document.getElementById('kpi-total-suggestions');
+    if (totalElement) {
+        totalElement.textContent = data.total;
+        console.log('✅ Total atualizado:', data.total);
+    }
     
     // Aprovadas
-    document.getElementById('kpi-approved').textContent = data.approved.length;
+    const approvedElement = document.getElementById('kpi-approved');
+    if (approvedElement) {
+        approvedElement.textContent = data.approved.length;
+        console.log('✅ Aprovadas atualizadas:', data.approved.length);
+    }
     
     // Pendentes
-    document.getElementById('kpi-pending').textContent = data.pending.length;
+    const pendingElement = document.getElementById('kpi-pending');
+    if (pendingElement) {
+        pendingElement.textContent = data.pending.length;
+        console.log('✅ Pendentes atualizadas:', data.pending.length);
+    }
     
     // Taxa de aprovação
     const approvalRate = data.total > 0 ? 
         Math.round((data.approved.length / data.total) * 100) : 0;
-    document.getElementById('kpi-approval-rate').textContent = `${approvalRate}%`;
+    const approvalRateElement = document.getElementById('kpi-approval-rate');
+    if (approvalRateElement) {
+        approvalRateElement.textContent = `${approvalRate}%`;
+        console.log('✅ Taxa de aprovação atualizada:', `${approvalRate}%`);
+    }
     
     // Avaliação média
     let avgRating = 0;
@@ -3231,9 +3301,14 @@ function updateDashboardKPIs(data) {
             avgRating = (validRatings.reduce((a, b) => a + b, 0) / validRatings.length).toFixed(1);
         }
     }
-    document.getElementById('kpi-avg-rating').textContent = `${avgRating}/10`;
+    const avgRatingElement = document.getElementById('kpi-avg-rating');
+    if (avgRatingElement) {
+        avgRatingElement.textContent = `${avgRating}/10`;
+        console.log('✅ Avaliação média atualizada:', `${avgRating}/10`);
+    }
     
-    console.log('KPIs atualizados:', {
+    // Log final dos KPIs
+    console.log('📊 KPIs finais:', {
         total: data.total,
         approved: data.approved.length,
         pending: data.pending.length,
@@ -3241,6 +3316,7 @@ function updateDashboardKPIs(data) {
         avgRating: `${avgRating}/10`
     });
 }
+
 
 // Atualizar resumo por categoria
 function updateCategoriesSummary(data) {
