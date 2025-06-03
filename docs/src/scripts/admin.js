@@ -2869,9 +2869,151 @@ function setDefaultCustomDates() {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 30);
     
-    document.getElementById('dashboard-start-date').value = formatDateForInput(startDate);
-    document.getElementById('dashboard-end-date').value = formatDateForInput(endDate);
+    const startInput = document.getElementById('dashboard-start-date');
+    const endInput = document.getElementById('dashboard-end-date');
+    
+    if (startInput && endInput) {
+        startInput.value = formatDateForInput(startDate);
+        endInput.value = formatDateForInput(endDate);
+        
+        // Aplicar estilos melhorados aos inputs de data
+        applyStylishDateInputs();
+    }
 }
+// Aplicar estilos estilosos aos inputs de data
+function applyStylishDateInputs() {
+    const dateInputs = document.querySelectorAll('#dashboard-start-date, #dashboard-end-date');
+    
+    // Adicionar estilos CSS para os inputs de data
+    if (!document.querySelector('#stylish-date-inputs-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'stylish-date-inputs-styles';
+        styles.textContent = `
+            /* Estilos para inputs de data estilosos */
+            .stylish-date-input {
+                position: relative;
+                display: inline-block;
+                width: 100%;
+            }
+            
+            .stylish-date-input input[type="date"] {
+                width: 100%;
+                padding: 15px 20px 15px 50px !important;
+                border: 2px solid #e1e8ed !important;
+                border-radius: 15px !important;
+                font-size: 15px !important;
+                font-weight: 600 !important;
+                color: #2c3e50 !important;
+                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                cursor: pointer !important;
+                outline: none !important;
+            }
+            
+            .stylish-date-input input[type="date"]:hover {
+                border-color: #0066cc !important;
+                box-shadow: 0 6px 25px rgba(0,102,204,0.15) !important;
+                transform: translateY(-2px) !important;
+                background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%) !important;
+            }
+            
+            .stylish-date-input input[type="date"]:focus {
+                border-color: #0066cc !important;
+                box-shadow: 0 0 0 4px rgba(0,102,204,0.1), 0 8px 30px rgba(0,102,204,0.2) !important;
+                transform: translateY(-2px) !important;
+                background: white !important;
+            }
+            
+            .stylish-date-input::before {
+                content: '';
+                position: absolute;
+                left: 18px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 20px;
+                height: 20px;
+                background: linear-gradient(135deg, #0066cc, #004499);
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/%3E%3C/svg%3E") no-repeat center;
+                mask-size: contain;
+                pointer-events: none;
+                z-index: 1;
+            }
+            
+            .stylish-date-input.start-date::before {
+                background: linear-gradient(135deg, #28a745, #20c997);
+            }
+            
+            .stylish-date-input.end-date::before {
+                background: linear-gradient(135deg, #dc3545, #c82333);
+            }
+            
+            .stylish-date-input input[type="date"]::-webkit-calendar-picker-indicator {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                opacity: 0.8;
+                transition: all 0.3s ease;
+            }
+            
+            .stylish-date-input input[type="date"]:hover::-webkit-calendar-picker-indicator {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.1);
+            }
+            
+            @media (max-width: 768px) {
+                .stylish-date-input input[type="date"] {
+                    padding: 12px 15px 12px 45px !important;
+                    font-size: 14px !important;
+                }
+                
+                .stylish-date-input::before {
+                    left: 15px;
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+    
+    dateInputs.forEach((input, index) => {
+        // Criar wrapper estiloso
+        if (!input.parentElement.classList.contains('stylish-date-input')) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `stylish-date-input ${index === 0 ? 'start-date' : 'end-date'}`;
+            
+            // Substituir o input atual pelo wrapper
+            input.parentNode.insertBefore(wrapper, input);
+            wrapper.appendChild(input);
+            
+            // Adicionar event listeners para efeitos visuais
+            input.addEventListener('focus', function() {
+                wrapper.classList.add('active');
+            });
+            
+            input.addEventListener('blur', function() {
+                wrapper.classList.remove('active');
+            });
+            
+            input.addEventListener('change', function() {
+                // Efeito visual de confirmação
+                wrapper.style.transform = 'scale(1.05)';
+                wrapper.style.transition = 'transform 0.2s ease';
+                setTimeout(() => {
+                    wrapper.style.transform = 'scale(1)';
+                }, 200);
+            });
+        }
+    });
+    
+    console.log('✅ Estilos estilosos aplicados aos inputs de data!');
+}
+
 
 // Formatar data para input
 function formatDateForInput(date) {

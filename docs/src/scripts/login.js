@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginError = document.getElementById('login-error');
     const loginButton = document.getElementById('login-button');
     
+    // Adicionar funcionalidade de mostrar/ocultar senha
+    setupPasswordToggle();
+    
     // Verificar se estamos na página de login
     if (loginForm) {
       console.log('Formulário de login encontrado, configurando autenticação');
@@ -203,5 +206,189 @@ document.addEventListener('DOMContentLoaded', function() {
           });
       });
     }
-  });
-  
+
+    // Função para configurar o toggle de mostrar/ocultar senha
+    function setupPasswordToggle() {
+        const passwordInput = document.getElementById('login-password');
+        
+        if (!passwordInput) {
+            console.warn('Campo de senha não encontrado');
+            return;
+        }
+
+        // Verificar se já existe um toggle
+        if (passwordInput.parentElement.querySelector('.password-toggle')) {
+            return;
+        }
+
+        // Criar container para o input e botão
+        const passwordContainer = passwordInput.parentElement;
+        passwordContainer.style.position = 'relative';
+
+        // Criar botão de toggle
+        const toggleButton = document.createElement('button');
+        toggleButton.type = 'button';
+        toggleButton.className = 'password-toggle';
+        toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+        
+        // Estilos do botão
+        toggleButton.style.cssText = `
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+        `;
+
+        // Adicionar estilos CSS para hover e estados
+        if (!document.querySelector('#password-toggle-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'password-toggle-styles';
+            styles.textContent = `
+                .password-toggle:hover {
+                    background-color: rgba(0, 102, 204, 0.1) !important;
+                    color: #0066cc !important;
+                    transform: translateY(-50%) scale(1.1) !important;
+                }
+                
+                .password-toggle:active {
+                    transform: translateY(-50%) scale(0.95) !important;
+                }
+                
+                .password-toggle.active {
+                    color: #0066cc !important;
+                    background-color: rgba(0, 102, 204, 0.1) !important;
+                }
+                
+                .password-toggle i {
+                    font-size: 16px;
+                    transition: all 0.2s ease;
+                }
+                
+                /* Ajustar padding do input para dar espaço ao botão */
+                #login-password {
+                    padding-right: 50px !important;
+                }
+                
+                /* Animação de transição do ícone */
+                .password-toggle.active i {
+                    transform: scale(1.1);
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+
+        // Adicionar o botão ao container
+        passwordContainer.appendChild(toggleButton);
+
+        // Variável para controlar o estado
+        let isPasswordVisible = false;
+
+        // Event listener para o botão
+        toggleButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isPasswordVisible = !isPasswordVisible;
+            
+            if (isPasswordVisible) {
+                // Mostrar senha
+                passwordInput.type = 'text';
+                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                toggleButton.classList.add('active');
+                toggleButton.title = 'Ocultar senha';
+                
+                // Efeito visual de confirmação
+                toggleButton.style.transform = 'translateY(-50%) scale(1.2)';
+                setTimeout(() => {
+                    toggleButton.style.transform = 'translateY(-50%) scale(1)';
+                }, 150);
+                
+            } else {
+                // Ocultar senha
+                passwordInput.type = 'password';
+                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+                toggleButton.classList.remove('active');
+                toggleButton.title = 'Mostrar senha';
+                
+                // Efeito visual de confirmação
+                toggleButton.style.transform = 'translateY(-50%) scale(1.2)';
+                setTimeout(() => {
+                    toggleButton.style.transform = 'translateY(-50%) scale(1)';
+                }, 150);
+            }
+            
+            // Manter o foco no input
+            passwordInput.focus();
+            
+            console.log('Senha', isPasswordVisible ? 'visível' : 'oculta');
+        });
+
+        // Adicionar tooltip inicial
+toggleButton.title = 'Mostrar senha';
+
+// Criar indicador de Caps Lock
+const capsLockIndicator = document.createElement('div');
+capsLockIndicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Caps Lock ativado';
+capsLockIndicator.style.cssText = `
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #dc3545;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 0 0 8px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: none;
+    z-index: 15;
+`;
+
+passwordContainer.appendChild(capsLockIndicator);
+
+// Detectar Caps Lock
+passwordInput.addEventListener('keyup', function(event) {
+    const isCapsLock = event.getModifierState('CapsLock');
+    capsLockIndicator.style.display = isCapsLock ? 'block' : 'none';
+});
+
+// Event listener para quando o input recebe foco
+passwordInput.addEventListener('focus', function() {
+    toggleButton.style.opacity = '1';
+});
+
+
+        // Event listener para quando o input perde foco
+        passwordInput.addEventListener('blur', function() {
+            // Pequeno delay para permitir clique no botão
+            setTimeout(() => {
+                if (document.activeElement !== toggleButton) {
+                    toggleButton.style.opacity = '0.7';
+                }
+            }, 100);
+        });
+
+        // Atalho de teclado (Ctrl + Shift + H) para toggle
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'H') {
+                e.preventDefault();
+                toggleButton.click();
+            }
+        });
+
+        console.log('✅ Toggle de senha configurado com sucesso!');
+    }
+});
