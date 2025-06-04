@@ -645,7 +645,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                         </button>
                         <button class="btn btn-sm btn-outline-primary copy-btn" 
                             data-id="${docId}" title="Copiar prompt">
-                            <i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copiar</span>
+                            <i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copiar Prompt</span>
                         </button>
                         <button class="btn btn-sm btn-outline-secondary share-btn" 
                             data-id="${docId}" title="Compartilhar">
