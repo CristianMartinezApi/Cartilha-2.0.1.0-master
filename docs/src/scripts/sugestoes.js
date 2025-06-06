@@ -1,6 +1,7 @@
 /**
  * Script para gerenciar a página de sugestões
  * Versão otimizada com melhorias de performance e manutenibilidade
+ * Inclui sistema de avaliação por estrelas
  */
 
 // Configurações globais
@@ -11,7 +12,17 @@ const CONFIG = {
     ARROW_ANIMATION_DELAY: 10,
     MAX_TITLE_LENGTH: 100,
     MAX_TEXT_LENGTH: 2000,
-    MAX_COMMENT_LENGTH: 500
+    MAX_COMMENT_LENGTH: 500,
+    // ✅ Adicionar IAs suportadas
+    SUPPORTED_AIS: [
+        'ChatGPT (OpenAI)',
+        'Claude (Anthropic)', 
+        'Google Gemini',
+        'Microsoft Copilot',
+        'Perplexity AI',
+        'Meta AI (Llama)',
+        'Outras'
+    ]
 };
 
 // Cache de elementos DOM
@@ -29,6 +40,11 @@ const APP_STATE = {
     likedPrompts: new Set(),
     currentCategory: 'all'
 };
+
+// ✅ Variáveis de estado para avaliações
+let isRating = false;
+const ratingTimeouts = new Map();
+
 /**
  * Captura a conta institucional logada no navegador
  */
@@ -198,27 +214,30 @@ async function captureUserInfo() {
     };
 }
 
-
-
-
 /**
- * Inicialização principal
+ * ✅ Inicialização principal - Versão atualizada
  */
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Página de sugestões carregada");
+    console.log("🚀 Página de sugestões carregada");
     
     try {
+        // Inicializar variáveis de estado
+        isRating = false;
+        ratingTimeouts.clear();
+        
         initializeApp();
     } catch (error) {
-        console.error("Erro na inicialização:", error);
+        console.error("❌ Erro na inicialização:", error);
         showFeedback("Erro ao carregar a página. Recarregue para tentar novamente.", "danger");
     }
 });
 
 /**
- * Inicializa a aplicação
+ * ✅ Inicializa a aplicação - Versão melhorada
  */
 function initializeApp() {
+    console.log('🚀 Inicializando aplicação de sugestões...');
+    
     // Cache elementos DOM
     cacheElements();
     
@@ -229,6 +248,11 @@ function initializeApp() {
     initForm();
     initCategoryFilter();
     initSearchFunctionality();
+    
+    // ✅ Inicializar sistema de estrelas
+    initStarRatingSystem();
+    
+    // Carregar prompts
     loadApprovedPrompts();
     
     // Verificar hash na URL
@@ -236,6 +260,27 @@ function initializeApp() {
     
     // Adicionar listeners globais
     addGlobalListeners();
+    
+    console.log('✅ Aplicação inicializada com sucesso!');
+}
+
+/**
+ * ✅ Nova função para inicializar sistema de estrelas
+ */
+function initStarRatingSystem() {
+    console.log('⭐ Inicializando sistema de avaliação por estrelas...');
+    
+    // Adicionar efeitos de hover
+    addStarHoverEffects();
+    
+    // Limpar timeouts antigos se existirem
+    ratingTimeouts.forEach(timeout => clearTimeout(timeout));
+    ratingTimeouts.clear();
+    
+    // Resetar estado
+    isRating = false;
+    
+    console.log('✅ Sistema de estrelas inicializado!');
 }
 
 /**
@@ -277,12 +322,15 @@ function initForm() {
 }
 
 /**
- * Adiciona validação em tempo real ao formulário
+ * ✅ Adiciona validação em tempo real ao formulário
  */
 function addFormValidation() {
     const titleInput = document.getElementById("prompt-title");
     const textInput = document.getElementById("prompt-text");
     const commentInput = document.getElementById("prompt-comment");
+    // ✅ Adicionar campo IA
+    const aiSelect = document.getElementById("prompt-ai");
+    const aiOtherInput = document.getElementById("prompt-ai-other");
 
     if (titleInput) {
         titleInput.addEventListener('input', () => validateField(titleInput, CONFIG.MAX_TITLE_LENGTH));
@@ -294,6 +342,18 @@ function addFormValidation() {
     
     if (commentInput) {
         commentInput.addEventListener('input', () => validateField(commentInput, CONFIG.MAX_COMMENT_LENGTH));
+    }
+
+    // ✅ Listener para mostrar/ocultar campo "Outras"
+    if (aiSelect && aiOtherInput) {
+        aiSelect.addEventListener('change', () => {
+            const isOther = aiSelect.value === 'Outras';
+            aiOtherInput.style.display = isOther ? 'block' : 'none';
+            aiOtherInput.required = isOther;
+            if (!isOther) {
+                aiOtherInput.value = '';
+            }
+        });
     }
 }
 
@@ -338,37 +398,45 @@ async function handleFormSubmit(e) {
     APP_STATE.isLoading = true;
     
     try {
-    const suggestion = await createSuggestionObject(formData); // ✅ Adicionar await
-    await window.db.collection("sugestoes").add(suggestion);
-           
-    showFeedback("Sua sugestão foi enviada e está aguardando aprovação. Obrigado pela contribuição!", "success");
-    DOM_CACHE.suggestionForm.reset();
-    clearFormValidation();
-       
-} catch (error) {
-    console.error("Erro ao enviar sugestão:", error);
-    showFeedback("Erro ao enviar sugestão. Tente novamente.", "danger");
-} finally {
-    setSubmitButtonState(submitButton, false);
-    APP_STATE.isLoading = false;
-}
-
+        const suggestion = await createSuggestionObject(formData);
+        await window.db.collection("sugestoes").add(suggestion);
+        
+        showFeedback("Sua sugestão foi enviada e está aguardando aprovação. Obrigado pela contribuição!", "success");
+        DOM_CACHE.suggestionForm.reset();
+        clearFormValidation();
+        
+    } catch (error) {
+        console.error("Erro ao enviar sugestão:", error);
+        showFeedback("Erro ao enviar sugestão. Tente novamente.", "danger");
+    } finally {
+        setSubmitButtonState(submitButton, false);
+        APP_STATE.isLoading = false;
+    }
 }
 
 /**
- * Obtém dados do formulário
+ * ✅ Obtém dados do formulário
  */
 function getFormData() {
+    const aiSelect = document.getElementById("prompt-ai");
+    const aiOther = document.getElementById("prompt-ai-other");
+    
+    let aiUsed = aiSelect?.value || '';
+    if (aiUsed === 'Outras' && aiOther?.value.trim()) {
+        aiUsed = aiOther.value.trim();
+    }
+
     return {
         title: document.getElementById("prompt-title")?.value.trim() || '',
         comment: document.getElementById("prompt-comment")?.value.trim() || '',
         category: document.getElementById("prompt-category")?.value || '',
-        text: document.getElementById("prompt-text")?.value.trim() || ''
+        text: document.getElementById("prompt-text")?.value.trim() || '',
+        aiUsed: aiUsed // ✅ Adicionar IA utilizada
     };
 }
 
 /**
- * Valida dados do formulário
+ * ✅ Valida dados do formulário
  */
 function validateFormData(data) {
     if (!data.title || !data.category || !data.text) {
@@ -387,29 +455,36 @@ function validateFormData(data) {
         return { isValid: false, message: `O comentário deve ter no máximo ${CONFIG.MAX_COMMENT_LENGTH} caracteres.` };
     }
     
+    // ✅ Validação da IA (opcional, mas se preenchido deve ser válido)
+    if (data.aiUsed === 'Outras' && !document.getElementById("prompt-ai-other")?.value.trim()) {
+        return { isValid: false, message: "Por favor, especifique qual IA foi utilizada." };
+    }
+    
     return { isValid: true };
 }
 
 /**
- * Cria objeto de sugestão
+ * ✅ Cria objeto de sugestão
  */
 async function createSuggestionObject(formData) {
-    // ✅ Aguardar a captura das informações do usuário
     const userInfo = await captureUserInfo();
-       
+    
     return {
         title: formData.title,
         category: formData.category,
         text: formData.text,
         comment: formData.comment || "",
+        aiUsed: formData.aiUsed || "Não informado", // ✅ Adicionar IA
         status: "pending",
         date: firebase.firestore.FieldValue.serverTimestamp(),
         likes: 0,
-        userInfo: userInfo  // ✅ Agora é um objeto, não uma Promise
+        // ✅ Adicionar campos de avaliação
+        averageRating: 0,
+        totalRatings: 0,
+        ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+        userInfo: userInfo
     };
 }
-
-
 
 /**
  * Gera ID anônimo para o autor
@@ -578,11 +653,16 @@ function createPromptElement(doc) {
 }
 
 /**
- * Gera HTML do prompt
+ * ✅ Gera HTML do prompt - Com estrelas no header e footer
  */
 function generatePromptHTML(data, uniqueId, userLiked, docId) {
     const likeButtonClass = userLiked ? 'btn-danger' : 'btn-outline-danger';
     const likeButtonDisabled = userLiked ? 'disabled' : '';
+    
+    // ✅ Verificar se usuário já avaliou
+    const userRated = hasUserRated(docId);
+    const averageRating = data.averageRating || 0;
+    const totalRatings = data.totalRatings || 0;
     
     return `
         <div class="card mb-2">
@@ -599,9 +679,21 @@ function generatePromptHTML(data, uniqueId, userLiked, docId) {
                                 <i class="fas fa-file-alt text-primary"></i>
                                 ${escapeHtml(data.title || 'Sem título')}
                             </h6>
+                            <!-- ✅ Resumo das estrelas no header -->
+                            <div class="d-flex align-items-center gap-2 mt-1">
+                                <div class="stars-summary">
+                                    ${generateStarsDisplay(averageRating)}
+                                </div>
+                                ${totalRatings > 0 ? 
+                                    `<small class="text-muted">${averageRating.toFixed(1)} (${totalRatings})</small>` : 
+                                    `<small class="text-muted">Sem avaliações</small>`
+                                }
+                            </div>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-primary">${escapeHtml(data.category || 'Não categorizado')}</span>
+                            ${data.aiUsed && data.aiUsed !== 'Não informado' ? 
+                                `<span class="badge bg-secondary">${escapeHtml(data.aiUsed)}</span>` : ''}
                             <i class="fas fa-chevron-down accordion-arrow transition-all"></i>
                         </div>
                     </div>
@@ -610,15 +702,21 @@ function generatePromptHTML(data, uniqueId, userLiked, docId) {
             
             <div id="prompt-${uniqueId}" class="collapse" data-bs-parent="#suggestions-accordion">
                 <div class="card-body">
+                    <div class="alert alert-warning border-warning mb-3" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Importante:</strong> Sempre valide e adapte este prompt às suas necessidades específicas antes de usar. 
+                        Verifique se o conteúdo está adequado ao seu contexto e objetivos.
+                    </div>
+
                     <div class="mb-3">
                         <h6 class="text-primary mb-2">
                             <i class="fas fa-pen me-1"></i> Texto do Prompt:
                         </h6>
-                        <div class="prompt-text bg-light p-3 rounded border" style="font-family: 'Courier New', monospace; font-size: 16
-px; text-align: justify; white-space: pre-wrap;">
+                        <div class="prompt-text bg-light p-3 rounded border" style="font-family: 'Courier New', monospace; font-size: 16px; text-align: justify; white-space: pre-wrap;">
 ${escapeHtml(data.text || 'Sem conteúdo')}
                         </div>
                     </div>
+                    
                     ${data.comment && data.comment !== 'Sem comentário' ? `
                     <div class="mb-3">
                         <h6 class="text-info mb-2">
@@ -630,36 +728,395 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                     </div>
                     ` : ''}
                 </div>
-                <div class="card-footer d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="mb-2 mb-md-0">
-                        <small class="text-muted">Publicado em ${data.date ? formatDate(data.date) : 'Data desconhecida'}</small>
-                        <small class="ms-2 text-secondary">
-                            <i class="fas fa-eye me-1"></i><span class="view-count">${data.views || 0}</span> visualizações
-                        </small>
+                
+                <div class="card-footer">
+                    <!-- ✅ Primeira linha: Informações do prompt -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                ${data.date ? formatDate(data.date) : 'Data desconhecida'}
+                            </small>
+                            <small class="text-secondary">
+                                <i class="fas fa-eye me-1"></i>
+                                <span class="view-count">${data.views || 0}</span> visualizações
+                            </small>
+                            ${data.aiUsed && data.aiUsed !== 'Não informado' ? 
+                                `<small class="text-info">
+                                    <i class="fas fa-robot me-1"></i>
+                                    ${escapeHtml(data.aiUsed)}
+                                </small>` : ''
+                            }
+                        </div>
+                        
+                        <!-- ✅ Avaliação interativa com estrelas clicáveis -->
+                        <div class="rating-display d-flex align-items-center">
+                            <div class="stars-container me-2" data-prompt-id="${docId}" data-user-rated="${userRated}">
+                                ${generateStarsHTML(averageRating, userRated, docId)}
+                            </div>
+                            ${totalRatings > 0 ? 
+                                `<small class="text-muted">${averageRating.toFixed(1)} (${totalRatings})</small>` : 
+                                `<small class="text-muted">Avalie este prompt</small>`
+                            }
+                        </div>
                     </div>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-sm ${likeButtonClass} like-btn" 
-                            data-id="${docId}" title="Curtir" ${likeButtonDisabled}>
-                            <i class="fas fa-heart"></i> 
-                            <span class="like-count">${data.likes || 0}</span>
-                        </button>
-                        <button class="btn btn-sm btn-outline-primary copy-btn" 
-                            data-id="${docId}" title="Copiar prompt">
-                            <i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copiar Prompt</span>
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary share-btn" 
-                            data-id="${docId}" title="Compartilhar">
-                            <i class="fas fa-share-alt"></i> <span class="d-none d-md-inline">Compartilhar</span>
-                        </button>
+                    
+                    <!-- ✅ Segunda linha: Botões de ação -->
+                    <div class="d-flex justify-content-end">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm ${likeButtonClass} like-btn" 
+                                data-id="${docId}" title="Curtir" ${likeButtonDisabled}>
+                                <i class="fas fa-heart"></i> 
+                                <span class="like-count">${data.likes || 0}</span>
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                data-id="${docId}" title="Copiar prompt">
+                                <i class="fas fa-copy"></i> 
+                                <span class="d-none d-md-inline ms-1">Copiar</span>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary share-btn" 
+                                data-id="${docId}" title="Compartilhar">
+                                <i class="fas fa-share-alt"></i> 
+                                <span class="d-none d-md-inline ms-1">Compartilhar</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     `;
 }
+/**
+ * ✅ Gera display de estrelas apenas para visualização (header)
+ */
+function generateStarsDisplay(rating) {
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= Math.floor(rating)) {
+            starsHtml += '<i class="fas fa-star text-warning" style="font-size: 0.8rem;"></i>';
+        } else if (i - 0.5 <= rating) {
+            starsHtml += '<i class="fas fa-star-half-alt text-warning" style="font-size: 0.8rem;"></i>';
+        } else {
+            starsHtml += '<i class="far fa-star text-warning" style="font-size: 0.8rem;"></i>';
+        }
+    }
+    return starsHtml;
+}
+
 
 /**
- * Anexa event listeners aos elementos
+ * ✅ Gera HTML das estrelas - Versão melhorada
+ */
+function generateStarsHTML(averageRating, userRated, promptId) {
+    let starsHtml = '';
+    
+    for (let i = 1; i <= 5; i++) {
+        let starClass = 'far fa-star';
+        let starStyle = userRated ? 'cursor: default;' : 'cursor: pointer;';
+        
+        // Determinar o tipo de estrela baseado na média
+        if (i <= Math.floor(averageRating)) {
+            starClass = 'fas fa-star text-warning';
+        } else if (i - 0.5 <= averageRating) {
+            starClass = 'fas fa-star-half-alt text-warning';
+        } else {
+            starClass = 'far fa-star text-warning';
+        }
+        
+        // Se o usuário não avaliou, as estrelas são clicáveis
+        const clickable = !userRated ? `data-rating="${i}"` : '';
+        const hoverClass = !userRated ? 'star-clickable' : '';
+        
+        starsHtml += `<i class="${starClass} ${hoverClass}" 
+                         ${clickable} 
+                         style="${starStyle}" 
+                         title="${userRated ? `Avaliação: ${averageRating.toFixed(1)}` : `Avaliar com ${i} estrela${i > 1 ? 's' : ''}`}"></i>`;
+    }
+    
+    return starsHtml;
+}
+
+/**
+ * ✅ Verifica se usuário já avaliou um prompt
+ */
+function hasUserRated(promptId) {
+    const ratedPrompts = JSON.parse(localStorage.getItem('ratedPrompts') || '[]');
+    return ratedPrompts.includes(promptId);
+}
+
+/**
+ * ✅ Marca prompt como avaliado pelo usuário
+ */
+function markAsRated(promptId) {
+    const ratedPrompts = JSON.parse(localStorage.getItem('ratedPrompts') || '[]');
+    if (!ratedPrompts.includes(promptId)) {
+        ratedPrompts.push(promptId);
+        localStorage.setItem('ratedPrompts', JSON.stringify(ratedPrompts));
+    }
+}
+
+/**
+ * ✅ Adiciona efeitos de hover nas estrelas
+ */
+function addStarHoverEffects() {
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.classList.contains('star-clickable')) {
+            const star = e.target;
+            const container = star.parentElement;
+            const rating = parseInt(star.getAttribute('data-rating'));
+            
+            // Destacar estrelas até a posição do hover
+            const stars = container.querySelectorAll('.star-clickable');
+            stars.forEach((s, index) => {
+                if (index < rating) {
+                    s.classList.remove('far');
+                    s.classList.add('fas');
+                } else {
+                    s.classList.remove('fas');
+                    s.classList.add('far');
+                }
+            });
+        }
+    });
+    
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.classList.contains('star-clickable')) {
+            const container = e.target.parentElement;
+            const stars = container.querySelectorAll('.star-clickable');
+            
+            // Resetar para estado padrão baseado na avaliação atual
+            const promptId = container.getAttribute('data-prompt-id');
+            resetStarsToCurrentRating(container, promptId);
+        }
+    });
+}
+
+/**
+ * ✅ Reseta estrelas para avaliação atual
+ */
+function resetStarsToCurrentRating(container, promptId) {
+    const stars = container.querySelectorAll('.star-clickable');
+    
+    // Buscar avaliação atual do prompt
+    const ratingText = container.parentElement.querySelector('small.text-muted');
+    let currentRating = 0;
+    
+    if (ratingText) {
+        const match = ratingText.textContent.match(/^([\d.]+)/);
+        if (match) {
+            currentRating = parseFloat(match[1]);
+        }
+    }
+    
+    // Aplicar avaliação atual
+    stars.forEach((star, index) => {
+        const position = index + 1;
+        
+        if (position <= Math.floor(currentRating)) {
+            star.classList.remove('far');
+            star.classList.add('fas');
+        } else if (position - 0.5 <= currentRating) {
+            star.classList.remove('far', 'fas');
+            star.classList.add('fas', 'fa-star-half-alt');
+        } else {
+            star.classList.remove('fas');
+            star.classList.add('far');
+        }
+    });
+}
+
+/**
+ * ✅ Manipula avaliação com estrelas
+ */
+async function handleStarRating(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Verificar se já está processando uma avaliação
+    if (isRating) {
+        console.log('⏳ Avaliação em andamento, aguarde...');
+        return;
+    }
+    
+    const star = e.target;
+    
+    // Verificar se é uma estrela clicável
+    if (!star.classList.contains('star-clickable')) {
+        return;
+    }
+    
+    const rating = parseInt(star.getAttribute('data-rating'));
+    const starsContainer = star.parentElement;
+    const promptId = starsContainer.getAttribute('data-prompt-id');
+    
+    if (!promptId || !rating || hasUserRated(promptId)) {
+        console.log('❌ Avaliação inválida ou usuário já avaliou');
+        return;
+    }
+    
+    console.log(`⭐ Iniciando avaliação: ${rating} estrelas para prompt ${promptId}`);
+    
+    // Marcar como processando
+    isRating = true;
+    
+    try {
+        // Feedback visual imediato
+        updateStarsAfterRating(starsContainer, rating);
+        
+        // Salvar no Firestore
+        await saveRating(promptId, rating);
+        
+        // Marcar como avaliado
+        markAsRated(promptId);
+        
+        // Atualizar interface
+        await updatePromptRatingDisplay(promptId, rating);
+        
+        showFeedback("⭐ Obrigado pela sua avaliação!", "success");
+        
+        console.log(`✅ Avaliação salva com sucesso: ${rating} estrelas`);
+        
+    } catch (error) {
+        console.error('❌ Erro ao salvar avaliação:', error);
+        showFeedback("Erro ao salvar avaliação. Tente novamente.", "danger");
+        
+        // Reverter mudanças visuais em caso de erro
+        resetStarsToCurrentRating(starsContainer, promptId);
+    } finally {
+        // Liberar processamento após um pequeno delay
+        setTimeout(() => {
+            isRating = false;
+        }, 1000);
+    }
+}
+
+/**
+ * ✅ Atualiza estrelas após avaliação
+ */
+function updateStarsAfterRating(container, userRating) {
+    const stars = container.querySelectorAll('i');
+    
+    stars.forEach((star, index) => {
+        const position = index + 1;
+        
+        // Remover classes antigas
+        star.className = '';
+        
+        // Adicionar novas classes baseadas na avaliação do usuário
+        if (position <= userRating) {
+            star.className = 'fas fa-star text-warning';
+        } else {
+            star.className = 'far fa-star text-warning';
+        }
+        
+        // Remover interatividade
+        star.style.cursor = 'default';
+        star.classList.remove('star-clickable');
+        star.removeAttribute('data-rating');
+        star.title = `Sua avaliação: ${userRating} estrela${userRating > 1 ? 's' : ''}`;
+    });
+    
+    // Marcar container como avaliado
+    container.setAttribute('data-user-rated', 'true');
+}
+
+/**
+ * ✅ Salva avaliação no Firestore
+ */
+async function saveRating(promptId, rating) {
+    const userInfo = await captureUserInfo();
+    
+    try {
+        // Salvar avaliação individual
+        await window.db.collection("prompt_ratings").add({
+            promptId: promptId,
+            rating: rating,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            userInfo: userInfo,
+            sessionId: userInfo.sessionId
+        });
+        
+        // Atualizar estatísticas do prompt
+        const promptRef = window.db.collection("sugestoes").doc(promptId);
+        
+        await window.db.runTransaction(async (transaction) => {
+            const promptDoc = await transaction.get(promptRef);
+            
+            if (!promptDoc.exists) {
+                throw new Error("Prompt não encontrado");
+            }
+            
+            const data = promptDoc.data();
+            const currentTotal = data.totalRatings || 0;
+            const currentAverage = data.averageRating || 0;
+            const currentDistribution = data.ratingDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            
+            // Calcular nova média
+            const newTotal = currentTotal + 1;
+            const newAverage = ((currentAverage * currentTotal) + rating) / newTotal;
+            
+            // Atualizar distribuição
+            const newDistribution = { ...currentDistribution };
+            newDistribution[rating] = (newDistribution[rating] || 0) + 1;
+            
+            transaction.update(promptRef, {
+                totalRatings: newTotal,
+                averageRating: Math.round(newAverage * 10) / 10, // Arredondar para 1 casa decimal
+                ratingDistribution: newDistribution,
+                lastRated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        });
+        
+    } catch (error) {
+        console.error('Erro ao salvar avaliação:', error);
+        throw error;
+    }
+}
+/**
+ * ✅ Atualiza display de avaliação - Versão completamente corrigida
+ */
+async function updatePromptRatingDisplay(promptId, userRating) {
+    try {
+        const promptDoc = await window.db.collection("sugestoes").doc(promptId).get();
+        
+        if (!promptDoc.exists) return;
+        
+        const data = promptDoc.data();
+        const averageRating = data.averageRating || 0;
+        const totalRatings = data.totalRatings || 0;
+        
+        // Encontrar elementos específicos
+        const starsContainer = document.querySelector(`[data-prompt-id="${promptId}"]`);
+        if (!starsContainer) return;
+        
+        const ratingSection = starsContainer.closest('.rating-section');
+        if (!ratingSection) return;
+        
+        // ✅ Buscar elementos com classes específicas
+        const ratingInfo = ratingSection.querySelector('.rating-info');
+        const ratingStatus = ratingSection.querySelector('.rating-status');
+        
+        // ✅ Atualizar apenas o texto de informação da avaliação
+        if (ratingInfo) {
+            ratingInfo.textContent = totalRatings > 0 ? 
+                `${averageRating.toFixed(1)} (${totalRatings} avaliação${totalRatings !== 1 ? 'ões' : ''})` : 
+                'Seja o primeiro a avaliar';
+        }
+        
+        // ✅ Atualizar apenas o status
+        if (ratingStatus) {
+            ratingStatus.className = 'rating-status text-success';
+            ratingStatus.innerHTML = '<i class="fas fa-check-circle me-1"></i>Você já avaliou';
+        }
+        
+    } catch (error) {
+        console.error('Erro ao atualizar display de avaliação:', error);
+    }
+}
+
+
+/**
+ * ✅ Anexa event listeners aos elementos
  */
 function attachEventListeners() {
     // Event delegation para melhor performance
@@ -671,14 +1128,15 @@ function attachEventListeners() {
     document.querySelectorAll('.accordion-toggle').forEach(toggle => {
         toggle.addEventListener('click', handleAccordionToggle);
     });
+    
+    console.log('✅ Event listeners anexados com sucesso!');
 }
 
 /**
- * Manipula ações dos prompts (delegação de eventos)
+ * ✅ Manipula ações dos prompts (delegação de eventos)
  */
 function handlePromptActions(e) {
-    const target = e.target.closest('button');
-    if (!target) return;
+    const target = e.target.closest('button') || e.target;
     
     if (target.classList.contains('copy-btn')) {
         handleCopyPrompt(e);
@@ -686,6 +1144,9 @@ function handlePromptActions(e) {
         handleLikePrompt(e);
     } else if (target.classList.contains('share-btn')) {
         handleSharePrompt(e);
+    } else if (target.classList.contains('star-clickable') || target.hasAttribute('data-rating')) {
+        // ✅ Adicionar handler para estrelas
+        handleStarRating(e);
     }
 }
 
@@ -726,43 +1187,99 @@ async function incrementViews(promptId) {
 }
 
 /**
- * Manipula cópia de prompts (versão otimizada)
+ * ✅ Versão alternativa - Salva avaliação no próprio documento do prompt
  */
-async function handleCopyPrompt(e) {
-    e.preventDefault();
-    
-    const button = e.currentTarget;
-    const card = button.closest('.card');
-    
-    if (!card) {
-        showFeedback("Erro ao localizar o prompt.", "danger");
-        return;
-    }
-    
-    const promptElement = card.querySelector('.prompt-text');
-    if (!promptElement) {
-        showFeedback("Texto do prompt não encontrado.", "danger");
-        return;
-    }
-    
-    const textToCopy = promptElement.textContent.trim();
-    
+async function saveRating(promptId, rating) {
     try {
-        // Tentar API moderna primeiro
-        if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(textToCopy);
-        } else {
-            // Fallback para navegadores antigos
-            await fallbackCopyText(textToCopy);
-        }
+        const userInfo = await captureUserInfo();
+        const sessionId = userInfo.sessionId;
         
-        showCopySuccess(button);
+        console.log('📝 Salvando avaliação no documento do prompt:', { promptId, rating });
+        
+        const promptRef = window.db.collection("sugestoes").doc(promptId);
+        
+        await window.db.runTransaction(async (transaction) => {
+            const promptDoc = await transaction.get(promptRef);
+            
+            if (!promptDoc.exists) {
+                throw new Error("Prompt não encontrado");
+            }
+            
+            const data = promptDoc.data();
+            const currentTotal = data.totalRatings || 0;
+            const currentAverage = data.averageRating || 0;
+            const currentDistribution = data.ratingDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            const userRatings = data.userRatings || {};
+            
+            // Verificar se o usuário já avaliou
+            if (userRatings[sessionId]) {
+                throw new Error("Usuário já avaliou este prompt");
+            }
+            
+            // Calcular nova média
+            const newTotal = currentTotal + 1;
+            const newAverage = ((currentAverage * currentTotal) + rating) / newTotal;
+            
+            // Atualizar distribuição
+            const newDistribution = { ...currentDistribution };
+            newDistribution[rating] = (newDistribution[rating] || 0) + 1;
+            
+            // Adicionar avaliação do usuário
+            const newUserRatings = { ...userRatings };
+            newUserRatings[sessionId] = {
+                rating: rating,
+                timestamp: new Date().toISOString(),
+                userInfo: userInfo
+            };
+            
+            transaction.update(promptRef, {
+                totalRatings: newTotal,
+                averageRating: Math.round(newAverage * 10) / 10,
+                ratingDistribution: newDistribution,
+                userRatings: newUserRatings,
+                lastRated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        });
+        
+        console.log('✅ Avaliação salva com sucesso!');
         
     } catch (error) {
-        console.error('Erro ao copiar:', error);
-        showFeedback("Não foi possível copiar o texto. Tente novamente.", "danger");
+        console.error('❌ Erro detalhado ao salvar avaliação:', error);
+        throw error;
     }
 }
+
+/**
+ * ✅ Verificar se usuário já avaliou (versão melhorada)
+ */
+async function hasUserRatedOnServer(promptId) {
+    try {
+        const userInfo = await captureUserInfo();
+        const sessionId = userInfo.sessionId;
+        
+        const promptDoc = await window.db.collection("sugestoes").doc(promptId).get();
+        
+        if (!promptDoc.exists) return false;
+        
+        const data = promptDoc.data();
+        const userRatings = data.userRatings || {};
+        
+        return !!userRatings[sessionId];
+        
+    } catch (error) {
+        console.error('Erro ao verificar avaliação no servidor:', error);
+        return false;
+    }
+}
+
+/**
+ * ✅ Atualizar função de verificação local
+ */
+function hasUserRated(promptId) {
+    const ratedPrompts = JSON.parse(localStorage.getItem('ratedPrompts') || '[]');
+    return ratedPrompts.includes(promptId);
+}
+
 
 /**
  * Fallback para cópia em navegadores antigos
@@ -914,6 +1431,7 @@ async function handleSharePrompt(e) {
         }
     }
 }
+
 
 /**
  * Renderiza estado vazio
@@ -1120,6 +1638,102 @@ function throttle(func, limit) {
 }
 
 /**
+ * ✅ Função para obter estatísticas de avaliações
+ */
+async function getRatingStatistics(promptId) {
+    try {
+        const ratingsSnapshot = await window.db.collection("prompt_ratings")
+            .where("promptId", "==", promptId)
+            .get();
+        
+        const ratings = [];
+        ratingsSnapshot.forEach(doc => {
+            ratings.push(doc.data().rating);
+        });
+        
+        if (ratings.length === 0) {
+            return {
+                average: 0,
+                total: 0,
+                distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+            };
+        }
+        
+        const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+        const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+        
+        ratings.forEach(rating => {
+            distribution[rating]++;
+        });
+        
+        return {
+            average: Math.round(average * 10) / 10,
+            total: ratings.length,
+            distribution: distribution
+        };
+        
+    } catch (error) {
+        console.error('Erro ao obter estatísticas de avaliação:', error);
+        return {
+            average: 0,
+            total: 0,
+            distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+        };
+    }
+}
+
+/**
+ * ✅ Função para limpar avaliações do localStorage (manutenção)
+ */
+function clearRatingCache() {
+    try {
+        localStorage.removeItem('ratedPrompts');
+        showFeedback('Cache de avaliações limpo com sucesso!', 'success');
+        loadApprovedPrompts(); // Recarregar para mostrar inputs de avaliação novamente
+    } catch (error) {
+        console.error('Erro ao limpar cache de avaliações:', error);
+        showFeedback('Erro ao limpar cache de avaliações.', 'danger');
+    }
+}
+
+/**
+ * ✅ Função para exportar estatísticas de avaliações
+ */
+async function exportRatingStatistics() {
+    try {
+        const ratingsSnapshot = await window.db.collection("prompt_ratings").get();
+        const statistics = [];
+        
+        ratingsSnapshot.forEach(doc => {
+            const data = doc.data();
+            statistics.push({
+                promptId: data.promptId,
+                rating: data.rating,
+                timestamp: data.timestamp?.toDate?.()?.toISOString() || 'N/A',
+                userInfo: {
+                    domain: data.userInfo?.domain || 'N/A',
+                    isInstitutional: data.userInfo?.isInstitutional || false
+                }
+            });
+        });
+        
+        const dataStr = JSON.stringify(statistics, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = `rating_statistics_${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        
+        showFeedback('Estatísticas de avaliações exportadas com sucesso!', 'success');
+        
+    } catch (error) {
+        console.error('Erro ao exportar estatísticas:', error);
+        showFeedback('Erro ao exportar estatísticas de avaliações.', 'danger');
+    }
+}
+
+/**
  * Utilitário para lazy loading de imagens (se houver)
  */
 function initLazyLoading() {
@@ -1149,10 +1763,16 @@ function exportPrompts() {
     document.querySelectorAll('.suggestion-item').forEach(item => {
         const title = item.querySelector('h6')?.textContent?.trim();
         const text = item.querySelector('.prompt-text')?.textContent?.trim();
-        const category = item.querySelector('.badge')?.textContent?.trim();
+        const category = item.querySelector('.badge.bg-primary')?.textContent?.trim();
+        const aiUsed = item.querySelector('.badge.bg-secondary')?.textContent?.trim();
         
         if (title && text) {
-            prompts.push({ title, text, category });
+            prompts.push({ 
+                title, 
+                text, 
+                category: category || 'Não categorizado',
+                aiUsed: aiUsed || 'Não informado'
+            });
         }
     });
     
@@ -1168,7 +1788,7 @@ function exportPrompts() {
 }
 
 /**
- * Função para estatísticas (funcionalidade adicional)
+ * ✅ Função para estatísticas - Versão atualizada
  */
 function getStatistics() {
     const stats = {
@@ -1177,12 +1797,52 @@ function getStatistics() {
             .reduce((sum, el) => sum + (parseInt(el.textContent) || 0), 0),
         totalViews: [...document.querySelectorAll('.view-count')]
             .reduce((sum, el) => sum + (parseInt(el.textContent) || 0), 0),
-        categories: {}
+        // ✅ Adicionar estatísticas de avaliações
+        totalRatings: 0,
+        averageRating: 0,
+        categories: {},
+        // ✅ Adicionar estatísticas de IAs
+        aiUsage: {}
     };
     
-    document.querySelectorAll('.badge').forEach(badge => {
+    // Calcular estatísticas de avaliações
+    const ratingElements = [...document.querySelectorAll('.rating-section small.text-muted')];
+    const validRatings = [];
+    let totalRatingsCount = 0;
+    
+    ratingElements.forEach(el => {
+        const text = el.textContent;
+        const ratingMatch = text.match(/^([\d.]+)/);
+        const countMatch = text.match(/\((\d+) avaliação/);
+        
+        if (ratingMatch && countMatch) {
+            const rating = parseFloat(ratingMatch[1]);
+            const count = parseInt(countMatch[1]);
+            
+            if (rating > 0 && count > 0) {
+                validRatings.push({ rating, count });
+                totalRatingsCount += count;
+            }
+        }
+    });
+    
+    if (validRatings.length > 0) {
+        // Calcular média ponderada
+        const weightedSum = validRatings.reduce((sum, item) => sum + (item.rating * item.count), 0);
+        stats.averageRating = Math.round((weightedSum / totalRatingsCount) * 10) / 10;
+        stats.totalRatings = totalRatingsCount;
+    }
+    
+    // Contar categorias
+    document.querySelectorAll('.badge.bg-primary').forEach(badge => {
         const category = badge.textContent.trim();
         stats.categories[category] = (stats.categories[category] || 0) + 1;
+    });
+    
+    // ✅ Contar uso de IAs
+    document.querySelectorAll('.badge.bg-secondary').forEach(badge => {
+        const ai = badge.textContent.trim();
+        stats.aiUsage[ai] = (stats.aiUsage[ai] || 0) + 1;
     });
     
     return stats;
@@ -1196,10 +1856,11 @@ function handleOfflineMode() {
         showFeedback('Você está offline. Algumas funcionalidades podem não estar disponíveis.', 'warning');
         
         // Desabilitar funcionalidades que requerem conexão
-        const onlineButtons = document.querySelectorAll('.like-btn, .share-btn');
+        const onlineButtons = document.querySelectorAll('.like-btn, .share-btn, .star-clickable');
         onlineButtons.forEach(btn => {
             btn.disabled = true;
             btn.title = 'Funcionalidade indisponível offline';
+            btn.style.cursor = 'not-allowed';
         });
     }
 }
@@ -1245,6 +1906,7 @@ function clearLocalCache() {
     try {
         localStorage.removeItem('likedPrompts');
         localStorage.removeItem('analytics_events');
+        localStorage.removeItem('ratedPrompts'); // ✅ Adicionar cache de avaliações
         APP_STATE.likedPrompts.clear();
         showFeedback('Cache local limpo com sucesso!', 'success');
         loadApprovedPrompts(); // Recarregar prompts
@@ -1266,7 +1928,7 @@ function checkForUpdates() {
 }
 
 /**
- * Inicialização de funcionalidades adicionais
+ * ✅ Inicialização de funcionalidades adicionais
  */
 function initAdditionalFeatures() {
     // Verificar modo offline
@@ -1280,6 +1942,35 @@ function initAdditionalFeatures() {
     
     // Adicionar atalhos de teclado
     initKeyboardShortcuts();
+    
+    // ✅ Verificar integridade do sistema de avaliações
+    validateRatingSystem();
+}
+
+/**
+ * ✅ Valida sistema de avaliações
+ */
+function validateRatingSystem() {
+    console.log('🔍 Validando sistema de avaliações...');
+    
+    // Verificar se localStorage está funcionando
+    try {
+        const testKey = 'rating_test_' + Date.now();
+        localStorage.setItem(testKey, 'test');
+        localStorage.removeItem(testKey);
+        console.log('✅ LocalStorage funcionando corretamente');
+    } catch (error) {
+        console.warn('⚠️ Problema com localStorage:', error);
+        showFeedback('Aviso: Algumas funcionalidades podem não funcionar corretamente.', 'warning');
+    }
+    
+    // Verificar se Firebase está disponível
+    if (typeof window.db === 'undefined') {
+        console.error('❌ Firebase não está disponível');
+        showFeedback('Erro: Sistema de avaliações indisponível.', 'danger');
+    } else {
+        console.log('✅ Firebase disponível');
+    }
 }
 
 /**
@@ -1300,6 +1991,13 @@ function initKeyboardShortcuts() {
         if (e.key === 'Escape') {
             const alerts = document.querySelectorAll('.alert-feedback');
             alerts.forEach(alert => alert.remove());
+        }
+        
+        // ✅ Tecla R para recarregar prompts
+        if (e.key === 'r' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            loadApprovedPrompts();
+            showFeedback('Prompts recarregados!', 'info');
         }
     });
 }
@@ -1332,7 +2030,48 @@ function loadDarkModePreference() {
     }
 }
 
-// Executar funcionalidades adicionais após carregamento
+/**
+ * ✅ Função para debug do sistema de avaliações
+ */
+function debugRatingSystem() {
+    console.log('🐛 Debug do Sistema de Avaliações:');
+    console.log('- Estado isRating:', isRating);
+    console.log('- Timeouts ativos:', ratingTimeouts.size);
+    console.log('- Prompts avaliados:', JSON.parse(localStorage.getItem('ratedPrompts') || '[]'));
+    console.log('- Estrelas clicáveis na página:', document.querySelectorAll('.star-clickable').length);
+    
+    // Verificar se há conflitos de event listeners
+    const starsContainers = document.querySelectorAll('.stars-container');
+    console.log('- Containers de estrelas:', starsContainers.length);
+    
+    starsContainers.forEach((container, index) => {
+        const promptId = container.getAttribute('data-prompt-id');
+        const userRated = container.getAttribute('data-user-rated');
+        console.log(`  Container ${index + 1}: ID=${promptId}, Avaliado=${userRated}`);
+    });
+}
+
+/**
+ * ✅ Função para resetar sistema de avaliações (emergência)
+ */
+function resetRatingSystem() {
+    console.log('🔄 Resetando sistema de avaliações...');
+    
+    // Limpar estado
+    isRating = false;
+    ratingTimeouts.forEach(timeout => clearTimeout(timeout));
+    ratingTimeouts.clear();
+    
+    // Limpar cache local
+    localStorage.removeItem('ratedPrompts');
+    
+    // Recarregar prompts
+    loadApprovedPrompts();
+    
+    showFeedback('Sistema de avaliações resetado!', 'info');
+}
+
+// ✅ Executar funcionalidades adicionais após carregamento
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         initAdditionalFeatures();
@@ -1340,15 +2079,128 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
 });
 
-// Expor funções úteis globalmente para debug/console
+// ✅ Expor funções úteis globalmente para debug/console - Versão atualizada
 if (typeof window !== 'undefined') {
     window.SugestoesDebug = {
+        // Estatísticas
         getStatistics,
         exportPrompts,
+        exportRatingStatistics,
+        getRatingStatistics,
+        
+        // Cache e limpeza
         clearLocalCache,
+        clearRatingCache,
+        
+        // Sistema de avaliações
+        hasUserRated,
+        debugRatingSystem,
+        resetRatingSystem,
+        
+        // Funcionalidades gerais
         toggleDarkMode,
         trackEvent,
+        
+        // Estado da aplicação
         APP_STATE,
-        CONFIG
+        CONFIG,
+        
+        // Estado do sistema de avaliações
+        get isRating() { return isRating; },
+        get ratingTimeouts() { return ratingTimeouts.size; }
     };
+    
+    console.log('🎯 SugestoesDebug disponível no console!');
+    console.log('💡 Use SugestoesDebug.debugRatingSystem() para debug do sistema de avaliações');
 }
+
+/**
+ * ✅ Listener para cleanup ao sair da página
+ */
+window.addEventListener('beforeunload', () => {
+    // Limpar timeouts pendentes
+    ratingTimeouts.forEach(timeout => clearTimeout(timeout));
+    ratingTimeouts.clear();
+    
+    // Salvar estado final
+    saveAppState();
+});
+
+/**
+ * ✅ Função para monitorar performance (opcional)
+ */
+function monitorPerformance() {
+    if ('performance' in window && 'PerformanceObserver' in window) {
+        const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            entries.forEach(entry => {
+                if (entry.duration > 100) { // Log apenas operações lentas
+                    console.warn(`⚠️ Operação lenta detectada: ${entry.name} - ${entry.duration.toFixed(2)}ms`);
+                }
+            });
+        });
+        
+        try {
+            observer.observe({ entryTypes: ['measure', 'navigation'] });
+        } catch (error) {
+            console.log('Performance monitoring não suportado:', error);
+        }
+    }
+}
+
+/**
+ * ✅ Função para otimizar renderização
+ */
+function optimizeRendering() {
+    // Usar requestAnimationFrame para operações visuais
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+            // Executar tarefas não críticas quando o navegador estiver idle
+            monitorPerformance();
+        });
+    } else {
+        setTimeout(monitorPerformance, 100);
+    }
+}
+
+/**
+ * ✅ Inicialização final com otimizações
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    // Marcar início da performance
+    if ('performance' in window) {
+        performance.mark('sugestoes-start');
+    }
+    
+    setTimeout(() => {
+        optimizeRendering();
+        
+        // Marcar fim da inicialização
+        if ('performance' in window) {
+            performance.mark('sugestoes-end');
+            performance.measure('sugestoes-init', 'sugestoes-start', 'sugestoes-end');
+        }
+        
+        console.log('🚀 Sistema de sugestões totalmente carregado e otimizado!');
+    }, 1500);
+});
+
+/**
+ * ✅ Tratamento de erros global melhorado
+ */
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('❌ Promise rejeitada não tratada:', event.reason);
+    
+    // Não mostrar erro para o usuário se for relacionado a avaliações
+    if (event.reason && event.reason.toString().includes('rating')) {
+        event.preventDefault(); // Prevenir que apareça no console
+        console.log('🔄 Tentando recuperar sistema de avaliações...');
+        
+        setTimeout(() => {
+            resetRatingSystem();
+        }, 1000);
+    }
+});
+
+// ✅ Fim do arquivo - Sistema completo e otimizado
+console.log('📄 sugestoes.js carregado com sucesso!');

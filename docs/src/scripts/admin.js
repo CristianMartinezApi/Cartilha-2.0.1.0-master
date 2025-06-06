@@ -981,24 +981,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Abrir modal de sugestão
-  function openSuggestionModal(suggestion, type) {
+function openSuggestionModal(suggestion, type) {
     if (!modal || !modalTitle || !modalBody || !modalFooter) return;
 
     const title = suggestion.title || "Sem título";
     const text = suggestion.text || "Sem descrição";
     const comment = suggestion.comment || "";
     const category = suggestion.category || "";
+    const aiUsed = suggestion.aiUsed || "Não informado"; // ✅ NOVA LINHA
     const categoryName = getCategoryName(category);
 
     let dateStr = "Data não disponível";
     if (suggestion.date) {
-      try {
-        dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString(
-          "pt-BR"
-        );
-      } catch (e) {
-        console.error("Erro ao formatar data:", e);
-      }
+        try {
+            dateStr = new Date(suggestion.date.seconds * 1000).toLocaleDateString("pt-BR");
+        } catch (e) {
+            console.error("Erro ao formatar data:", e);
+        }
     }
 
     modalTitle.textContent = title;
@@ -1009,27 +1008,17 @@ document.addEventListener("DOMContentLoaded", function () {
             <h4><i class="fas fa-file-alt"></i> Detalhes da Sugestão</h4>
             <p><strong>Título:</strong> ${title}</p>
             <p><strong>Categoria:</strong> ${categoryName}</p>
+            <p><strong>IA Utilizada:</strong> ${aiUsed}</p>
             <p><strong>Data de Envio:</strong> ${dateStr}</p>
-            <p><strong>Status:</strong> <span class="status-badge ${
-              suggestion.status
-            }">${
-      suggestion.status === "pending" ? "Pendente" : "Aprovado"
-    }</span></p>
-            ${
-              suggestion.author
-                ? `<p><strong>Autor:</strong> ${suggestion.author}</p>`
-                : ""
-            }
-            ${
-              suggestion.email
-                ? `<p><strong>Email:</strong> ${suggestion.email}</p>`
-                : ""
-            }
-            ${
-              suggestion.status === "approved" && suggestion.approvalDate
+            <p><strong>Status:</strong> <span class="status-badge ${suggestion.status}">${
+                suggestion.status === "pending" ? "Pendente" : "Aprovado"
+            }</span></p>
+            ${suggestion.author ? `<p><strong>Autor:</strong> ${suggestion.author}</p>` : ""}
+            ${suggestion.email ? `<p><strong>Email:</strong> ${suggestion.email}</p>` : ""}
+            ${suggestion.status === "approved" && suggestion.approvalDate
                 ? `<p><strong>Data de aprovação:</strong> ${new Date(
                     suggestion.approvalDate.seconds * 1000
-                  ).toLocaleDateString("pt-BR")}</p>`
+                ).toLocaleDateString("pt-BR")}</p>`
                 : ""
             }
         </div>
@@ -1039,20 +1028,16 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="prompt-text">${text}</div>
         </div>
         
-        ${
-          comment
-            ? `
+        ${comment ? `
         <div class="detail-section">
             <h4><i class="fas fa-comment"></i> Comentário</h4>
             <div class="comment-text">${comment}</div>
         </div>
-        `
-            : ""
-        }
+        ` : ""}
         
         ${suggestion.userInfo ? formatUserInfo(suggestion.userInfo) : ""}
-    </div>
-`;
+    </div>`;
+
 
     modalFooter.innerHTML = "";
 
@@ -2292,7 +2277,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <i class="fas fa-lightbulb"></i>
                 </div>
                 <div class="kpi-value">${stats.general.totalSuggestions}</div>
-                <div class="kpi-label">Total de Sugestões</div>
+                <div class="kpi-label">Total de Sugestõs</div>
                 <div class="kpi-trend">+${
                   stats.currentMonth.total
                 } este mês</div>

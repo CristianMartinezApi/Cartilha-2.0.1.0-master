@@ -1232,3 +1232,328 @@ img:hover {
 .gap-5 {
     gap: 3rem;
 }
+/* ✅ SISTEMA DE AVALIAÇÃO SUPER ORGANIZADO */
+
+.rating-section {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.03), rgba(0, 123, 255, 0.01));
+    border: 1px solid rgba(0, 123, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    transition: all 0.3s ease;
+}
+
+.rating-section:hover {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.06), rgba(0, 123, 255, 0.02));
+    border-color: rgba(0, 123, 255, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
+}
+
+/* ✅ Container principal das avaliações */
+.rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+}
+
+/* ✅ Container das estrelas */
+.stars-container {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+/* ✅ Efeito hover para estrelas clicáveis */
+.stars-container[data-user-rated="false"]:hover {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.12), rgba(255, 193, 7, 0.04));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.15);
+}
+
+/* ✅ Indicador visual sutil */
+.stars-container[data-user-rated="false"]::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffc107, transparent);
+    border-radius: 1px;
+    transition: width 0.4s ease;
+}
+
+.stars-container[data-user-rated="false"]:hover::after {
+    width: 90%;
+}
+
+/* ✅ Estrelas individuais */
+.stars-container i {
+    font-size: 1.3em;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #ffc107;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Estrelas clicáveis */
+.star-clickable {
+    cursor: pointer !important;
+    position: relative;
+}
+
+.star-clickable:hover {
+    transform: scale(1.35);
+    filter: brightness(1.3) drop-shadow(0 3px 8px rgba(255, 193, 7, 0.4));
+    z-index: 2;
+}
+
+.star-clickable:active {
+    transform: scale(1.15);
+    transition: transform 0.1s ease;
+}
+
+/* ✅ Informações da avaliação */
+.rating-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    text-align: right;
+}
+
+.rating-text {
+    font-size: 0.95em;
+    color: #495057;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.rating-status {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8em;
+}
+
+/* ✅ Animação sutil para estrelas não avaliadas */
+.stars-container[data-user-rated="false"] .star-clickable {
+    animation: gentlePulse 4s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.85; 
+        transform: scale(0.98);
+    }
+}
+
+/* ✅ Parar animação no hover */
+.stars-container[data-user-rated="false"]:hover .star-clickable {
+    animation: none;
+}
+
+/* ✅ Animação de sucesso após avaliar */
+.star-rated {
+    animation: starSuccess 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes starSuccess {
+    0% { 
+        transform: scale(1); 
+        filter: brightness(1);
+    }
+    40% { 
+        transform: scale(1.5); 
+        filter: brightness(1.6) drop-shadow(0 4px 12px rgba(255, 193, 7, 0.6));
+    }
+    70% { 
+        transform: scale(1.1); 
+        filter: brightness(1.2);
+    }
+    100% { 
+        transform: scale(1); 
+        filter: brightness(1);
+    }
+}
+
+/* ✅ Estado de carregamento */
+.rating-section.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.rating-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
+    color: #6c757d;
+    z-index: 10;
+}
+
+.rating-loading .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e9ecef;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ✅ Efeito de sucesso após avaliação */
+.rating-section.just-rated {
+    animation: ratingSuccess 1.2s ease;
+}
+
+/* ✅ Continuação do CSS - Efeito de sucesso após avaliação */
+@keyframes ratingSuccess {
+    0% { 
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.05));
+        border-color: #28a745;
+        transform: scale(1.02);
+    }
+    100% { 
+        background: linear-gradient(135deg, rgba(0, 123, 255, 0.03), rgba(0, 123, 255, 0.01));
+        border-color: rgba(0, 123, 255, 0.08);
+        transform: scale(1);
+    }
+}
+
+/* ✅ Responsividade mobile */
+@media (max-width: 768px) {
+    .rating-section {
+        padding: 12px;
+        margin-top: 12px;
+    }
+    
+    .rating-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .rating-info {
+        align-items: center;
+        text-align: center;
+        flex-direction: row;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    .stars-container {
+        justify-content: center;
+        padding: 6px 10px;
+    }
+    
+    .stars-container i {
+        font-size: 1.4em;
+    }
+    
+    .rating-text {
+        font-size: 0.9em;
+    }
+    
+    .rating-status {
+        font-size: 0.75em;
+    }
+}
+
+@media (max-width: 480px) {
+    .rating-container {
+        gap: 8px;
+    }
+    
+    .stars-container i {
+        font-size: 1.2em;
+        gap: 4px;
+    }
+    
+    .rating-info {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+/* ✅ Estados especiais */
+.rating-section .rating-text:empty::before {
+    content: "Carregando...";
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ✅ Melhorar preview das estrelas no cabeçalho */
+.stars-preview {
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.stars-preview i {
+    font-size: 0.9em;
+    color: #ffc107;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Transições suaves para todos os elementos */
+.rating-section * {
+    transition: all 0.3s ease;
+}
+
+/* ✅ Melhorar contraste para acessibilidade */
+@media (prefers-contrast: high) {
+    .rating-section {
+        border-color: #000;
+        background: #fff;
+    }
+    
+    .stars-container[data-user-rated="false"]:hover {
+        background: rgba(255, 193, 7, 0.3);
+        border: 2px solid #ffc107;
+    }
+    
+    .rating-text {
+        color: #000;
+        font-weight: 600;
+    }
+}
+
+/* ✅ Modo escuro (se implementado) */
+@media (prefers-color-scheme: dark) {
+    .rating-section {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .rating-text {
+        color: #e9ecef;
+    }
+    
+    .stars-container[data-user-rated="false"]:hover {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.08));
+    }
+}
