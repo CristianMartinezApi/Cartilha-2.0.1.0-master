@@ -1234,6 +1234,7 @@ img:hover {
 }
 /* ✅ SISTEMA DE AVALIAÇÃO SUPER ORGANIZADO */
 
+/* ✅ SISTEMA DE AVALIAÇÃO SUPER ORGANIZADO - LAYOUT VERTICAL */
 .rating-section {
     background: linear-gradient(135deg, rgba(0, 123, 255, 0.03), rgba(0, 123, 255, 0.01));
     border: 1px solid rgba(0, 123, 255, 0.08);
@@ -1241,6 +1242,11 @@ img:hover {
     padding: 16px;
     margin-top: 16px;
     transition: all 0.3s ease;
+    /* NOVA ESTRUTURA VERTICAL */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
 .rating-section:hover {
@@ -1250,20 +1256,21 @@ img:hover {
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
 }
 
-/* ✅ Container principal das avaliações */
+/* ✅ Container principal das avaliações - AGORA VERTICAL */
 .rating-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
 }
 
-/* ✅ Container das estrelas */
+/* ✅ Container das estrelas - CENTRALIZADO NO TOPO */
 .stars-container {
     display: inline-flex;
     gap: 6px;
     align-items: center;
+    justify-content: center;
     padding: 8px 12px;
     border-radius: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1320,27 +1327,30 @@ img:hover {
     transition: transform 0.1s ease;
 }
 
-/* ✅ Informações da avaliação */
+/* ✅ Informações da avaliação - AGORA ABAIXO DAS ESTRELAS */
 .rating-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     gap: 4px;
-    text-align: right;
+    text-align: center;
 }
 
 .rating-text {
-    font-size: 0.95em;
+    font-size: 1.1em;
     color: #495057;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
 }
 
 .rating-status {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     font-size: 0.8em;
+    color: #6c757d;
+    font-style: italic;
 }
 
 /* ✅ Animação sutil para estrelas não avaliadas */
@@ -1349,12 +1359,12 @@ img:hover {
 }
 
 @keyframes gentlePulse {
-    0%, 100% { 
-        opacity: 1; 
+    0%, 100% {
+        opacity: 1;
         transform: scale(1);
     }
-    50% { 
-        opacity: 0.85; 
+    50% {
+        opacity: 0.85;
         transform: scale(0.98);
     }
 }
@@ -1370,20 +1380,20 @@ img:hover {
 }
 
 @keyframes starSuccess {
-    0% { 
-        transform: scale(1); 
+    0% {
+        transform: scale(1);
         filter: brightness(1);
     }
-    40% { 
-        transform: scale(1.5); 
+    40% {
+        transform: scale(1.5);
         filter: brightness(1.6) drop-shadow(0 4px 12px rgba(255, 193, 7, 0.6));
     }
-    70% { 
-        transform: scale(1.1); 
+    70% {
+        transform: scale(1.1);
         filter: brightness(1.2);
     }
-    100% { 
-        transform: scale(1); 
+    100% {
+        transform: scale(1);
         filter: brightness(1);
     }
 }
@@ -1430,43 +1440,36 @@ img:hover {
     animation: ratingSuccess 1.2s ease;
 }
 
-/* ✅ Continuação do CSS - Efeito de sucesso após avaliação */
 @keyframes ratingSuccess {
-    0% { 
+    0% {
         background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.05));
         border-color: #28a745;
         transform: scale(1.02);
     }
-    100% { 
+    100% {
         background: linear-gradient(135deg, rgba(0, 123, 255, 0.03), rgba(0, 123, 255, 0.01));
         border-color: rgba(0, 123, 255, 0.08);
         transform: scale(1);
     }
 }
 
-/* ✅ Responsividade mobile */
+/* ✅ Responsividade mobile - AJUSTADA PARA LAYOUT VERTICAL */
 @media (max-width: 768px) {
     .rating-section {
         padding: 12px;
         margin-top: 12px;
+        gap: 10px;
     }
     
     .rating-container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
+        gap: 10px;
     }
     
     .rating-info {
-        align-items: center;
-        text-align: center;
-        flex-direction: row;
-        justify-content: center;
-        gap: 12px;
+        gap: 6px;
     }
     
     .stars-container {
-        justify-content: center;
         padding: 6px 10px;
     }
     
@@ -1475,7 +1478,7 @@ img:hover {
     }
     
     .rating-text {
-        font-size: 0.9em;
+        font-size: 1em;
     }
     
     .rating-status {
@@ -1484,18 +1487,34 @@ img:hover {
 }
 
 @media (max-width: 480px) {
+    .rating-section {
+        gap: 8px;
+        padding: 10px;
+    }
+    
     .rating-container {
         gap: 8px;
     }
     
+    .stars-container {
+        gap: 4px;
+        padding: 4px 8px;
+    }
+    
     .stars-container i {
         font-size: 1.2em;
-        gap: 4px;
     }
     
     .rating-info {
-        flex-direction: column;
         gap: 4px;
+    }
+    
+    .rating-text {
+        font-size: 0.95em;
+    }
+    
+    .rating-status {
+        font-size: 0.7em;
     }
 }
 
@@ -1556,4 +1575,142 @@ img:hover {
     .stars-container[data-user-rated="false"]:hover {
         background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.08));
     }
+}
+
+/* ✅ AJUSTES ESPECÍFICOS PARA O LAYOUT VERTICAL */
+.rating-section .rating-container {
+    min-height: auto;
+}
+
+/* ✅ Melhorar espaçamento entre elementos no layout vertical */
+.rating-section .stars-container + .rating-info {
+    margin-top: 4px;
+}
+
+/* ✅ Garantir que o texto fique bem centralizado */
+.rating-info .rating-text,
+.rating-info .rating-status {
+    text-align: center;
+    width: 100%;
+}
+
+/* ✅ Ajuste fino para o hover das estrelas no layout vertical */
+.stars-container[data-user-rated="false"]:hover {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* ✅ Melhorar a visualização no layout vertical em telas pequenas */
+@media (max-width: 576px) {
+    .rating-section {
+        margin: 10px 0;
+        padding: 8px;
+    }
+    
+    .stars-container i {
+        font-size: 1.1em;
+    }
+    
+    .rating-text {
+        font-size: 0.9em;
+    }
+}
+/* ✅ FORÇAR LAYOUT VERTICAL - SOBRESCREVER CONFLITOS */
+.rating-section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.03), rgba(0, 123, 255, 0.01));
+    border: 1px solid rgba(0, 123, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    transition: all 0.3s ease;
+}
+
+.rating-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100%;
+}
+
+/* ✅ ESTRELAS NO TOPO - SEM TEXTO AO LADO */
+.stars-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    /* Remover qualquer float ou posicionamento que cause layout horizontal */
+    float: none !important;
+    clear: both !important;
+}
+
+/* ✅ INFORMAÇÕES ABAIXO DAS ESTRELAS - NUNCA AO LADO */
+.rating-info {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+    text-align: center !important;
+    width: 100%;
+    /* Garantir que não flutue ao lado */
+    float: none !important;
+    clear: both !important;
+}
+
+.rating-text {
+    font-size: 1.1em !important;
+    color: #495057 !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    width: 100%;
+    margin: 0 !important;
+}
+
+.rating-status {
+    display: block !important;
+    text-align: center !important;
+    font-size: 0.8em !important;
+    color: #6c757d !important;
+    font-style: italic !important;
+    width: 100%;
+    margin: 0 !important;
+}
+
+/* ✅ REMOVER QUALQUER LAYOUT HORIZONTAL EXISTENTE */
+.rating-section .d-flex {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.rating-section .justify-content-between {
+    justify-content: center !important;
+}
+
+.rating-section .align-items-center {
+    align-items: center !important;
+}
+
+/* ✅ SOBRESCREVER CLASSES BOOTSTRAP QUE POSSAM CAUSAR CONFLITO */
+.rating-section .row {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.rating-section .col,
+.rating-section .col-auto,
+.rating-section [class*="col-"] {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }

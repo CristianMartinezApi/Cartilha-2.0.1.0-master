@@ -804,11 +804,18 @@ function generateStarsDisplay(rating) {
 }
 
 
-/**
- * ✅ Gera HTML das estrelas - Versão melhorada
+/** 
+ * ✅ Gera HTML das estrelas - Versão melhorada com layout vertical 
  */
 function generateStarsHTML(averageRating, userRated, promptId) {
     let starsHtml = '';
+    
+    // Container principal com layout vertical (removendo qualquer estrutura horizontal)
+    starsHtml += '<div class="rating-section">';
+    starsHtml += '<div class="rating-container">';
+    
+    // Container das estrelas (apenas as estrelas, sem texto ao lado)
+    starsHtml += '<div class="stars-container" data-user-rated="' + userRated + '">';
     
     for (let i = 1; i <= 5; i++) {
         let starClass = 'far fa-star';
@@ -824,17 +831,29 @@ function generateStarsHTML(averageRating, userRated, promptId) {
         }
         
         // Se o usuário não avaliou, as estrelas são clicáveis
-        const clickable = !userRated ? `data-rating="${i}"` : '';
+        const clickable = !userRated ? `data-rating="${i}" data-prompt-id="${promptId}"` : '';
         const hoverClass = !userRated ? 'star-clickable' : '';
         
-        starsHtml += `<i class="${starClass} ${hoverClass}" 
-                         ${clickable} 
-                         style="${starStyle}" 
-                         title="${userRated ? `Avaliação: ${averageRating.toFixed(1)}` : `Avaliar com ${i} estrela${i > 1 ? 's' : ''}`}"></i>`;
+        starsHtml += `<i class="${starClass} ${hoverClass}"
+                        ${clickable}
+                        style="${starStyle}"
+                        title="${userRated ? `Avaliação: ${averageRating.toFixed(1)}` : `Avaliar com ${i} estrela${i > 1 ? 's' : ''}`}"></i>`;
     }
+    
+    starsHtml += '</div>'; // Fecha stars-container
+    
+    // Container do texto de avaliação (separado, abaixo das estrelas)
+    starsHtml += '<div class="rating-info">';
+    starsHtml += `<div class="rating-text">${averageRating.toFixed(1)}</div>`;
+    starsHtml += `<div class="rating-status">${userRated ? 'Você já avaliou' : 'Clique para avaliar'}</div>`;
+    starsHtml += '</div>'; // Fecha rating-info
+    
+    starsHtml += '</div>'; // Fecha rating-container
+    starsHtml += '</div>'; // Fecha rating-section
     
     return starsHtml;
 }
+
 
 /**
  * ✅ Verifica se usuário já avaliou um prompt
