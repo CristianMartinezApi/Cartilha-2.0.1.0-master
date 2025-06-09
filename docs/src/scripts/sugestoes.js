@@ -848,9 +848,7 @@ function generateStarsHTML(averageRating, userRated, promptId) {
     starsHtml += `<div class="rating-status">${userRated ? 'Você já avaliou' : 'Clique para avaliar'}</div>`;
     starsHtml += '</div>'; // Fecha rating-info
     
-    starsHtml += '</div>'; // Fecha rating-container
-    starsHtml += '</div>'; // Fecha rating-section
-    
+   
     return starsHtml;
 }
 
@@ -1453,7 +1451,7 @@ async function handleSharePrompt(e) {
 
 
 /**
- * Renderiza estado vazio
+ * ✅ Renderiza estado vazio - Versão simples
  */
 function renderEmptyState() {
     DOM_CACHE.suggestionsList.innerHTML = `
@@ -1461,11 +1459,30 @@ function renderEmptyState() {
             <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">Nenhum prompt encontrado</h5>
             <p class="text-muted">Seja o primeiro a contribuir com esta categoria!</p>
-            <button class="btn btn-primary" onclick="document.getElementById('suggestion-form')?.scrollIntoView({behavior: 'smooth'})">
+            <button class="btn btn-primary" onclick="scrollToFormSimple()">
                 <i class="fas fa-plus me-2"></i>Adicionar Prompt
             </button>
         </div>
     `;
+}
+
+/**
+ * ✅ Função simples para scroll ao formulário
+ */
+function scrollToFormSimple() {
+    
+
+    // Tentar encontrar e focar no formulário
+    setTimeout(() => {
+        const form = document.querySelector('#suggestion-form, .suggestion-form, form');
+        if (form) {
+            form.scrollIntoView({ behavior: 'smooth' });
+            const firstInput = form.querySelector('input, textarea');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+    }, 1000);
 }
 
 /**
