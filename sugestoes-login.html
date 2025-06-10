@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Sugestões | PGE-SC</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos customizados -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .login-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .login-body {
+            padding: 40px 30px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .btn-google {
+            background: #db4437;
+            color: white;
+        }
+        
+        .btn-google:hover {
+            background: #c23321;
+            color: white;
+        }
+        
+        .btn-microsoft {
+            background: #0078d4;
+            color: white;
+        }
+        
+        .btn-microsoft:hover {
+            background: #106ebe;
+            color: white;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider span {
+            background: white;
+            padding: 0 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .security-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .security-info h6 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .security-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .security-info li {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 300px;
+        }
+        
+        .spinner-custom {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-info {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner-custom"></div>
+            <h5>Autenticando...</h5>
+            <p class="text-muted mb-0">Aguarde enquanto verificamos suas credenciais</p>
+        </div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+               <img src="./docs/src/img/Apenas-brasao (1).png" alt="PGE-SC" onerror="this.style.display='none'">
+
+
+                <h3 class="mb-2">Sistema de Sugestões</h3>
+                <p class="mb-0 opacity-75">Procuradoria Geral do Estado de SC</p>
+            </div>
+            
+            <!-- Body -->
+            <div class="login-body">
+                <!-- Alerts -->
+                <div id="alert-container"></div>
+                
+                <div class="text-center mb-4">
+                    <h4 class="text-dark">Acesso Restrito</h4>
+                    <p class="text-muted">Use sua conta institucional para continuar</p>
+                </div>
+                
+                <!-- Botões de Login -->
+                <button id="google-login-btn" class="login-btn btn-google">
+                    <i class="fab fa-google"></i>
+                    <span>Entrar com Google</span>
+                </button>
+                
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+                
+                <button id="microsoft-login-btn" class="login-btn btn-microsoft">
+                    <i class="fab fa-microsoft"></i>
+                    <span>Entrar com Microsoft</span>
+                </button>
+                
+                <!-- Informações de Segurança -->
+                <div class="security-info">
+                    <h6><i class="fas fa-shield-alt me-2"></i>Informações de Segurança</h6>
+                    <ul>
+                        <li><strong>Acesso restrito</strong> a servidores da PGE-SC</li>
+                        <li><strong>Conta institucional obrigatória</strong> (@pge.sc.gov.br)</li>
+                        <li><strong>Sessão segura</strong> com timeout automático</li>
+                        <li><strong>Dados protegidos</strong> conforme LGPD</li>
+                    </ul>
+                </div>
+                
+                <!-- Footer -->
+                <div class="footer-info">
+                    <p class="mb-2">
+                        <i class="fas fa-question-circle me-1"></i>
+                        Problemas para acessar?
+                    </p>
+                    <p class="mb-0">
+                        Entre em contato com o suporte técnico da PGE-SC
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./docs/src/scripts/firebase-init.js"></script>
+    <!-- Auth System -->
+   <script src="./docs/src/scripts/sugestoes-auth.js"></script>
+    
+    <!-- Login Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Página de login carregada');
+            
+            // Elementos
+            const googleBtn = document.getElementById('google-login-btn');
+            const microsoftBtn = document.getElementById('microsoft-login-btn');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const alertContainer = document.getElementById('alert-container');
+            
+            // Verificar se usuário já está logado
+            checkIfAlreadyLoggedIn();
+            
+            // Event Listeners
+            googleBtn.addEventListener('click', handleGoogleLogin);
+            microsoftBtn.addEventListener('click', handleMicrosoftLogin);
+            
+            /**
+             * Verificar se usuário já está autenticado
+             */
+            async function checkIfAlreadyLoggedIn() {
+                try {
+                    // Aguardar Firebase estar pronto
+                    await waitForFirebase();
+                    
+                    const auth = await SugestoesAuth.checkAuthentication();
+                    if (auth.isAuthenticated) {
+                        console.log('✅ Usuário já autenticado, redirecionando...');
+                        showAlert('Você já está logado! Redirecionando...', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'docs/sugestoes.html';
+                        }, 1500);
+                    }
+                } catch (error) {
+                    console.log('ℹ️ Usuário não autenticado, mostrando tela de login');
+                }
+            }
+            
+            /**
+             * Aguardar Firebase estar disponível
+             */
+            function waitForFirebase() {
+                return new Promise((resolve, reject) => {
+                    let attempts = 0;
+                    const maxAttempts = 50;
+                    
+                    const checkFirebase = () => {
+                        if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
+                            resolve();
+                        } else if (attempts < maxAttempts) {
+                            attempts++;
+                            setTimeout(checkFirebase, 100);
+                        } else {
+                            reject(new Error('Firebase não carregou'));
+                        }
+                    };
+                    
+                    checkFirebase();
+                });
+            }
+            
+            /**
+             * Login com Google
+             */
+            async function handleGoogleLogin() {
+                try {
+                    showLoading(true);
+                    disableButtons(true);
+                    
+                    const result = await SugestoesAuth.loginWithGoogle();
+                    
+                    if (result.success) {
+                        showAlert(result.message, 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'docs/sugestoes.html';
+                        }, 1500);
+                    } else {
+                        throw new Error(result.message);
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Erro no login com Google:', error);
+                    showAlert(error.message || 'Erro no login com Google', 'danger');
+                } finally {
+                    showLoading(false);
+                    disableButtons(false);
+                }
+            }
+            
+            /**
+             * Login com Microsoft
+             */
+            async function handleMicrosoftLogin() {
+                try {
+                    showLoading(true);
+                    disableButtons(true);
+                    
+                    const result = await SugestoesAuth.loginWithMicrosoft();
+                    
+                    if (result.success) {
+                        showAlert(result.message, 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'docs/sugestoes.html';
+                        }, 1500);
+                    } else {
+                        throw new Error(result.message);
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Erro no login com Microsoft:', error);
+                    showAlert(error.message || 'Erro no login com Microsoft', 'danger');
+                } finally {
+                    showLoading(false);
+                    disableButtons(false);
+                }
+            }
+            
+            /**
+             * Mostrar/ocultar loading
+             */
+            function showLoading(show) {
+                loadingOverlay.style.display = show ? 'flex' : 'none';
+            }
+            
+            /**
+             * Habilitar/desabilitar botões
+             */
+            function disableButtons(disable) {
+                googleBtn.disabled = disable;
+                microsoftBtn.disabled = disable;
+                
+                if (disable) {
+                    googleBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+                    microsoftBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+                } else {
+                    googleBtn.innerHTML = '<i class="fab fa-google"></i><span>Entrar com Google</span>';
+                    microsoftBtn.innerHTML = '<i class="fab fa-microsoft"></i><span>Entrar com Microsoft</span>';
+                }
+            }
+            
+                    /**
+             * Mostrar alerta
+             */
+            function showAlert(message, type) {
+                const alertHTML = `
+                    <div class="alert alert-${type} alert-custom alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-${getAlertIcon(type)} me-2"></i>
+                            <span>${message}</span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                
+                alertContainer.innerHTML = alertHTML;
+                
+                // Auto-remover após 5 segundos
+                setTimeout(() => {
+                    const alert = alertContainer.querySelector('.alert');
+                    if (alert) {
+                        alert.classList.remove('show');
+                        setTimeout(() => {
+                            alertContainer.innerHTML = '';
+                        }, 300);
+                    }
+                }, 5000);
+            }
+            
+            /**
+             * Obter ícone do alerta
+             */
+            function getAlertIcon(type) {
+                const icons = {
+                    'success': 'check-circle',
+                    'danger': 'exclamation-triangle',
+                    'warning': 'exclamation-circle',
+                    'info': 'info-circle'
+                };
+                return icons[type] || 'info-circle';
+            }
+            
+            // Tratamento de erros globais
+            window.addEventListener('error', function(e) {
+                console.error('❌ Erro global:', e.error);
+                showAlert('Ocorreu um erro inesperado. Recarregue a página e tente novamente.', 'danger');
+            });
+            
+            // Tratamento de promises rejeitadas
+            window.addEventListener('unhandledrejection', function(e) {
+                console.error('❌ Promise rejeitada:', e.reason);
+                showAlert('Erro de conexão. Verifique sua internet e tente novamente.', 'warning');
+            });
+        });
+    </script>
+</body>
+</html>
