@@ -861,7 +861,7 @@ function resetStarsToCurrentRating(container, promptId) {
 }
 
 /**
- * ✅ Manipula avaliação com estrelas
+ * ✅ Manipula avaliação com estrelas - VERSÃO CORRIGIDA
  */
 async function handleStarRating(e) {
     e.preventDefault();
@@ -881,8 +881,8 @@ async function handleStarRating(e) {
     }
     
     const rating = parseInt(star.getAttribute('data-rating'));
+    const promptId = star.getAttribute('data-prompt-id'); // ← CORREÇÃO AQUI
     const starsContainer = star.parentElement;
-    const promptId = starsContainer.getAttribute('data-prompt-id');
     
     if (!promptId || !rating || hasUserRated(promptId)) {
         console.log('❌ Avaliação inválida ou usuário já avaliou');
@@ -924,6 +924,7 @@ async function handleStarRating(e) {
         }, 1000);
     }
 }
+
 
 /**
  * ✅ Atualiza estrelas após avaliação
