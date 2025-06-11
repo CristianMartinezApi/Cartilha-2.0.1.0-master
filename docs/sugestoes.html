@@ -4,16 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sugestões e Interações - Guia de Uso Seguro da IA na PGE-SC</title>
+    
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    
     <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -27,11 +30,21 @@
       gtag("js", new Date());
       gtag("config", "G-1YLW2YHQSE");
     </script>
+    
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="./src/styles/sugestoes.css" />
-    <!-- Inicialização do Firebase -->
+    
+    <!-- ✅ FIREBASE - ORDEM CORRETA -->
+    <!-- 1. Firebase App -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    
+    <!-- 2. Firebase Auth (ADICIONADO) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- 3. Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- 4. Firebase Init -->
     <script src="./src/scripts/firebase-init.js"></script>
   </head>
 
@@ -114,6 +127,7 @@
             </div>
           </div>
         </div>
+        
         <!-- Formulário de envio de sugestões (AGORA NA DIREITA) -->
         <div class="col-lg-5">
           <div class="card h-100 border-primary">
@@ -153,11 +167,11 @@
                     <option value="Outros">Outros</option>
                   </select>
                 </div>
+                
                 <!-- Adicionar no formulário de sugestões, se ainda não existir -->
                 <div class="mb-3">
                   <label for="prompt-ai" class="form-label">
-
-                    IA UTILIZADA</span>
+                    IA UTILIZADA
                   </label>
                   <select class="form-select" id="prompt-ai" name="prompt-ai">
                     <option value="">Selecione a IA utilizada...</option>
@@ -183,18 +197,6 @@
                     Informe qual IA foi utilizada para criar ou testar este
                     prompt.
                   </div>
-                </div>
-
-                <!-- Adicionar indicador de carregamento se não existir -->
-                <div
-                  id="loading-indicator"
-                  class="text-center py-4"
-                  style="display: none"
-                >
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Carregando...</span>
-                  </div>
-                  <p class="mt-2 text-muted">Carregando prompts...</p>
                 </div>
 
                 <div class="mb-3">
@@ -228,9 +230,15 @@
         </div>
       </div>
     </div>
-    <!-- Bootstrap JS Bundle with Popper -->
+    
+    <!-- ✅ SCRIPTS - ORDEM CORRETA -->
+    <!-- 1. Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Scripts específicos para a página de sugestões -->
+    
+    <!-- 2. Sistema de Autenticação (ADICIONADO) -->
+    <script src="./src/scripts/sugestoes-auth.js"></script>
+    
+    <!-- 3. Lógica da página -->
     <script src="./src/scripts/sugestoes.js"></script>
   </body>
 </html>
