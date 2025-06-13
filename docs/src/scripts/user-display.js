@@ -261,9 +261,8 @@ function showUserError(message) {
         userInfoDisplay.style.display = 'block';
     }
 }
-
 /**
- * Lidar com logout
+ * Lidar com logout - REDIRECIONAR PARA PÁGINA PRINCIPAL
  */
 async function handleLogout() {
     console.log('🚪 Iniciando logout...');
@@ -284,11 +283,12 @@ async function handleLogout() {
         sessionStorage.clear();
         console.log('✅ Dados locais limpos');
         
-        // Redirecionar
-        window.location.href = 'login.html';
+        // ✅ REDIRECIONAR PARA PÁGINA PRINCIPAL
+        window.location.href = 'index.html';
         
     } catch (error) {
         console.error('❌ Erro ao fazer logout:', error);
         alert('Erro ao sair. Tente novamente.');
     }
 }
+
