@@ -418,16 +418,51 @@ detectEnvironment() {
 
 
 };
+// Sistema de inicialização mais robusto
+function initSugestoesAuth() {
+    console.log('🔄 Tentando inicializar SugestoesAuth...');
+    
+    if (typeof firebase === 'undefined') {
+        console.log('⏳ Firebase não carregado ainda, tentando novamente...');
+        return false;
+    }
+    
+    if (!firebase.auth) {
+        console.log('⏳ Firebase Auth não carregado ainda, tentando novamente...');
+        return false;
+    }
+    
+    console.log('✅ Firebase disponível, inicializando...');
+    SugestoesAuth.init();
+    return true;
+}
 
-// Inicializar quando o DOM estiver pronto
+// Múltiplas tentativas de inicialização
 document.addEventListener('DOMContentLoaded', () => {
-    // Aguardar Firebase estar pronto
-    setTimeout(() => {
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-            SugestoesAuth.init();
-        }
-    }, 1000);
+    console.log('📄 DOM carregado, iniciando verificações...');
+    
+    // Tentativa imediata
+    if (initSugestoesAuth()) return;
+    
+    // Tentativas com delay crescente
+    const delays = [500, 1000, 2000, 3000];
+    
+    delays.forEach((delay, index) => {
+        setTimeout(() => {
+            console.log(`🔄 Tentativa ${index + 2} após ${delay}ms...`);
+            if (initSugestoesAuth()) {
+                console.log('✅ Inicialização bem-sucedida!');
+            } else if (index === delays.length - 1) {
+                console.error('❌ Falha na inicialização após múltiplas tentativas');
+                console.error('🔍 Diagnóstico:', {
+                    firebase: typeof firebase,
+                    auth: typeof firebase !== 'undefined' ? !!firebase.auth : 'N/A',
+                    location: window.location.href
+                });
+            }
+        }, delay);
+    });
 });
 
-// Expor globalmente
-window.SugestoesAuth = SugestoesAuth;
+
+
