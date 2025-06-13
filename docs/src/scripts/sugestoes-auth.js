@@ -8,7 +8,7 @@ const SugestoesAuth = {
         sessionTimeout: 5 * 60 * 1000, // 5 minutos
         allowedDomains: ['pge.sc.gov.br'],
         redirectAfterLogin: '/sugestoes.html',        // ← CORRETO (mesmo diretório)
-        redirectAfterLogout: '/sugestoes-login.html'   // ← CORRETO (raiz)
+        redirectAfterLogout: '/docs/sugestoes-login.html'   // ← CORRETO (raiz)
     },
 
 
