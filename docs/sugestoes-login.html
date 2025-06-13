@@ -322,7 +322,7 @@
                         showAlert('Você já está logado! Redirecionando...', 'success');
                         
                         setTimeout(() => {
-                            window.location.href = './sugestoes.html';
+                            window.location.href = '/docs/sugestoes.html';
                         }, 1500);
                     }
                 } catch (error) {
@@ -367,7 +367,7 @@
                         showAlert(result.message, 'success');
                         
                         setTimeout(() => {
-                            window.location.href = 'docs/sugestoes.html';
+                            window.location.href = '/docs/sugestoes.html';
                         }, 1500);
                     } else {
                         throw new Error(result.message);
@@ -396,7 +396,7 @@
                         showAlert(result.message, 'success');
                         
                         setTimeout(() => {
-                            window.location.href = 'docs/sugestoes.html';
+                            window.location.href = '/docs/sugestoes.html';
                         }, 1500);
                     } else {
                         throw new Error(result.message);
