@@ -291,202 +291,210 @@
    <script src="./src/scripts/sugestoes-auth.js"></script>
     
     <!-- Login Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Página de login carregada');
-            
-            // Elementos
-            const googleBtn = document.getElementById('google-login-btn');
-            const microsoftBtn = document.getElementById('microsoft-login-btn');
-            const loadingOverlay = document.getElementById('loading-overlay');
-            const alertContainer = document.getElementById('alert-container');
-            
-            // Verificar se usuário já está logado
-            checkIfAlreadyLoggedIn();
-            
-            // Event Listeners
-            googleBtn.addEventListener('click', handleGoogleLogin);
-            microsoftBtn.addEventListener('click', handleMicrosoftLogin);
-            
-            /**
-             * Verificar se usuário já está autenticado
-             */
-            async function checkIfAlreadyLoggedIn() {
-                try {
-                    // Aguardar Firebase estar pronto
-                    await waitForFirebase();
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Página de login carregada');
+        
+        // Elementos
+        const googleBtn = document.getElementById('google-login-btn');
+        const microsoftBtn = document.getElementById('microsoft-login-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const alertContainer = document.getElementById('alert-container');
+        
+        // Verificar se usuário já está logado
+        checkIfAlreadyLoggedIn();
+        
+        // Event Listeners
+        googleBtn.addEventListener('click', handleGoogleLogin);
+        microsoftBtn.addEventListener('click', handleMicrosoftLogin);
+        
+        /**
+         * Verificar se usuário já está autenticado
+         */
+        async function checkIfAlreadyLoggedIn() {
+            try {
+                // Aguardar Firebase estar pronto
+                await waitForFirebase();
+                
+                const auth = await SugestoesAuth.checkAuthentication();
+                if (auth.isAuthenticated) {
+                    console.log('✅ Usuário já autenticado, redirecionando...');
+                    showAlert('Você já está logado! Redirecionando...', 'success');
                     
-                    const auth = await SugestoesAuth.checkAuthentication();
-                    if (auth.isAuthenticated) {
-                        console.log('✅ Usuário já autenticado, redirecionando...');
-                        showAlert('Você já está logado! Redirecionando...', 'success');
-                        
-                        setTimeout(() => {
-                            window.location.href = './sugestoes.html';
-                        }, 1500);
-                    }
-                } catch (error) {
-                    console.log('ℹ️ Usuário não autenticado, mostrando tela de login');
+                    setTimeout(() => {
+                        SugestoesAuth.detectEnvironment();  // ← CORRIGIDO
+                        console.log('🎯 Redirecionando para:', SugestoesAuth.config.redirectAfterLogin);
+                        window.location.href = SugestoesAuth.config.redirectAfterLogin;  // ← CORRIGIDO
+                    }, 1500);
                 }
+            } catch (error) {
+                console.log('ℹ️ Usuário não autenticado, mostrando tela de login');
             }
-            
-            /**
-             * Aguardar Firebase estar disponível
-             */
-            function waitForFirebase() {
-                return new Promise((resolve, reject) => {
-                    let attempts = 0;
-                    const maxAttempts = 50;
-                    
-                    const checkFirebase = () => {
-                        if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
-                            resolve();
-                        } else if (attempts < maxAttempts) {
-                            attempts++;
-                            setTimeout(checkFirebase, 100);
-                        } else {
-                            reject(new Error('Firebase não carregou'));
-                        }
-                    };
-                    
-                    checkFirebase();
-                });
-            }
-            
-            /**
-             * Login com Google
-             */
-            async function handleGoogleLogin() {
-                try {
-                    showLoading(true);
-                    disableButtons(true);
-                    
-                    const result = await SugestoesAuth.loginWithGoogle();
-                    
-                    if (result.success) {
-                        showAlert(result.message, 'success');
-                        
-                        setTimeout(() => {
-                            window.location.href = '/docs/sugestoes.html';
-                        }, 1500);
+        }
+        
+        /**
+         * Aguardar Firebase estar disponível
+         */
+        function waitForFirebase() {
+            return new Promise((resolve, reject) => {
+                let attempts = 0;
+                const maxAttempts = 50;
+                
+                const checkFirebase = () => {
+                    if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
+                        resolve();
+                    } else if (attempts < maxAttempts) {
+                        attempts++;
+                        setTimeout(checkFirebase, 100);
                     } else {
-                        throw new Error(result.message);
+                        reject(new Error('Firebase não carregou'));
                     }
-                    
-                } catch (error) {
-                    console.error('❌ Erro no login com Google:', error);
-                    showAlert(error.message || 'Erro no login com Google', 'danger');
-                } finally {
-                    showLoading(false);
-                    disableButtons(false);
-                }
-            }
-            
-            /**
-             * Login com Microsoft
-             */
-            async function handleMicrosoftLogin() {
-                try {
-                    showLoading(true);
-                    disableButtons(true);
-                    
-                    const result = await SugestoesAuth.loginWithMicrosoft();
-                    
-                    if (result.success) {
-                        showAlert(result.message, 'success');
-                        
-                        setTimeout(() => {
-                            window.location.href = '/docs/sugestoes.html';
-                        }, 1500);
-                    } else {
-                        throw new Error(result.message);
-                    }
-                    
-                } catch (error) {
-                    console.error('❌ Erro no login com Microsoft:', error);
-                    showAlert(error.message || 'Erro no login com Microsoft', 'danger');
-                } finally {
-                    showLoading(false);
-                    disableButtons(false);
-                }
-            }
-            
-            /**
-             * Mostrar/ocultar loading
-             */
-            function showLoading(show) {
-                loadingOverlay.style.display = show ? 'flex' : 'none';
-            }
-            
-            /**
-             * Habilitar/desabilitar botões
-             */
-            function disableButtons(disable) {
-                googleBtn.disabled = disable;
-                microsoftBtn.disabled = disable;
-                
-                if (disable) {
-                    googleBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
-                    microsoftBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
-                } else {
-                    googleBtn.innerHTML = '<i class="fab fa-google"></i><span>Entrar com Google</span>';
-                    microsoftBtn.innerHTML = '<i class="fab fa-microsoft"></i><span>Entrar com Microsoft</span>';
-                }
-            }
-            
-                    /**
-             * Mostrar alerta
-             */
-            function showAlert(message, type) {
-                const alertHTML = `
-                    <div class="alert alert-${type} alert-custom alert-dismissible fade show" role="alert">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-${getAlertIcon(type)} me-2"></i>
-                            <span>${message}</span>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                `;
-                
-                alertContainer.innerHTML = alertHTML;
-                
-                // Auto-remover após 5 segundos
-                setTimeout(() => {
-                    const alert = alertContainer.querySelector('.alert');
-                    if (alert) {
-                        alert.classList.remove('show');
-                        setTimeout(() => {
-                            alertContainer.innerHTML = '';
-                        }, 300);
-                    }
-                }, 5000);
-            }
-            
-            /**
-             * Obter ícone do alerta
-             */
-            function getAlertIcon(type) {
-                const icons = {
-                    'success': 'check-circle',
-                    'danger': 'exclamation-triangle',
-                    'warning': 'exclamation-circle',
-                    'info': 'info-circle'
                 };
-                return icons[type] || 'info-circle';
+                
+                checkFirebase();
+            });
+        }
+        
+        /**
+         * Login com Google
+         */
+        async function handleGoogleLogin() {
+            try {
+                showLoading(true);
+                disableButtons(true);
+                
+                const result = await SugestoesAuth.loginWithGoogle();
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    
+                    setTimeout(() => {
+                        SugestoesAuth.detectEnvironment();  // ← CORRIGIDO
+                        console.log('🎯 Redirecionando para:', SugestoesAuth.config.redirectAfterLogin);
+                        window.location.href = SugestoesAuth.config.redirectAfterLogin;  // ← CORRIGIDO
+                    }, 1500);
+                } else {
+                    throw new Error(result.message);
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro no login com Google:', error);
+                showAlert(error.message || 'Erro no login com Google', 'danger');
+            } finally {
+                showLoading(false);
+                disableButtons(false);
             }
+        }
+        
+                /**
+         * Login com Microsoft
+         */
+        async function handleMicrosoftLogin() {
+            try {
+                showLoading(true);
+                disableButtons(true);
+                
+                const result = await SugestoesAuth.loginWithMicrosoft();
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    
+                    setTimeout(() => {
+                        SugestoesAuth.detectEnvironment();  // ← CORRIGIDO
+                        console.log('🎯 Redirecionando para:', SugestoesAuth.config.redirectAfterLogin);
+                        window.location.href = SugestoesAuth.config.redirectAfterLogin;  // ← CORRIGIDO
+                    }, 1500);
+                } else {
+                    throw new Error(result.message);
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro no login com Microsoft:', error);
+                showAlert(error.message || 'Erro no login com Microsoft', 'danger');
+            } finally {
+                showLoading(false);
+                disableButtons(false);
+            }
+        }
+        
+        /**
+         * Mostrar/ocultar loading
+         */
+        function showLoading(show) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+        
+        /**
+         * Habilitar/desabilitar botões
+         */
+        function disableButtons(disable) {
+            googleBtn.disabled = disable;
+            microsoftBtn.disabled = disable;
             
-            // Tratamento de erros globais
-            window.addEventListener('error', function(e) {
-                console.error('❌ Erro global:', e.error);
-                showAlert('Ocorreu um erro inesperado. Recarregue a página e tente novamente.', 'danger');
-            });
+            if (disable) {
+                googleBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+                microsoftBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+            } else {
+                googleBtn.innerHTML = '<i class="fab fa-google"></i><span>Entrar com Google</span>';
+                microsoftBtn.innerHTML = '<i class="fab fa-microsoft"></i><span>Entrar com Microsoft</span>';
+            }
+        }
+        
+        /**
+         * Mostrar alerta
+         */
+        function showAlert(message, type) {
+            const alertHTML = `
+                <div class="alert alert-${type} alert-custom alert-dismissible fade show" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getAlertIcon(type)} me-2"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
             
-            // Tratamento de promises rejeitadas
-            window.addEventListener('unhandledrejection', function(e) {
-                console.error('❌ Promise rejeitada:', e.reason);
-                showAlert('Erro de conexão. Verifique sua internet e tente novamente.', 'warning');
-            });
+            alertContainer.innerHTML = alertHTML;
+            
+            // Auto-remover após 5 segundos
+            setTimeout(() => {
+                const alert = alertContainer.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => {
+                        alertContainer.innerHTML = '';
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        /**
+         * Obter ícone do alerta
+         */
+        function getAlertIcon(type) {
+            const icons = {
+                'success': 'check-circle',
+                'danger': 'exclamation-triangle',
+                'warning': 'exclamation-circle',
+                'info': 'info-circle'
+            };
+            return icons[type] || 'info-circle';
+        }
+        
+        // Tratamento de erros globais
+        window.addEventListener('error', function(e) {
+            console.error('❌ Erro global:', e.error);
+            showAlert('Ocorreu um erro inesperado. Recarregue a página e tente novamente.', 'danger');
         });
-    </script>
+        
+        // Tratamento de promises rejeitadas
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('❌ Promise rejeitada:', e.reason);
+            showAlert('Erro de conexão. Verifique sua internet e tente novamente.', 'warning');
+        });
+    });
+</script>
+
+
 </body>
 </html>
