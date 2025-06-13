@@ -5,11 +5,43 @@
 
 const SugestoesAuth = {
     config: {
-        sessionTimeout: 5 * 60 * 1000, // 5 minutos
-        allowedDomains: ['pge.sc.gov.br'],
-        redirectAfterLogin: '/docs/sugestoes.html',        // ← CORRETO (mesmo diretório)
-        redirectAfterLogout: '/docs/sugestoes-login.html'   // ← CORRETO (raiz)
-    },
+    sessionTimeout: 5 * 60 * 1000, // 5 minutos
+    allowedDomains: ['pge.sc.gov.br'],
+    redirectAfterLogin: null,    // Será definido automaticamente
+    redirectAfterLogout: null    // Será definido automaticamente
+},
+/**
+ * Detectar ambiente automaticamente
+ */
+detectEnvironment() {
+    const pathname = window.location.pathname;
+    const hostname = window.location.hostname;
+    
+    console.log('🔍 Detectando ambiente:', { pathname, hostname });
+    
+    if (pathname.includes('/Cartilha-2.0.1.0-master/')) {
+        // GitHub Pages
+        this.config.redirectAfterLogin = '/Cartilha-2.0.1.0-master/sugestoes.html';
+        this.config.redirectAfterLogout = '/Cartilha-2.0.1.0-master/sugestoes-login.html';
+        console.log('🐙 Ambiente: GitHub Pages');
+    } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // Live Server
+        this.config.redirectAfterLogin = '/docs/sugestoes.html';
+        this.config.redirectAfterLogout = '/docs/sugestoes-login.html';
+        console.log('🏠 Ambiente: Live Server');
+    } else {
+        // Outros ambientes (fallback)
+        this.config.redirectAfterLogin = './sugestoes.html';
+        this.config.redirectAfterLogout = './sugestoes-login.html';
+        console.log('🌐 Ambiente: Outros');
+    }
+    
+    console.log('✅ URLs configuradas:', {
+        login: this.config.redirectAfterLogin,
+        logout: this.config.redirectAfterLogout
+    });
+},
+
 
 
     /**
@@ -364,20 +396,26 @@ const SugestoesAuth = {
     init() {
     console.log('🚀 Inicializando sistema de autenticação...');
     
+    // DETECTAR AMBIENTE PRIMEIRO
+    this.detectEnvironment();
+    
     // Verificar se está na página de login
     if (window.location.pathname.includes('sugestoes-login.html')) {
         console.log('📄 Página de login detectada');
-        return; // ← Para aqui se for página de login
+        return;
     }
     
-   
     this.checkAuthentication().then(auth => {
         if (!auth.isAuthenticated) {
             console.log('🔄 Redirecionando para login...');
-            window.location.href = this.config.redirectAfterLogout; 
+            console.log('🎯 URL de destino:', this.config.redirectAfterLogout);
+            window.location.href = this.config.redirectAfterLogout;
+        } else {
+            console.log('✅ Usuário autenticado, permanecendo na página');
         }
     });
 }
+
 
 };
 
