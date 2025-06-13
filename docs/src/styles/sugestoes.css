@@ -1714,3 +1714,176 @@ img:hover {
     padding: 0 !important;
     margin: 0 !important;
 }
+
+/* ✅ ESTILOS PARA INFORMAÇÕES DO USUÁRIO - VERSÃO DISCRETA E PRÓXIMA DO TOPO */
+.user-info-container {
+    background: transparent;
+    padding: 4px 0 8px 0; /* Reduzido o padding superior */
+    margin: 0 0 10px 0; /* Removido margin-top */
+    position: relative;
+    top: -10px; /* Move para mais próximo do topo */
+}
+
+.user-info-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 4px 12px; /* Reduzido o padding */
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.user-info-card:hover {
+    background: rgba(248, 249, 250, 0.5);
+    border-radius: 8px;
+}
+
+.user-avatar i {
+    color: #6c757d;
+    opacity: 0.8;
+}
+
+.user-greeting {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-bottom: 1px; /* Reduzido */
+    font-weight: normal;
+    line-height: 1.2; /* Reduzido o espaçamento entre linhas */
+}
+
+.user-name {
+    font-size: 0.9rem;
+    color: #495057;
+    font-weight: 500;
+    margin-bottom: 0; /* Removido margin-bottom */
+    line-height: 1.2;
+}
+
+.user-email {
+    font-size: 0.8rem;
+    color: #6c757d;
+    opacity: 0.8;
+    line-height: 1.2;
+}
+
+.user-actions .btn {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border: none;
+    color: #6c757d;
+    background: transparent;
+    font-size: 0.8rem;
+}
+
+.user-actions .btn:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    transform: scale(1.1);
+}
+
+.user-loading {
+    background: transparent;
+    border: none;
+    padding: 4px 12px; /* Reduzido */
+    box-shadow: none;
+}
+
+.user-loading .fa-spinner {
+    color: #6c757d;
+    opacity: 0.7;
+}
+
+.user-loading small {
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+
+/* ✅ RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .user-info-container {
+        padding: 2px 0 6px 0; /* Ainda mais compacto no mobile */
+        top: -8px;
+    }
+    
+    .user-info-card .d-flex {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .user-details {
+        text-align: center;
+        margin: 0;
+    }
+    
+    .user-actions {
+        margin-left: 6px !important;
+    }
+    
+    .user-info-card {
+        padding: 3px 8px;
+    }
+    
+    .user-avatar i {
+        font-size: 1.2rem;
+    }
+    
+    .user-name {
+        font-size: 0.85rem;
+    }
+    
+    .user-email {
+        font-size: 0.75rem;
+    }
+}
+
+/* ✅ ANIMAÇÃO SUTIL */
+@keyframes fadeInUser {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.user-info-card {
+    animation: fadeInUser 0.3s ease-out;
+}
+
+/* ✅ INTEGRAÇÃO COM O TEMA DA PÁGINA */
+.user-info-container {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Mais sutil */
+}
+
+/* ✅ AJUSTE NO CONTAINER PRINCIPAL PARA COMPENSAR */
+.container.py-4 {
+    padding-top: 1rem !important; /* Reduzido de py-4 (1.5rem) para 1rem */
+}
+
+/* ✅ MODO ESCURO (se necessário) */
+@media (prefers-color-scheme: dark) {
+    .user-info-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .user-name {
+        color: #f8f9fa;
+    }
+    
+    .user-greeting,
+    .user-email {
+        color: #adb5bd;
+    }
+    
+    .user-avatar i {
+        color: #adb5bd;
+    }
+}
