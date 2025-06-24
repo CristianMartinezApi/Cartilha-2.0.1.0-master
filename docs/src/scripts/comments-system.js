@@ -312,6 +312,8 @@ function setupCommentsListeners() {
     console.log('✅ Listeners de comentários configurados!');
 }
 
+
+
 /**
  * Manipular toggle de comentários (abrir/fechar)
  */
