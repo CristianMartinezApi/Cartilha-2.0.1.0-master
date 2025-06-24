@@ -1,64 +1,58 @@
 /**
- * Sistema de Autenticação para Área de Sugestões
- * Versão 2.0 - Integração com Firebase Auth
+ * ✅ SISTEMA DE AUTENTICAÇÃO SEM TIMEOUT - VERSÃO PERMANENTE
  */
 
 const SugestoesAuth = {
     config: {
-    sessionTimeout: 30 * 60 * 1000, // 30 minutos
-    allowedDomains: ['pge.sc.gov.br'],
-    redirectAfterLogin: null,    // Será definido automaticamente
-    redirectAfterLogout: null    // Será definido automaticamente
-},
-/**
- * Detectar ambiente automaticamente
- */
-detectEnvironment() {
-    const pathname = window.location.pathname;
-    const hostname = window.location.hostname;
-    
-    console.log('🔍 Detectando ambiente:', { pathname, hostname });
-    
-    if (pathname.includes('/Cartilha-2.0.1.0-master/')) {
-        // GitHub Pages
-        this.config.redirectAfterLogin = '/Cartilha-2.0.1.0-master/sugestoes.html';
-        this.config.redirectAfterLogout = '/Cartilha-2.0.1.0-master/sugestoes-login.html';
-        console.log('🐙 Ambiente: GitHub Pages');
-    } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        // Live Server
-        this.config.redirectAfterLogin = '/docs/sugestoes.html';
-        this.config.redirectAfterLogout = '/docs/sugestoes-login.html';
-        console.log('🏠 Ambiente: Live Server');
-    } else {
-        // Outros ambientes (fallback)
-        this.config.redirectAfterLogin = './sugestoes.html';
-        this.config.redirectAfterLogout = './sugestoes-login.html';
-        console.log('🌐 Ambiente: Outros');
-    }
-    
-    console.log('✅ URLs configuradas:', {
-        login: this.config.redirectAfterLogin,
-        logout: this.config.redirectAfterLogout
-    });
-},
-
-
+        sessionTimeout: Infinity, // ✅ NUNCA EXPIRA
+        allowedDomains: ['pge.sc.gov.br'],
+        redirectAfterLogin: null,
+        redirectAfterLogout: null
+    },
 
     /**
-     * Verificar se usuário está autenticado
+     * ✅ Detectar ambiente automaticamente
+     */
+    detectEnvironment() {
+        const pathname = window.location.pathname;
+        const hostname = window.location.hostname;
+        
+        console.log('🔍 Detectando ambiente:', { pathname, hostname });
+        
+        if (pathname.includes('/Cartilha-2.0.1.0-master/')) {
+            this.config.redirectAfterLogin = '/Cartilha-2.0.1.0-master/sugestoes.html';
+            this.config.redirectAfterLogout = '/Cartilha-2.0.1.0-master/sugestoes-login.html';
+            console.log('🐙 Ambiente: GitHub Pages');
+        } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            this.config.redirectAfterLogin = '/docs/sugestoes.html';
+            this.config.redirectAfterLogout = '/docs/sugestoes-login.html';
+            console.log('🏠 Ambiente: Live Server');
+        } else {
+            this.config.redirectAfterLogin = './sugestoes.html';
+            this.config.redirectAfterLogout = './sugestoes-login.html';
+            console.log('🌐 Ambiente: Outros');
+        }
+        
+        console.log('✅ URLs configuradas:', {
+            login: this.config.redirectAfterLogin,
+            logout: this.config.redirectAfterLogout
+        });
+    },
+
+    /**
+     * ✅ Verificar autenticação SEM TIMEOUT
      */
     async checkAuthentication() {
         try {
-            console.log('🔍 Verificando autenticação...');
+            console.log('🔍 Verificando autenticação (SEM TIMEOUT)...');
             
-            // Verificar se Firebase está disponível
             if (typeof firebase === 'undefined' || !firebase.auth) {
                 throw new Error('Firebase não está inicializado');
             }
 
             return new Promise((resolve, reject) => {
                 const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-                    unsubscribe(); // Cancelar listener
+                    unsubscribe();
                     
                     if (!user) {
                         console.log('❌ Usuário não autenticado');
@@ -72,7 +66,6 @@ detectEnvironment() {
                     }
 
                     try {
-                        // Verificar se é usuário autorizado
                         const profile = await this.getUserProfile(user);
                         
                         if (!profile.isAuthorized) {
@@ -87,33 +80,20 @@ detectEnvironment() {
                             return;
                         }
 
-                        // Verificar timeout da sessão
-                        if (this.isSessionExpired()) {
-                            console.log('⏰ Sessão expirada');
-                            await firebase.auth().signOut();
-                            resolve({
-                                isAuthenticated: false,
-                                user: null,
-                                profile: null,
-                                reason: 'session_expired'
-                            });
-                            return;
-                        }
-
-                        console.log('✅ Usuário autenticado:', user.email);
+                        // ✅ REMOVER VERIFICAÇÃO DE TIMEOUT
+                        console.log('✅ Usuário autenticado (SESSÃO PERMANENTE):', user.email);
                         
-                        // Atualizar timestamp da sessão
-                        this.updateSessionTimestamp();
+                        // ✅ NÃO ATUALIZAR TIMESTAMP (não precisamos mais)
                         
                         resolve({
                             isAuthenticated: true,
                             user: user,
                             profile: profile,
-                            reason: 'authenticated'
+                            reason: 'authenticated_permanent'
                         });
 
                     } catch (error) {
-                        console.error('❌ Erro ao verificar perfil do usuário:', error);
+                        console.error('❌ Erro ao verificar perfil:', error);
                         resolve({
                             isAuthenticated: false,
                             user: null,
@@ -136,14 +116,13 @@ detectEnvironment() {
     },
 
     /**
-     * Obter perfil do usuário
+     * ✅ Obter perfil do usuário
      */
     async getUserProfile(user) {
         try {
             const email = user.email;
             const domain = email.split('@')[1];
             
-            // Verificar se é domínio autorizado
             const isAuthorized = this.config.allowedDomains.includes(domain);
             
             if (!isAuthorized) {
@@ -153,7 +132,6 @@ detectEnvironment() {
                 };
             }
 
-            // Buscar dados adicionais no Firestore (se existir)
             let additionalData = {};
             try {
                 const userDoc = await window.db
@@ -165,7 +143,7 @@ detectEnvironment() {
                     additionalData = userDoc.data();
                 }
             } catch (error) {
-                console.log('ℹ️ Dados adicionais não encontrados, usando dados básicos');
+                console.log('ℹ️ Dados adicionais não encontrados');
             }
 
             return {
@@ -180,11 +158,12 @@ detectEnvironment() {
                 permissions: additionalData.permissions || ['comment', 'suggest', 'like', 'rate'],
                 isInstitutional: true,
                 lastLogin: new Date().toISOString(),
-                authProvider: user.providerData[0]?.providerId || 'unknown'
+                authProvider: user.providerData[0]?.providerId || 'unknown',
+                sessionType: 'permanent' // ✅ MARCAR COMO PERMANENTE
             };
 
         } catch (error) {
-            console.error('Erro ao obter perfil do usuário:', error);
+            console.error('Erro ao obter perfil:', error);
             return {
                 isAuthorized: false,
                 reason: 'profile_error'
@@ -193,7 +172,7 @@ detectEnvironment() {
     },
 
     /**
-     * Login com Google
+     * ✅ Login com Google
      */
     async loginWithGoogle() {
         try {
@@ -203,10 +182,9 @@ detectEnvironment() {
             provider.addScope('email');
             provider.addScope('profile');
             
-            // Forçar seleção de conta
             provider.setCustomParameters({
                 prompt: 'select_account',
-                hd: 'pge.sc.gov.br' // Sugerir domínio institucional
+                hd: 'pge.sc.gov.br'
             });
 
             const result = await firebase.auth().signInWithPopup(provider);
@@ -214,22 +192,20 @@ detectEnvironment() {
             
             console.log('✅ Login com Google realizado:', user.email);
             
-            // Verificar domínio
             if (!user.email.includes('@pge.sc.gov.br')) {
                 await firebase.auth().signOut();
                 throw new Error('Por favor, use sua conta institucional @pge.sc.gov.br');
             }
 
-            // Salvar dados do usuário
             await this.saveUserData(user);
             
-            // Atualizar timestamp da sessão
-            this.updateSessionTimestamp();
+            // ✅ NÃO SALVAR TIMESTAMP (sessão permanente)
+            console.log('🔒 Sessão permanente estabelecida');
             
             return {
                 success: true,
                 user: user,
-                message: 'Login realizado com sucesso!'
+                message: 'Login realizado com sucesso! Sessão permanente ativa.'
             };
 
         } catch (error) {
@@ -253,7 +229,7 @@ detectEnvironment() {
     },
 
     /**
-     * Login com Microsoft
+     * ✅ Login com Microsoft
      */
     async loginWithMicrosoft() {
         try {
@@ -263,7 +239,6 @@ detectEnvironment() {
             provider.addScope('email');
             provider.addScope('profile');
             
-            // Configurar tenant (se necessário)
             provider.setCustomParameters({
                 prompt: 'select_account',
                 tenant: 'pge.sc.gov.br'
@@ -274,22 +249,19 @@ detectEnvironment() {
             
             console.log('✅ Login com Microsoft realizado:', user.email);
             
-            // Verificar domínio
             if (!user.email.includes('@pge.sc.gov.br')) {
                 await firebase.auth().signOut();
                 throw new Error('Por favor, use sua conta institucional @pge.sc.gov.br');
             }
 
-            // Salvar dados do usuário
             await this.saveUserData(user);
             
-            // Atualizar timestamp da sessão
-            this.updateSessionTimestamp();
+            console.log('🔒 Sessão permanente estabelecida');
             
             return {
                 success: true,
                 user: user,
-                message: 'Login realizado com sucesso!'
+                message: 'Login realizado com sucesso! Sessão permanente ativa.'
             };
 
         } catch (error) {
@@ -313,7 +285,7 @@ detectEnvironment() {
     },
 
     /**
-     * Salvar dados do usuário no Firestore
+     * ✅ Salvar dados do usuário
      */
     async saveUserData(user) {
         try {
@@ -330,7 +302,8 @@ detectEnvironment() {
                 lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 authProvider: user.providerData[0]?.providerId,
-                isActive: true
+                isActive: true,
+                sessionType: 'permanent' // ✅ MARCAR COMO PERMANENTE
             };
 
             await window.db
@@ -338,120 +311,116 @@ detectEnvironment() {
                 .doc(user.uid)
                 .set(userData, { merge: true });
 
-            console.log('✅ Dados do usuário salvos no Firestore');
+            console.log('✅ Dados do usuário salvos (sessão permanente)');
 
         } catch (error) {
             console.error('⚠️ Erro ao salvar dados do usuário:', error);
-            // Não bloquear o login por causa disso
         }
     },
 
     /**
-     * Logout
+     * ✅ Logout manual
      */
     async logout() {
         try {
-            console.log('🚪 Realizando logout...');
+            console.log('🚪 Realizando logout MANUAL...');
             
             await firebase.auth().signOut();
             
             // Limpar dados locais
-            localStorage.removeItem('sessionTimestamp');
-            localStorage.removeItem('likedPrompts');
-            localStorage.removeItem('ratedPrompts');
-            localStorage.removeItem('likedComments');
+            localStorage.clear();
             
-            console.log('✅ Logout realizado com sucesso');
+            console.log('✅ Logout manual realizado com sucesso');
             
-            // Redirecionar para página de login
             window.location.href = this.config.redirectAfterLogout;
             
         } catch (error) {
             console.error('❌ Erro no logout:', error);
-            // Forçar redirecionamento mesmo com erro
             window.location.href = this.config.redirectAfterLogout;
         }
     },
 
     /**
-     * Verificar se sessão expirou
+     * ✅ NUNCA EXPIRA - sempre retorna false
      */
     isSessionExpired() {
-        const sessionTimestamp = localStorage.getItem('sessionTimestamp');
-        if (!sessionTimestamp) return true;
-        
-        const now = Date.now();
-        const sessionAge = now - parseInt(sessionTimestamp);
-        
-        return sessionAge > this.config.sessionTimeout;
+        console.log('🔒 Verificação de expiração: SESSÃO PERMANENTE (nunca expira)');
+        return false; // ✅ NUNCA EXPIRA
     },
 
     /**
-     * Atualizar timestamp da sessão
+     * ✅ NÃO FAZ NADA - não precisamos mais de timestamp
      */
     updateSessionTimestamp() {
-        localStorage.setItem('sessionTimestamp', Date.now().toString());
+        console.log('🔒 Timestamp não necessário - sessão permanente');
+        // ✅ NÃO SALVAR NADA
     },
 
+    /**
+     * ✅ Inicialização SEM VERIFICAÇÃO DE TIMEOUT
+     */
     init() {
-    console.log('🚀 Inicializando sistema de autenticação...');
-    
-    // DETECTAR AMBIENTE PRIMEIRO
-    this.detectEnvironment();
-    
-    // Verificar se está na página de login
-    if (window.location.pathname.includes('sugestoes-login.html')) {
-        console.log('📄 Página de login detectada');
-        return;
-    }
-    
-    this.checkAuthentication().then(auth => {
-        if (!auth.isAuthenticated) {
-            console.log('🔄 Redirecionando para login...');
-            console.log('🎯 URL de destino:', this.config.redirectAfterLogout);
-            window.location.href = this.config.redirectAfterLogout;
-        } else {
-            console.log('✅ Usuário autenticado, permanecendo na página');
+        console.log('🚀 Inicializando sistema de autenticação PERMANENTE...');
+        
+        this.detectEnvironment();
+        
+        // ✅ PERMITIR ACESSO LIVRE À PÁGINA DE LOGIN
+        if (window.location.pathname.includes('sugestoes-login.html')) {
+            console.log('📄 Página de login - acesso livre');
+            return;
         }
-    });
-}
 
-
+        // ✅ VERIFICAR AUTENTICAÇÃO SEM TIMEOUT
+        this.checkAuthentication().then(auth => {
+            if (!auth.isAuthenticated) {
+                console.log('🔄 Usuário não autenticado, redirecionando...');
+                window.location.href = this.config.redirectAfterLogout;
+            } else {
+                console.log('✅ Usuário autenticado - SESSÃO PERMANENTE ATIVA');
+                console.log('🔒 Tipo de sessão:', auth.profile?.sessionType || 'permanent');
+            }
+        }).catch(error => {
+            console.error('❌ Erro na inicialização:', error);
+        });
+    }
 };
-// Sistema de inicialização mais robusto
+
+/**
+ * ✅ Sistema de inicialização
+ */
 function initSugestoesAuth() {
-    console.log('🔄 Tentando inicializar SugestoesAuth...');
+    console.log('🔄 Inicializando SugestoesAuth (versão permanente)...');
     
     if (typeof firebase === 'undefined') {
-        console.log('⏳ Firebase não carregado ainda, tentando novamente...');
+        console.log('⏳ Firebase não carregado ainda...');
         return false;
     }
     
     if (!firebase.auth) {
-        console.log('⏳ Firebase Auth não carregado ainda, tentando novamente...');
+        console.log('⏳ Firebase Auth não carregado ainda...');
         return false;
     }
     
-    console.log('✅ Firebase disponível, inicializando...');
+    console.log('✅ Firebase disponível, inicializando sessão permanente...');
     SugestoesAuth.init();
     return true;
 }
 
-// Múltiplas tentativas de inicialização
+/**
+ * ✅ Inicialização com múltiplas tentativas
+ */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📄 DOM carregado, iniciando verificações...');
+    console.log('📄 DOM carregado - iniciando sistema permanente...');
     
-    // Tentativa imediata
     if (initSugestoesAuth()) return;
     
-    // Tentativas com delay crescente
     const delays = [500, 1000, 2000, 3000];
     
     delays.forEach((delay, index) => {
         setTimeout(() => {
             console.log(`🔄 Tentativa ${index + 2} após ${delay}ms...`);
             if (initSugestoesAuth()) {
-                console.log('✅ Inicialização bem-sucedida!');
+                              console.log('✅ Sistema de autenticação permanente inicializado!');
             } else if (index === delays.length - 1) {
                 console.error('❌ Falha na inicialização após múltiplas tentativas');
                 console.error('🔍 Diagnóstico:', {
@@ -464,5 +433,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/**
+ * ✅ EXPOR GLOBALMENTE PARA DEBUG
+ */
+if (typeof window !== 'undefined') {
+    window.SugestoesAuth = SugestoesAuth;
+    
+    // ✅ Função de debug
+    window.debugAuth = function() {
+        console.log('🔍 DEBUG DO SISTEMA DE AUTENTICAÇÃO:');
+        console.log('- Config:', SugestoesAuth.config);
+        console.log('- Session Timeout:', SugestoesAuth.config.sessionTimeout);
+        console.log('- Is Expired:', SugestoesAuth.isSessionExpired());
+        console.log('- Current User:', firebase.auth().currentUser);
+        console.log('- Local Storage:', {
+            sessionTimestamp: localStorage.getItem('sessionTimestamp'),
+            likedPrompts: localStorage.getItem('likedPrompts'),
+            ratedPrompts: localStorage.getItem('ratedPrompts')
+        });
+    };
+    
+    // ✅ Função para forçar logout
+    window.forceLogout = function() {
+        console.log('🚪 Forçando logout...');
+        SugestoesAuth.logout();
+    };
+    
+    console.log('🎯 Funções de debug disponíveis:');
+    console.log('- window.debugAuth() - Ver status do sistema');
+    console.log('- window.forceLogout() - Forçar logout');
+}
 
+/**
+ * ✅ MONITORAMENTO CONTÍNUO (OPCIONAL)
+ */
+setInterval(() => {
+    const user = firebase.auth().currentUser;
+    if (user) {
+        console.log('🔒 Sessão permanente ativa para:', user.email);
+    }
+}, 5 * 60 * 1000); // Log a cada 5 minutos para confirmar que está funcionando
 
+/**
+ * ✅ INTERCEPTAR TENTATIVAS DE LOGOUT AUTOMÁTICO
+ */
+const originalSignOut = firebase.auth().signOut;
+firebase.auth().signOut = function() {
+    console.warn('🚨 TENTATIVA DE LOGOUT DETECTADA!');
+    console.trace('Stack trace do logout:');
+    
+    // ✅ PERMITIR APENAS LOGOUT MANUAL
+    const stack = new Error().stack;
+    if (stack.includes('forceLogout') || stack.includes('logout')) {
+        console.log('✅ Logout manual autorizado');
+        return originalSignOut.call(this);
+    } else {
+        console.error('❌ LOGOUT AUTOMÁTICO BLOQUEADO!');
+        console.log('🔒 Mantendo sessão ativa');
+        return Promise.resolve(); // Não fazer logout
+    }
+};
+
+console.log('🔒 Sistema de autenticação permanente carregado!');
+console.log('⚠️ ATENÇÃO: Sessões nunca expiram automaticamente');
+console.log('🚪 Use window.forceLogout() para sair manualmente');
+  
