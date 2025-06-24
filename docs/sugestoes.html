@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sugestões e Interações - Guia de Uso Seguro da IA na PGE-SC</title>
@@ -33,11 +33,13 @@
     
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="./src/styles/sugestoes.css" />
-  </head>
+    
+    
+</head>
 
-  <body>
+<body>
     <div class="container py-4">
-      <!-- ✅ SEÇÃO DE INFORMAÇÕES DO USUÁRIO - PRÓXIMA DO TOPO -->
+      <!-- ✅ SEÇÃO DE INFORMAÇÕES DO USUÁRIO -->
       <div class="user-info-container">
         <div class="container">
           <div class="row">
@@ -74,7 +76,7 @@
         </div>
       </div>
 
-      <!-- Ajustado para py-4 para um equilíbrio melhor -->
+      <!-- Header -->
       <div class="header-container">
         <div class="row align-items-center">
           <div class="col-md-3 text-center text-md-end">
@@ -85,7 +87,6 @@
               style="max-height: 100px; width: auto"
             />
           </div>
-
           <div class="col-md-9 text-center">
             <h1 class="display-5 fw-bold text-white">
               COMPARTILHE E EXPLORE PROMPTS
@@ -95,9 +96,8 @@
         <div class="header-divider"></div>
       </div>
 
-      <!-- Linha para os textos introdutórios alinhados com os containers abaixo -->
+      <!-- Títulos das seções -->
       <div class="row section-titles">
-        <!-- Classe personalizada para controle específico -->
         <div class="col-lg-7">
           <p class="lead mb-0 fw-bold text-white fs-3">PORTFÓLIO DE PROMPTS</p>
         </div>
@@ -110,27 +110,31 @@
       </div>
 
       <div class="row">
-        <!-- Lista de sugestões aprovadas (AGORA NA ESQUERDA) -->
+        <!-- Lista de sugestões aprovadas (ESQUERDA) -->
         <div class="col-lg-7">
           <div class="card h-100">
-            <div
-              class="card-header bg-secondary text-white d-flex justify-content-between align-items-center"
-            >
+            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
               <h3 class="h5 mb-0">PROMPTS APROVADOS</h3>
-              <div class="d-flex">
+              <div class="d-flex gap-2">
+                <!-- ✅ Campo de busca -->
+                <div class="input-group" style="max-width: 200px;">
+                  <input type="text" class="form-control form-control-sm" 
+                         id="search-input" placeholder="Buscar...">
+                  <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+                
+                <!-- Filtro de categoria -->
                 <div class="input-group">
-                  <label class="input-group-text" for="category-filter"
-                    >Filtrar:</label
-                  >
+                  <label class="input-group-text" for="category-filter">Filtrar:</label>
                   <select class="form-select" id="category-filter">
                     <option value="all">Todas as categorias</option>
                     <option value="Jurídico">Jurídico</option>
                     <option value="Administrativo">Administrativo</option>
                     <option value="Pesquisa">Pesquisa</option>
                     <option value="Redação">Redação</option>
-                    <option value="Análise de Documentos">
-                      Análise de Documentos
-                    </option>
+                    <option value="Análise de Documentos">Análise de Documentos</option>
                     <option value="Pareceres">Pareceres</option>
                     <option value="Petições">Petições</option>
                     <option value="Outros">Outros</option>
@@ -152,7 +156,7 @@
           </div>
         </div>
         
-        <!-- Formulário de envio de sugestões (AGORA NA DIREITA) -->
+        <!-- Formulário de envio de sugestões (DIREITA) -->
         <div class="col-lg-5">
           <div class="card h-100 border-primary">
             <div class="card-header bg-primary text-white">
@@ -161,20 +165,25 @@
             <div class="card-body">
               <form id="suggestion-form">
                 <div class="mb-3">
-                  <label for="prompt-title" class="form-label"
-                    >FINALIDADE DO PROMPT</label
-                  >
+                  <label for="prompt-title" class="form-label">
+                    FINALIDADE DO PROMPT <span class="text-danger">*</span>
+                  </label>
                   <input
                     type="text"
                     class="form-control"
                     id="prompt-title"
                     placeholder="Digite um título para seu prompt"
+                    required
                   />
+                  <div class="form-text">
+                    <span class="char-counter">0/100</span>
+                  </div>
                 </div>
+
                 <div class="mb-3">
-                  <label for="prompt-category" class="form-label"
-                    >CATEGORIA </label>
-                  
+                  <label for="prompt-category" class="form-label">
+                    CATEGORIA <span class="text-danger">*</span>
+                  </label>
                   <select class="form-select" id="prompt-category" required>
                     <option value="" disabled selected>
                       Selecione uma categoria
@@ -183,16 +192,13 @@
                     <option value="Administrativo">Administrativo</option>
                     <option value="Pesquisa">Pesquisa</option>
                     <option value="Redação">Redação</option>
-                    <option value="Análise de Documentos">
-                      Análise de Documentos
-                    </option>
+                    <option value="Análise de Documentos">Análise de Documentos</option>
                     <option value="Pareceres">Pareceres</option>
                     <option value="Petições">Petições</option>
                     <option value="Outros">Outros</option>
                   </select>
                 </div>
                 
-                <!-- Adicionar no formulário de sugestões, se ainda não existir -->
                 <div class="mb-3">
                   <label for="prompt-ai" class="form-label">
                     IA UTILIZADA
@@ -200,9 +206,7 @@
                   <select class="form-select" id="prompt-ai" name="prompt-ai">
                     <option value="">Selecione a IA utilizada...</option>
                     <option value="ChatGPT (OpenAI)">ChatGPT (OpenAI)</option>
-                    <option value="Claude (Anthropic)">
-                      Claude (Anthropic)
-                    </option>
+                    <option value="Claude (Anthropic)">Claude (Anthropic)</option>
                     <option value="Google Gemini">Google Gemini</option>
                     <option value="Microsoft Copilot">Microsoft Copilot</option>
                     <option value="Perplexity AI">Perplexity AI</option>
@@ -218,34 +222,43 @@
                   />
                   <div class="form-text">
                     <i class="fas fa-info-circle me-1"></i>
-                    Informe qual IA foi utilizada para criar ou testar este
-                    prompt.
+                    Informe qual IA foi utilizada para criar ou testar este prompt.
                   </div>
                 </div>
 
                 <div class="mb-3">
-                  <label for="prompt-text" class="form-label"
-                    >TEXTO DO PROMPT</label
-                  >
+                  <label for="prompt-text" class="form-label">
+                    TEXTO DO PROMPT <span class="text-danger">*</span>
+                  </label>
                   <textarea
                     class="form-control"
                     id="prompt-text"
                     rows="5"
                     placeholder="Digite o texto do seu prompt"
+                    required
                   ></textarea>
+                  <div class="form-text">
+                    <span class="char-counter">0/2000</span>
+                  </div>
                 </div>
+
                 <div class="mb-3">
-                  <label for="prompt-comment" class="form-label"
-                    >COMENTÁRIO</label
-                  >
+                  <label for="prompt-comment" class="form-label">
+                    COMENTÁRIO
+                  </label>
                   <textarea
                     class="form-control"
                     id="prompt-comment"
                     rows="3"
                     placeholder="Adicione um comentário sobre o prompt"
                   ></textarea>
+                  <div class="form-text">
+                    <span class="char-counter">0/500</span>
+                  </div>
                 </div>
+
                 <button type="submit" class="btn btn-primary w-100">
+                  <i class="fas fa-paper-plane me-2"></i>
                   Enviar Prompt
                 </button>
               </form>
@@ -254,28 +267,129 @@
         </div>
       </div>
     </div>
+
+       <!-- ✅ SCRIPTS - ORDEM OTIMIZADA -->
     
-    <!-- ✅ SCRIPTS - ORDEM CORRETA -->
-    <!-- 1. Firebase App -->
+    <!-- 1. Firebase Core -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    
-    <!-- 2. Firebase Auth -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    
-    <!-- 3. Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     
-    <!-- 4. Firebase Init -->
+    <!-- 2. Firebase Inicialização -->
     <script src="./src/scripts/firebase-init.js"></script>
     
-    <!-- 5. Bootstrap JS -->
+    <!-- 3. Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        
+    <!-- 4. Sistema de Comentários -->
+    <script src="./src/scripts/comments-utils.js"></script>
+    <script src="./src/scripts/comments-ui.js"></script>
+    <script src="./src/scripts/comments-system.js"></script>
     
-    <!-- 6. Sistema de Autenticação -->
-    <script src="./src/scripts/sugestoes-auth.js"></script>
-    <script src="./src/scripts/user-display.js"></script>
+    <!-- ✅ 5. Verificação de Autenticação Simples -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🔍 Verificando autenticação...');
+        
+        const waitForFirebase = () => {
+            return new Promise((resolve) => {
+                const check = () => {
+                    if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+        };
+        
+        waitForFirebase().then(() => {
+            console.log('✅ Firebase carregado');
+            
+            firebase.auth().onAuthStateChanged(user => {
+                if (!user) {
+                    console.log('❌ Usuário não logado');
+                    showAuthError('Você precisa estar logado para acessar esta página.');
+                    setTimeout(() => {
+                        window.location.href = 'sugestoes-login.html';
+                    }, 2000);
+                } else if (!user.email.endsWith('@pge.sc.gov.br')) {
+                    console.log('❌ Conta não institucional:', user.email);
+                    showAuthError('Apenas contas @pge.sc.gov.br são permitidas.');
+                    firebase.auth().signOut();
+                    setTimeout(() => {
+                        window.location.href = 'sugestoes-login.html';
+                    }, 2000);
+                } else {
+                    console.log('✅ Usuário autorizado:', user.email);
+                    updateUserDisplay(user);
+                    setupLogout();
+                }
+            });
+        });
+        
+        function showAuthError(message) {
+            const container = document.querySelector('.container');
+            if (container) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-warning alert-dismissible fade show';
+                alert.innerHTML = `
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Acesso Restrito:</strong> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                container.insertBefore(alert, container.firstChild);
+            }
+        }
+        
+        function updateUserDisplay(user) {
+            const displayName = document.getElementById('user-display-name');
+            const displayEmail = document.getElementById('user-display-email');
+            const loading = document.getElementById('user-loading-display');
+            const userInfo = document.getElementById('user-info-display');
+            
+            if (displayName) displayName.textContent = user.displayName || 'Usuário';
+            if (displayEmail) displayEmail.textContent = user.email;
+            if (loading) loading.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'block';
+        }
+        
+        function setupLogout() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Deseja realmente sair?')) {
+                        firebase.auth().signOut().then(() => {
+                            localStorage.removeItem('lastLoginTime');
+                            window.location.href = 'sugestoes-login.html';
+                        });
+                    }
+                });
+            }
+        }
+    });
+    </script>
     
-    <!-- 7. Lógica da página -->
+    <!-- <script src="./src/scripts/user-display.js"></script> -->
+    
+    <!-- 6. Lógica Principal da Página -->
     <script src="./src/scripts/sugestoes.js"></script>
+    
+    <!-- ✅ 7. Script de Inicialização Final -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('🚀 Página totalmente carregada');
+        
+        setTimeout(() => {
+          if (typeof CommentsSystem !== 'undefined') {
+            console.log('✅ Sistema de comentários disponível');
+          } else {
+            console.warn('⚠️ Sistema de comentários não carregado');
+          }
+        }, 1000);
+      });
+    </script>
   </body>
 </html>
+

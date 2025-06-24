@@ -5,7 +5,7 @@
 
 const SugestoesAuth = {
     config: {
-    sessionTimeout: 5 * 60 * 1000, // 5 minutos
+    sessionTimeout: 30 * 60 * 1000, // 30 minutos
     allowedDomains: ['pge.sc.gov.br'],
     redirectAfterLogin: null,    // Será definido automaticamente
     redirectAfterLogout: null    // Será definido automaticamente

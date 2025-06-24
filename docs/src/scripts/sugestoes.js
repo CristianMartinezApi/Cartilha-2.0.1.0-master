@@ -549,7 +549,7 @@ function renderPrompts(querySnapshot) {
 }
 
 /**
- * Cria elemento de prompt
+ * ✅ Cria elemento de prompt - VERSÃO ATUALIZADA
  */
 function createPromptElement(doc) {
     const data = doc.data();
@@ -561,17 +561,27 @@ function createPromptElement(doc) {
     suggestionElement.className = 'suggestion-item accordion-item';
     suggestionElement.innerHTML = generatePromptHTML(data, uniqueId, userLiked, doc.id);
     
-    // Adicionar listener para views
+    // ✅ Listener para views (existente)
     const collapseElement = suggestionElement.querySelector(`#prompt-${uniqueId}`);
     collapseElement.addEventListener('shown.bs.collapse', () => {
         incrementViews(doc.id);
-    }, { once: true }); // Executar apenas uma vez
+        
+        // ✅ NOVO: Carregar comentários quando prompt for expandido
+        if (typeof CommentsSystem !== 'undefined') {
+            // Aguardar um pouco para garantir que a interface foi renderizada
+            setTimeout(() => {
+                CommentsSystem.loadComments(doc.id);
+            }, 300);
+        }
+    }, { once: true });
     
     return suggestionElement;
 }
 
+
 /**
- * ✅ Gera HTML do prompt - Com estrelas no header e footer
+ * ✅ Gera HTML do prompt - VERSÃO CORRIGIDA SIMPLES
+ * Apenas move os comentários para fora do card
  */
 function generatePromptHTML(data, uniqueId, userLiked, docId) {
     const likeButtonClass = userLiked ? 'btn-danger' : 'btn-outline-danger';
@@ -638,7 +648,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                     ${data.comment && data.comment !== 'Sem comentário' ? `
                     <div class="mb-3">
                         <h6 class="text-info mb-2">
-                            <i class="fas fa-comment me-1"></i> Comentário:
+                            <i class="fas fa-comment me-1"></i> Comentário do Autor:
                         </h6>
                         <p class="card-text text-muted bg-info bg-opacity-10 p-3 rounded">
                             ${escapeHtml(data.comment)}
@@ -702,8 +712,81 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                 </div>
             </div>
         </div>
+        
+        <!-- ✅ COMENTÁRIOS CORRIGIDOS -->
+<div class="comments-section" data-prompt-id="${docId}">
+    <div class="comments-header">
+        <button class="toggle-comments"
+                type="button"
+                data-prompt-id="${docId}"
+                data-bs-toggle="collapse"
+                data-bs-target="#comments-${docId}"
+                aria-expanded="false"
+                aria-controls="comments-${docId}">
+            <i class="fas fa-comments me-2"></i>
+            <span class="comments-title">Comentários</span>
+            <span class="comments-count">(0)</span>
+            <i class="fas fa-chevron-down ms-auto"></i>
+        </button>
+    </div>
+    
+    <div id="comments-${docId}" class="collapse comments-content">
+        <div class="comments-list">
+            <div class="no-comments text-center">
+                <i class="fas fa-comment-slash"></i>
+                <p class="mb-0">Nenhum comentário ainda.</p>
+                <small class="text-muted">Seja o primeiro a comentar!</small>
+            </div>
+        </div>
+        
+        <div class="comment-form">
+            <div class="comment-form-header">
+                <h6 class="mb-2">
+                    <i class="fas fa-plus-circle me-1"></i>
+                    Adicionar Comentário
+                </h6>
+            </div>
+            
+            <div class="comment-form-body">
+                <textarea class="comment-input"
+                          placeholder="Compartilhe sua experiência com este prompt, dicas de uso ou sugestões de melhoria..."
+                          maxlength="500"
+                          rows="3"></textarea>
+                <div class="comment-form-footer">
+                    <small class="char-counter text-muted">0/500</small>
+                    <button class="submit-comment" data-prompt-id="${docId}">
+                        <i class="fas fa-paper-plane me-1"></i>
+                        Comentar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     `;
 }
+
+
+/**
+ * ✅ Fallback para seção de comentários (caso CommentsUI não esteja carregado)
+ */
+function generateFallbackCommentsSection(promptId, commentCount = 0) {
+    return `
+        <div class="comments-section-fallback mt-3 pt-3 border-top" data-prompt-id="${promptId}">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    <i class="fas fa-comments"></i> 
+                    ${commentCount} comentário${commentCount !== 1 ? 's' : ''}
+                </small>
+                <small class="text-muted">
+                    Sistema de comentários carregando...
+                </small>
+            </div>
+        </div>
+    `;
+}
+
 /**
  * ✅ Gera display de estrelas apenas para visualização (header)
  */

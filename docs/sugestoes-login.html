@@ -353,81 +353,48 @@
         </div>
       </div>
     </div>
-
     <!-- Scripts -->
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase Config -->
     <script src="./src/scripts/firebase-init.js"></script>
-    <!-- Auth System -->
-    <script src="./src/scripts/sugestoes-auth.js"></script>
-
+    
+    <!-- ✅ SCRIPT SIMPLIFICADO -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         console.log("🚀 Página de login carregada");
-
-        // Elementos - apenas os que existem
+        
         const googleBtn = document.getElementById("google-login-btn");
         const loadingOverlay = document.getElementById("loading-overlay");
         const alertContainer = document.getElementById("alert-container");
-
-        // Verificar se os elementos existem antes de usar
+        
         if (!googleBtn) {
           console.error("❌ Botão Google não encontrado");
           return;
         }
-
-        // Verificar se usuário já está logado
-        checkIfAlreadyLoggedIn();
-
-        // Event Listeners - apenas Google
-        googleBtn.addEventListener("click", handleGoogleLogin);
-
-        /**
-         * Verificar se usuário já está autenticado
-         */
-        async function checkIfAlreadyLoggedIn() {
-          try {
-            // Aguardar Firebase estar pronto
-            await waitForFirebase();
-
-            const auth = await SugestoesAuth.checkAuthentication();
-            if (auth.isAuthenticated) {
-              console.log("✅ Usuário já autenticado, redirecionando...");
-              showAlert("Você já está logado! Redirecionando...", "success");
-
-              setTimeout(() => {
-                SugestoesAuth.detectEnvironment();
-                console.log(
-                  "🎯 Redirecionando para:",
-                  SugestoesAuth.config.redirectAfterLogin
-                );
-                window.location.href = SugestoesAuth.config.redirectAfterLogin;
-              }, 1500);
-            }
-          } catch (error) {
-            console.log("ℹ️ Usuário não autenticado, mostrando tela de login");
-          }
-        }
-
-        /**
-         * Aguardar Firebase estar disponível
-         */
+        
+        // Aguardar Firebase
+        waitForFirebase().then(() => {
+          console.log("✅ Firebase pronto");
+          googleBtn.addEventListener("click", handleGoogleLogin);
+        }).catch(error => {
+          console.error("❌ Erro ao carregar Firebase:", error);
+          showAlert("Erro ao carregar sistema. Recarregue a página.", "danger");
+        });
+        
         function waitForFirebase() {
           return new Promise((resolve, reject) => {
             let attempts = 0;
             const maxAttempts = 50;
-
+            
             const checkFirebase = () => {
-              if (
-                typeof firebase !== "undefined" &&
-                firebase.auth &&
-                window.db
-              ) {
+              if (typeof firebase !== "undefined" && firebase.auth && window.db) {
                 resolve();
               } else if (attempts < maxAttempts) {
                 attempts++;
@@ -436,89 +403,93 @@
                 reject(new Error("Firebase não carregou"));
               }
             };
-
+            
             checkFirebase();
           });
         }
-
-        /**
-         * Login com Google
-         */
+        
         async function handleGoogleLogin() {
           try {
+            console.log("🔐 Iniciando login com Google...");
+            
             showLoading(true);
             disableButtons(true);
-
-            const result = await SugestoesAuth.loginWithGoogle();
-
-            if (result.success) {
-              showAlert(result.message, "success");
-
-              setTimeout(() => {
-                SugestoesAuth.detectEnvironment();
-                console.log(
-                  "🎯 Redirecionando para:",
-                  SugestoesAuth.config.redirectAfterLogin
-                );
-                window.location.href = SugestoesAuth.config.redirectAfterLogin;
-              }, 1500);
-            } else {
-              throw new Error(result.message);
+            
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            provider.setCustomParameters({ prompt: 'select_account' });
+            
+            const result = await firebase.auth().signInWithPopup(provider);
+            const user = result.user;
+            
+            console.log("✅ Login Google realizado:", user.email);
+            
+            if (!user.email.endsWith('@pge.sc.gov.br')) {
+              throw new Error('Apenas contas @pge.sc.gov.br são permitidas');
             }
+            
+            localStorage.setItem('lastLoginTime', Date.now().toString());
+            showAlert("Login realizado com sucesso! Redirecionando...", "success");
+            
+            setTimeout(() => {
+              window.location.href = 'sugestoes.html';
+            }, 1500);
+            
           } catch (error) {
-            console.error("❌ Erro no login com Google:", error);
-            showAlert(error.message || "Erro no login com Google", "danger");
+            console.error("❌ Erro no login:", error);
+            
+            let errorMessage = "Erro no login. Tente novamente.";
+            
+            if (error.code === 'auth/popup-closed-by-user') {
+              errorMessage = "Login cancelado pelo usuário.";
+            } else if (error.code === 'auth/popup-blocked') {
+              errorMessage = "Pop-up bloqueado. Permita pop-ups e tente novamente.";
+            } else if (error.message.includes('@pge.sc.gov.br')) {
+              errorMessage = "Apenas contas institucionais (@pge.sc.gov.br) são permitidas.";
+              firebase.auth().signOut();
+            }
+            
+            showAlert(errorMessage, "danger");
+            
           } finally {
             showLoading(false);
             disableButtons(false);
           }
         }
-
-        /**
-         * Mostrar/ocultar loading
-         */
+        
         function showLoading(show) {
           if (loadingOverlay) {
             loadingOverlay.style.display = show ? "flex" : "none";
           }
         }
-
-        /**
-         * Habilitar/desabilitar botões - APENAS GOOGLE
-         */
+        
         function disableButtons(disable) {
           if (googleBtn) {
             googleBtn.disabled = disable;
-
             if (disable) {
-              googleBtn.innerHTML =
-                '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+              googleBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
             } else {
-              googleBtn.innerHTML =
-                '<i class="fab fa-google"></i><span>Entrar com Google</span>';
+              googleBtn.innerHTML = '<i class="fab fa-google"></i><span>Entrar com Google</span>';
             }
           }
         }
-
-        /**
-         * Mostrar alerta
-         */
+        
         function showAlert(message, type) {
           if (!alertContainer) return;
-
+          
           const alertHTML = `
             <div class="alert alert-${type} alert-custom alert-dismissible fade show" role="alert">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-${getAlertIcon(type)} me-2"></i>
-                    <span>${message}</span>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              <div class="d-flex align-items-center">
+                <i class="fas fa-${getAlertIcon(type)} me-2"></i>
+                <span>${message}</span>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        `;
-
+          `;
+          
           alertContainer.innerHTML = alertHTML;
-
-          // Auto-remover após 5 segundos
+          
           setTimeout(() => {
             const alert = alertContainer.querySelector(".alert");
             if (alert) {
@@ -529,10 +500,7 @@
             }
           }, 5000);
         }
-
-        /**
-         * Obter ícone do alerta
-         */
+        
         function getAlertIcon(type) {
           const icons = {
             success: "check-circle",
@@ -542,25 +510,8 @@
           };
           return icons[type] || "info-circle";
         }
-
-        // Tratamento de erros globais
-        window.addEventListener("error", function (e) {
-          console.error("❌ Erro global:", e.error);
-          showAlert(
-            "Ocorreu um erro inesperado. Recarregue a página e tente novamente.",
-            "danger"
-          );
-        });
-
-        // Tratamento de promises rejeitadas
-        window.addEventListener("unhandledrejection", function (e) {
-          console.error("❌ Promise rejeitada:", e.reason);
-          showAlert(
-            "Erro de conexão. Verifique sua internet e tente novamente.",
-            "warning"
-          );
-        });
       });
     </script>
   </body>
 </html>
+
