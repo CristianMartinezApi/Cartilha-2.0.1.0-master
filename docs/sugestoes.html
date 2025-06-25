@@ -37,6 +37,122 @@
     
     
 </head>
+<style>
+/* ✅ ESTILOS PARA O CARD DE INFORMAÇÕES DO USUÁRIO */
+.user-info-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.user-info-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    /* Removido: background: rgba(255, 255, 255, 1) !important; */
+}
+
+/* Avatar do usuário */
+.user-avatar {
+    color: #667eea;
+    font-size: 1.2rem;
+}
+
+/* Detalhes do usuário */
+.user-details {
+    flex-grow: 1;
+}
+
+.user-greeting {
+    color: #6c757d !important;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.user-name {
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+    font-size: 1rem;
+    margin-bottom: 2px;
+    opacity: 1 !important;
+}
+
+.user-email {
+    color: #495057 !important;
+    font-size: 0.9rem;
+    opacity: 1 !important;
+}
+
+/* Botão de logout */
+.user-actions .btn {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545 !important;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.user-actions .btn:hover {
+    background: #dc3545 !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+/* Estado de carregamento */
+.user-loading {
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 10px 20px;
+}
+
+.user-loading i {
+    color: #667eea;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .user-info-container {
+        padding: 10px 0;
+    }
+    
+    .user-info-card {
+        padding: 12px 15px;
+        margin: 0 10px;
+    }
+    
+    .user-name {
+        font-size: 0.95rem;
+    }
+    
+    .user-email {
+        font-size: 0.85rem;
+    }
+}
+
+/* Variação para tema escuro (se necessário) */
+@media (prefers-color-scheme: dark) {
+    .user-info-card {
+        background: rgba(33, 37, 41, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .user-name {
+        color: #ffffff !important;
+    }
+    
+    .user-email {
+        color: #e9ecef !important;
+    }
+    
+    .user-greeting {
+        color: #adb5bd !important;
+    }
+}
+</style>
+
 
 <body>
     <div class="container py-4">
@@ -115,7 +231,8 @@
         <div class="col-lg-7">
           <div class="card h-100">
             <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-              <h3 class="h5 mb-0">PROMPTS APROVADOS</h3>
+              <h3 class="h5 mb-0">PROMPTS COMPARTILHADOS</h3>
+              <p></p>
               <div class="d-flex gap-2">
                 <!-- ✅ Campo de busca -->
                 <div class="input-group" style="max-width: 200px;">

@@ -5,7 +5,7 @@
 
 // Configurações do sistema de comentários
 const COMMENTS_CONFIG = {
-    maxLength: 1000, // ✅ Aumentado para 1000 conforme regras do Firebase
+    maxLength: 1000,
     autoSave: true,
     showTimestamp: true
 };
@@ -49,8 +49,6 @@ async function captureUserInfoForComments() {
  */
 async function saveCommentToFirebase(promptId, commentText) {
     try {
-        console.log('💾 Salvando comentário no Firebase...', { promptId, commentText });
-        
         if (typeof window.db === 'undefined') {
             throw new Error('Firebase não disponível');
         }
@@ -73,7 +71,6 @@ async function saveCommentToFirebase(promptId, commentText) {
         };
         
         const docRef = await window.db.collection("prompt_comments").add(commentData);
-        console.log('✅ Comentário salvo no Firebase:', docRef.id);
         
         // Salvar backup local
         saveCommentToLocalStorage(promptId, commentText, docRef.id, userInfo.userName);
@@ -85,7 +82,7 @@ async function saveCommentToFirebase(promptId, commentText) {
         };
         
     } catch (error) {
-        console.error('❌ Erro ao salvar no Firebase:', error);
+        console.error('Erro ao salvar no Firebase:', error);
         
         // Fallback: salvar apenas localmente
         const localId = 'local_' + Date.now();
@@ -106,8 +103,6 @@ async function saveCommentToFirebase(promptId, commentText) {
  */
 async function loadCommentsFromFirebase(promptId) {
     try {
-        console.log('📥 Carregando comentários do Firebase para:', promptId);
-        
         if (typeof window.db === 'undefined') {
             return loadCommentsFromLocalStorage(promptId);
         }
@@ -132,8 +127,6 @@ async function loadCommentsFromFirebase(promptId) {
             });
         });
         
-        console.log('✅ Comentários carregados do Firebase:', comments.length);
-        
         // Salvar backup local
         if (comments.length > 0) {
             const localComments = JSON.parse(localStorage.getItem('promptComments') || '{}');
@@ -144,7 +137,7 @@ async function loadCommentsFromFirebase(promptId) {
         return comments;
         
     } catch (error) {
-        console.error('❌ Erro ao carregar do Firebase:', error);
+        console.error('Erro ao carregar do Firebase:', error);
         return loadCommentsFromLocalStorage(promptId);
     }
 }
@@ -173,12 +166,11 @@ function saveCommentToLocalStorage(promptId, commentText, commentId, author = 'V
         localComments[promptId].unshift(newComment);
         
         localStorage.setItem('promptComments', JSON.stringify(localComments));
-        console.log('💾 Comentário salvo no localStorage');
         
         return newComment;
         
     } catch (error) {
-        console.error('❌ Erro ao salvar no localStorage:', error);
+        console.error('Erro ao salvar no localStorage:', error);
         return null;
     }
 }
@@ -191,7 +183,7 @@ function loadCommentsFromLocalStorage(promptId) {
         const localComments = JSON.parse(localStorage.getItem('promptComments') || '{}');
         return localComments[promptId] || [];
     } catch (error) {
-        console.error('❌ Erro ao carregar do localStorage:', error);
+        console.error('Erro ao carregar do localStorage:', error);
         return [];
     }
 }
@@ -220,8 +212,6 @@ function renderLoadedComments(comments, commentsList) {
         const commentElement = createLoadedCommentElement(comment);
         commentsList.appendChild(commentElement);
     });
-    
-    console.log('✅ Comentários renderizados:', comments.length);
 }
 
 /**
@@ -245,8 +235,8 @@ function createLoadedCommentElement(comment) {
     }
     
     // Indicador se é local ou do Firebase
-    const sourceIndicator = comment.isLocal ? 
-        '<small class="badge bg-warning ms-2">Local</small>' : 
+    const sourceIndicator = comment.isLocal ?
+        '<small class="badge bg-warning ms-2">Local</small>' :
         '<small class="badge bg-success ms-2">Sincronizado</small>';
     
     commentElement.innerHTML = `
@@ -284,8 +274,6 @@ function createLoadedCommentElement(comment) {
  * Inicializar sistema de comentários
  */
 function initCommentsSystem() {
-    console.log('🚀 Inicializando sistema de comentários...');
-    
     // Aguardar DOM estar pronto
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setupCommentsListeners);
@@ -298,8 +286,6 @@ function initCommentsSystem() {
  * Configurar listeners do sistema de comentários
  */
 function setupCommentsListeners() {
-    console.log('🔧 Configurando listeners de comentários...');
-    
     // Event delegation para botões de toggle
     document.addEventListener('click', handleCommentsToggle);
     
@@ -308,11 +294,7 @@ function setupCommentsListeners() {
     
     // Event delegation para inputs de comentário
     document.addEventListener('input', handleCommentInput);
-    
-    console.log('✅ Listeners de comentários configurados!');
 }
-
-
 
 /**
  * Manipular toggle de comentários (abrir/fechar)
@@ -327,11 +309,9 @@ function handleCommentsToggle(e) {
     const promptId = toggleBtn.getAttribute('data-prompt-id');
     const target = toggleBtn.getAttribute('data-bs-target');
     
-    console.log('🖱️ Toggle comentários:', { promptId, target });
-    
     const commentsContent = document.querySelector(target);
     if (!commentsContent) {
-        console.error('❌ Seção de comentários não encontrada:', target);
+        console.error('Seção de comentários não encontrada:', target);
         return;
     }
     
@@ -348,8 +328,6 @@ function handleCommentsToggle(e) {
             chevron.classList.remove('fa-chevron-up');
             chevron.classList.add('fa-chevron-down');
         }
-        
-        console.log('📤 Comentários fechados');
     } else {
         // Abrir comentários
         commentsContent.classList.add('show');
@@ -364,8 +342,6 @@ function handleCommentsToggle(e) {
         
         // ✅ Carregar comentários do Firebase
         loadCommentsForPrompt(promptId);
-        
-        console.log('📥 Comentários abertos');
     }
 }
 
@@ -380,7 +356,6 @@ function handleCommentSubmit(e) {
     e.stopPropagation();
     
     const promptId = submitBtn.getAttribute('data-prompt-id');
-    console.log('🖱️ Enviar comentário:', promptId);
     
     // Encontrar elementos relacionados
     const commentForm = submitBtn.closest('.comment-form');
@@ -388,7 +363,7 @@ function handleCommentSubmit(e) {
     const commentsList = submitBtn.closest('.comments-content')?.querySelector('.comments-list');
     
     if (!textarea || !commentsList) {
-        console.error('❌ Elementos necessários não encontrados');
+        console.error('Elementos necessários não encontrados');
         return;
     }
     
@@ -419,16 +394,13 @@ function handleCommentSubmit(e) {
  * ✅ PROCESSAR ENVIO DO COMENTÁRIO - VERSÃO COM FIREBASE
  */
 async function processCommentSubmission(promptId, commentText, submitBtn, textarea, commentsList) {
-    console.log('📤 Processando envio do comentário...');
-    
     // Desabilitar botão e mostrar loading
     const originalHTML = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.innerHTML =
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Enviando...';
     
     try {
-        // ✅ SALVAR NO FIREBASE (nova funcionalidade)
+        // ✅ SALVAR NO FIREBASE
         const result = await saveCommentToFirebase(promptId, commentText);
         
         // Criar elemento do comentário
@@ -458,20 +430,17 @@ async function processCommentSubmission(promptId, commentText, submitBtn, textar
         
         // Scroll para o novo comentário
         commentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        
         // Mostrar feedback de sucesso
-        const message = result.success ? 
-            '💬 Comentário enviado e salvo com sucesso!' : 
-            '💾 Comentário salvo localmente. Será sincronizado quando possível.';
+        const message = result.success ?
+            'Comentário enviado e salvo com sucesso!' :
+            'Comentário salvo localmente. Será sincronizado quando possível.';
         const type = result.success ? 'success' : 'info';
         
         showCommentFeedback(message, type);
         
-        console.log('✅ Comentário processado:', result);
-        
     } catch (error) {
-        console.error('❌ Erro ao processar comentário:', error);
-        showCommentFeedback('⚠️ Erro ao enviar comentário. Salvo localmente.', 'warning');
+        console.error('Erro ao processar comentário:', error);
+        showCommentFeedback('Erro ao enviar comentário. Salvo localmente.', 'warning');
     } finally {
         // Restaurar botão
         submitBtn.disabled = false;
@@ -553,11 +522,8 @@ function handleCommentInput(e) {
  * ✅ CARREGAR COMENTÁRIOS PARA UM PROMPT - VERSÃO COM FIREBASE
  */
 async function loadCommentsForPrompt(promptId) {
-    console.log('📥 Carregando comentários para prompt:', promptId);
-    
     const commentsList = document.querySelector(`#comments-${promptId} .comments-list`);
     if (!commentsList) {
-        console.log('⚠️ Lista de comentários não encontrada');
         return;
     }
     
@@ -575,7 +541,7 @@ async function loadCommentsForPrompt(promptId) {
         updateCommentsCounterWithNumber(promptId, comments.length);
         
     } catch (error) {
-        console.error('❌ Erro ao carregar comentários:', error);
+        console.error('Erro ao carregar comentários:', error);
         commentsList.innerHTML = `
             <div class="alert alert-warning">
                 <i class="fas fa-exclamation-triangle me-2"></i>
@@ -623,7 +589,6 @@ function showCommentFeedback(message, type = 'info') {
     }
     
     // Fallback para alert simples
-    console.log(`${type.toUpperCase()}: ${message}`);
     alert(message);
 }
 
@@ -636,26 +601,23 @@ function likeComment(button) {
     button.disabled = true;
     button.classList.remove('btn-outline-success');
     button.classList.add('btn-success');
-    
-    // ✅ Aqui você pode adicionar lógica para salvar o like no Firebase
-    console.log('👍 Like adicionado ao comentário');
 }
 
 function replyToComment(button) {
-    showCommentFeedback('🔄 Funcionalidade de resposta em desenvolvimento!', 'info');
+    showCommentFeedback('Funcionalidade de resposta em desenvolvimento!', 'info');
 }
 
 function deleteComment(button) {
-    if (confirm('❓ Tem certeza que deseja excluir este comentário?')) {
+    if (confirm('Tem certeza que deseja excluir este comentário?')) {
         const commentItem = button.closest('.comment-item');
         const commentId = commentItem.getAttribute('data-comment-id');
         
         commentItem.style.animation = 'fadeOut 0.3s ease-out';
         setTimeout(() => {
             commentItem.remove();
-            showCommentFeedback('🗑️ Comentário excluído!', 'success');
+            showCommentFeedback('Comentário excluído!', 'success');
             
-            // ✅ Aqui você pode adicionar lógica para excluir do Firebase
+            // ✅ Excluir do Firebase se não for local
             if (commentId && !commentId.startsWith('local_')) {
                 deleteCommentFromFirebase(commentId);
             }
@@ -670,10 +632,9 @@ async function deleteCommentFromFirebase(commentId) {
     try {
         if (typeof window.db !== 'undefined') {
             await window.db.collection("prompt_comments").doc(commentId).delete();
-            console.log('🗑️ Comentário excluído do Firebase:', commentId);
         }
     } catch (error) {
-        console.error('❌ Erro ao excluir comentário do Firebase:', error);
+        console.error('Erro ao excluir comentário do Firebase:', error);
     }
 }
 
@@ -777,8 +738,6 @@ function addCommentsCSS() {
  */
 async function syncLocalCommentsToFirebase() {
     try {
-        console.log('🔄 Sincronizando comentários locais com Firebase...');
-        
         const localComments = JSON.parse(localStorage.getItem('promptComments') || '{}');
         let syncCount = 0;
         
@@ -797,7 +756,7 @@ async function syncLocalCommentsToFirebase() {
                             syncCount++;
                         }
                     } catch (error) {
-                        console.log('⚠️ Não foi possível sincronizar comentário:', comment.id);
+                        // Falha silenciosa na sincronização
                     }
                 }
             }
@@ -807,12 +766,11 @@ async function syncLocalCommentsToFirebase() {
         localStorage.setItem('promptComments', JSON.stringify(localComments));
         
         if (syncCount > 0) {
-            console.log(`✅ ${syncCount} comentários sincronizados com sucesso!`);
-            showCommentFeedback(`🔄 ${syncCount} comentário(s) sincronizado(s) com sucesso!`, 'success');
+            showCommentFeedback(`${syncCount} comentário(s) sincronizado(s) com sucesso!`, 'success');
         }
         
     } catch (error) {
-        console.error('❌ Erro na sincronização:', error);
+        console.error('Erro na sincronização:', error);
     }
 }
 
@@ -822,33 +780,10 @@ async function syncLocalCommentsToFirebase() {
 function clearCommentsCache() {
     try {
         localStorage.removeItem('promptComments');
-        console.log('🧹 Cache de comentários limpo');
-        showCommentFeedback('🧹 Cache de comentários limpo com sucesso!', 'info');
+        showCommentFeedback('Cache de comentários limpo com sucesso!', 'info');
     } catch (error) {
-        console.error('❌ Erro ao limpar cache:', error);
+        console.error('Erro ao limpar cache:', error);
     }
-}
-
-// Inicializar sistema quando o script for carregado
-initCommentsSystem();
-addCommentsCSS();
-
-// Tentar sincronizar comentários locais quando online
-window.addEventListener('online', () => {
-    console.log('🌐 Conexão restaurada, tentando sincronizar comentários...');
-    setTimeout(syncLocalCommentsToFirebase, 2000);
-});
-
-// Exportar funções para uso global
-if (typeof window !== 'undefined') {
-    window.CommentsSystem = {
-        init: initCommentsSystem,
-        loadComments: loadCommentsForPrompt,
-        saveComment: saveCommentToFirebase,
-        syncComments: syncLocalCommentsToFirebase,
-        clearCache: clearCommentsCache,
-        config: COMMENTS_CONFIG
-    };
 }
 
 /**
@@ -882,7 +817,7 @@ function getCommentsStatistics() {
             syncedComments: totalComments - localOnlyComments
         };
     } catch (error) {
-        console.error('❌ Erro ao obter estatísticas:', error);
+        console.error('Erro ao obter estatísticas:', error);
         return {
             totalComments: 0,
             localOnlyComments: 0,
@@ -913,11 +848,11 @@ function exportComments() {
         link.download = `comments_export_${new Date().toISOString().split('T')[0]}.json`;
         link.click();
         
-        showCommentFeedback('📁 Comentários exportados com sucesso!', 'success');
+        showCommentFeedback('Comentários exportados com sucesso!', 'success');
         
     } catch (error) {
-        console.error('❌ Erro ao exportar comentários:', error);
-        showCommentFeedback('❌ Erro ao exportar comentários.', 'danger');
+        console.error('Erro ao exportar comentários:', error);
+        showCommentFeedback('Erro ao exportar comentários.', 'danger');
     }
 }
 
@@ -932,16 +867,16 @@ function importComments(file) {
             try {
                 const importData = JSON.parse(e.target.result);
                 
-                if (importData.comments) {
+                                if (importData.comments) {
                     localStorage.setItem('promptComments', JSON.stringify(importData.comments));
-                    showCommentFeedback('📥 Comentários importados com sucesso!', 'success');
+                    showCommentFeedback('Comentários importados com sucesso!', 'success');
                     resolve(importData);
                 } else {
                     throw new Error('Formato de arquivo inválido');
                 }
             } catch (error) {
-                console.error('❌ Erro ao importar:', error);
-                showCommentFeedback('❌ Erro ao importar comentários. Verifique o arquivo.', 'danger');
+                console.error('Erro ao importar:', error);
+                showCommentFeedback('Erro ao importar comentários. Verifique o arquivo.', 'danger');
                 reject(error);
             }
         };
@@ -959,8 +894,6 @@ function importComments(file) {
  */
 function validateCommentsIntegrity() {
     try {
-        console.log('🔍 Validando integridade dos comentários...');
-        
         const localComments = JSON.parse(localStorage.getItem('promptComments') || '{}');
         let issues = [];
         let fixedIssues = 0;
@@ -1012,25 +945,23 @@ function validateCommentsIntegrity() {
             issues: issues
         };
         
-        console.log('✅ Validação concluída:', result);
-        
-        if (issues.length === 0 && fixedIssues === 0) {
-            showCommentFeedback('✅ Todos os comentários estão íntegros!', 'success');
-        } else if (fixedIssues > 0) {
-            showCommentFeedback(`🔧 ${fixedIssues} problema(s) corrigido(s) automaticamente!`, 'info');
+        // ✅ REMOVER MENSAGENS AUTOMÁTICAS - só mostrar se houver problemas
+        if (fixedIssues > 0) {
+            showCommentFeedback(`${fixedIssues} problema(s) corrigido(s) automaticamente!`, 'info');
         }
         
         if (issues.length > 0) {
-            console.warn('⚠️ Problemas encontrados:', issues);
+            console.warn('Problemas encontrados:', issues);
         }
         
         return result;
         
     } catch (error) {
-        console.error('❌ Erro na validação:', error);
+        console.error('Erro na validação:', error);
         return { totalIssues: 1, fixedIssues: 0, issues: [error.message] };
     }
 }
+
 
 /**
  * ✅ FUNÇÃO PARA OTIMIZAR PERFORMANCE
@@ -1058,13 +989,18 @@ function optimizeCommentsPerformance() {
     document.querySelectorAll('[id^="comments-"]').forEach(section => {
         observer.observe(section);
     });
-    
-    console.log('⚡ Otimização de performance ativada');
 }
 
-/**
- * ✅ ADICIONAR FUNCIONALIDADES AO OBJETO GLOBAL
- */
+// Inicializar sistema quando o script for carregado
+initCommentsSystem();
+addCommentsCSS();
+
+// Tentar sincronizar comentários locais quando online
+window.addEventListener('online', () => {
+    setTimeout(syncLocalCommentsToFirebase, 2000);
+});
+
+// Exportar funções para uso global
 if (typeof window !== 'undefined') {
     window.CommentsSystem = {
         // Funções principais
@@ -1096,8 +1032,6 @@ if (typeof window !== 'undefined') {
  * ✅ INICIALIZAÇÃO FINAL COM VERIFICAÇÕES
  */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Sistema de comentários inicializando...');
-    
     // Validar integridade na inicialização
     setTimeout(() => {
         validateCommentsIntegrity();
@@ -1111,13 +1045,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navigator.onLine) {
             syncLocalCommentsToFirebase();
         }
-        
-        console.log('✅ Sistema de comentários totalmente inicializado!');
-        
-        // Log de estatísticas
-        const stats = getCommentsStatistics();
-        console.log('📊 Estatísticas de comentários:', stats);
-        
     }, 2000);
 });
 
@@ -1126,12 +1053,11 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 window.addEventListener('unhandledrejection', (event) => {
     if (event.reason && event.reason.toString().includes('comment')) {
-        console.error('❌ Erro não tratado no sistema de comentários:', event.reason);
+        console.error('Erro não tratado no sistema de comentários:', event.reason);
         event.preventDefault();
         
         // Tentar recuperar automaticamente
         setTimeout(() => {
-            console.log('🔄 Tentando recuperar sistema de comentários...');
             initCommentsSystem();
         }, 1000);
     }
@@ -1145,11 +1071,5 @@ window.addEventListener('beforeunload', () => {
     if (navigator.onLine) {
         syncLocalCommentsToFirebase();
     }
-    
-    console.log('👋 Sistema de comentários finalizando...');
 });
-
-console.log('✅ Sistema de comentários carregado e pronto para uso!');
-console.log('💡 Use window.CommentsSystem para acessar as funcionalidades');
-console.log('📊 Use window.CommentsSystem.getStatistics() para ver estatísticas');
 
