@@ -461,17 +461,53 @@
             }
         }
         
-        function updateUserDisplay(user) {
-            const displayName = document.getElementById('user-display-name');
-            const displayEmail = document.getElementById('user-display-email');
-            const loading = document.getElementById('user-loading-display');
-            const userInfo = document.getElementById('user-info-display');
+        async function updateUserDisplay(user) {
+    const displayName = document.getElementById('user-display-name');
+    const displayEmail = document.getElementById('user-display-email');
+    const loading = document.getElementById('user-loading-display');
+    const userInfo = document.getElementById('user-info-display');
+    const avatarContainer = document.querySelector('.user-avatar'); // ✅ NOVO
+    
+    if (displayName) displayName.textContent = user.displayName || 'Usuário';
+    if (displayEmail) displayEmail.textContent = user.email;
+    if (loading) loading.style.display = 'none';
+    if (userInfo) userInfo.style.display = 'block';
+    
+    // ✅ ATUALIZAR AVATAR COM FOTO
+    if (avatarContainer) {
+        try {
+            // Tentar obter foto do usuário
+            let photoURL = user.photoURL; // Foto do Firebase Auth
             
-            if (displayName) displayName.textContent = user.displayName || 'Usuário';
-            if (displayEmail) displayEmail.textContent = user.email;
-            if (loading) loading.style.display = 'none';
-            if (userInfo) userInfo.style.display = 'block';
+            // Se não tiver foto no Firebase Auth, tentar capturar do sistema
+            if (!photoURL && typeof captureUserInfo === 'function') {
+                const userDetails = await captureUserInfo();
+                photoURL = userDetails.photoURL || userDetails.profilePhoto || userDetails.avatar;
+            }
+            
+            if (photoURL) {
+                avatarContainer.innerHTML = `
+                    <img src="${photoURL}" 
+                         alt="Foto do usuário"
+                         class="user-header-photo rounded-circle"
+                         style="width: 32px; height: 32px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"
+                         onload="console.log('✅ Foto do cabeçalho carregada')">
+                    <i class="fas fa-user-circle fa-lg backup-header-avatar" style="display: none; color: #667eea;"></i>
+                `;
+            } else {
+                // Manter ícone padrão se não houver foto
+                avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
+            }
+            
+        } catch (error) {
+            console.error('Erro ao carregar foto do cabeçalho:', error);
+            // Manter ícone padrão em caso de erro
+            avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
         }
+    }
+}
+
         
         function setupLogout() {
             const logoutBtn = document.getElementById('logout-btn');
