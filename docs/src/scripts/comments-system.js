@@ -419,79 +419,206 @@ function setupCommentsListeners() {
 }
 
 /**
- * Manipular toggle de comentários (abrir/fechar)
+ * ✅ VERSÃO FINAL - Com atributo personalizado (à prova de interferências)
  */
 function handleCommentsToggle(e) {
-    const toggleBtn = e.target.closest('.toggle-comments');
+    const toggleBtn = e.target.closest('.toggle-comments') || 
+                     e.target.closest('.comments-toggle') ||
+                     e.target.closest('[class*="toggle"]');
+    
     if (!toggleBtn) return;
     
     e.preventDefault();
     e.stopPropagation();
+    e.stopImmediatePropagation();
     
-    const promptId = toggleBtn.getAttribute('data-prompt-id');
-    const target = toggleBtn.getAttribute('data-bs-target');
+    console.log('🔄 Toggle FINAL acionado');
     
-    const commentsContent = document.querySelector(target);
+    const promptId = toggleBtn.getAttribute('data-prompt-id') || 
+                     toggleBtn.closest('[data-prompt-id]')?.getAttribute('data-prompt-id');
+    
+    let commentsContent = document.querySelector(`#comments-${promptId}`);
+    
     if (!commentsContent) {
-        console.error('Seção de comentários não encontrada:', target);
+        const target = toggleBtn.getAttribute('data-bs-target') || toggleBtn.getAttribute('data-target');
+        if (target) {
+            commentsContent = document.querySelector(target);
+        }
+    }
+    
+    if (!commentsContent) {
+        console.error('❌ Container não encontrado para prompt:', promptId);
         return;
     }
     
-    const isOpen = commentsContent.classList.contains('show');
+    // ✅ USAR NOSSO PRÓPRIO ATRIBUTO - IGNORAR TUDO MAIS
+    const isCurrentlyOpen = commentsContent.getAttribute('data-my-state') === 'open';
     
-    if (isOpen) {
-        // Fechar comentários
-        commentsContent.classList.remove('show');
+    console.log(`📋 Prompt ${promptId}:`, isCurrentlyOpen ? '🔴 FECHANDO' : '🟢 ABRINDO');
+    console.log('🔍 Nosso estado:', commentsContent.getAttribute('data-my-state'));
+    
+    if (isCurrentlyOpen) {
+        // ✅ FECHAR
+        console.log('🔄 Fechando...');
+        
+        // Nosso controle
+        commentsContent.setAttribute('data-my-state', 'closed');
+        
+        // Forçar fechamento BRUTAL
+        commentsContent.style.cssText = `
+            display: none !important;
+            height: 0px !important;
+            max-height: 0px !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            visibility: hidden !important;
+        `;
+        
+        // Limpar classes
+        commentsContent.className = 'comments-container d-none';
+        
+        // Atualizar botão
         toggleBtn.setAttribute('aria-expanded', 'false');
         
-        // Atualizar ícone
-        const chevron = toggleBtn.querySelector('.fa-chevron-up, .fa-chevron-down');
+        // Ícone
+        const chevron = toggleBtn.querySelector('.fa-chevron-up, .fa-chevron-down, .toggle-icon');
         if (chevron) {
-            chevron.classList.remove('fa-chevron-up');
-            chevron.classList.add('fa-chevron-down');
+            chevron.className = 'fas fa-chevron-down ms-1 toggle-icon';
         }
+        
+        // Texto
+        const toggleText = toggleBtn.querySelector('.toggle-text');
+        if (toggleText) {
+            toggleText.textContent = 'Mostrar';
+        }
+        
+        console.log('✅ FECHADO');
+        
     } else {
-        // Abrir comentários
-        commentsContent.classList.add('show');
+        // ✅ ABRIR
+        console.log('🔄 Abrindo...');
+        
+        // Nosso controle
+        commentsContent.setAttribute('data-my-state', 'open');
+        
+        // Forçar abertura BRUTAL
+        commentsContent.style.cssText = `
+            display: block !important;
+            height: auto !important;
+            max-height: none !important;
+            opacity: 1 !important;
+            overflow: visible !important;
+            visibility: visible !important;
+        `;
+        
+        // Definir classes
+        commentsContent.className = 'comments-container show';
+        
+        // Atualizar botão
         toggleBtn.setAttribute('aria-expanded', 'true');
         
-        // Atualizar ícone
-        const chevron = toggleBtn.querySelector('.fa-chevron-up, .fa-chevron-down');
+        // Ícone
+        const chevron = toggleBtn.querySelector('.fa-chevron-up, .fa-chevron-down, .toggle-icon');
         if (chevron) {
-            chevron.classList.remove('fa-chevron-down');
-            chevron.classList.add('fa-chevron-up');
+            chevron.className = 'fas fa-chevron-up ms-1 toggle-icon';
         }
         
-        // ✅ Carregar comentários do Firebase
-        loadCommentsForPrompt(promptId);
+        // Texto
+        const toggleText = toggleBtn.querySelector('.toggle-text');
+        if (toggleText) {
+            toggleText.textContent = 'Ocultar';
+        }
+        
+        // Carregar comentários
+        if (promptId) {
+            loadCommentsForPrompt(promptId);
+        }
+        
+        console.log('✅ ABERTO');
     }
+    
+    // Verificar estado final
+    setTimeout(() => {
+        console.log('🔍 Estado final:', {
+            myState: commentsContent.getAttribute('data-my-state'),
+            display: commentsContent.style.display,
+            height: commentsContent.offsetHeight,
+            visible: commentsContent.offsetHeight > 0
+        });
+    }, 100);
 }
 
+
+
 /**
- * Manipular envio de comentários
+ * ✅ MANIPULAR ENVIO DE COMENTÁRIOS - VERSÃO CORRIGIDA
  */
 function handleCommentSubmit(e) {
-    const submitBtn = e.target.closest('.submit-comment');
+    const submitBtn = e.target.closest('.submit-comment-btn') || e.target.closest('.submit-comment');
+
     if (!submitBtn) return;
     
     e.preventDefault();
     e.stopPropagation();
     
+    console.log('📝 Botão de envio clicado');
+    
     const promptId = submitBtn.getAttribute('data-prompt-id');
+    console.log('🔍 Prompt ID:', promptId);
     
-    // Encontrar elementos relacionados
-    const commentForm = submitBtn.closest('.comment-form');
-    const textarea = commentForm?.querySelector('.comment-input');
-    const commentsList = submitBtn.closest('.comments-content')?.querySelector('.comments-list');
+    if (!promptId) {
+        console.error('❌ Prompt ID não encontrado');
+        showCommentFeedback('Erro: ID do prompt não encontrado', 'danger');
+        return;
+    }
     
-    if (!textarea || !commentsList) {
-        console.error('Elementos necessários não encontrados');
+    // ✅ BUSCA MAIS ROBUSTA DOS ELEMENTOS
+    let commentForm = submitBtn.closest('.comment-form');
+    let textarea = commentForm?.querySelector('.comment-input');
+    let commentsList = null;
+    
+    // Tentar diferentes formas de encontrar a textarea
+    if (!textarea) {
+        textarea = document.querySelector(`#comments-${promptId} .comment-input`);
+        console.log('🔍 Textarea encontrada via ID:', !!textarea);
+    }
+    
+    if (!textarea) {
+        textarea = submitBtn.closest('[data-prompt-id]')?.querySelector('.comment-input');
+        console.log('🔍 Textarea encontrada via data-prompt-id:', !!textarea);
+    }
+    
+    // Tentar diferentes formas de encontrar a lista de comentários
+    commentsList = document.querySelector(`#comments-${promptId} .comments-list`);
+    if (!commentsList) {
+        commentsList = submitBtn.closest('[id^="comments-"]')?.querySelector('.comments-list');
+    }
+    if (!commentsList) {
+        commentsList = submitBtn.closest('.comments-container')?.querySelector('.comments-list');
+    }
+    
+    console.log('🔍 Elementos encontrados:', {
+        textarea: !!textarea,
+        commentsList: !!commentsList,
+        commentForm: !!commentForm
+    });
+    
+    if (!textarea) {
+        console.error('❌ Campo de texto não encontrado');
+        showCommentFeedback('Erro: Campo de comentário não encontrado', 'danger');
+        return;
+    }
+    
+    if (!commentsList) {
+        console.error('❌ Lista de comentários não encontrada');
+        showCommentFeedback('Erro: Lista de comentários não encontrada', 'danger');
         return;
     }
     
     const commentText = textarea.value.trim();
+    console.log('📝 Texto do comentário:', commentText.substring(0, 50) + '...');
     
-    // Validações
+    // ✅ VALIDAÇÕES
     if (!commentText) {
         showCommentFeedback('Por favor, digite um comentário!', 'warning');
         textarea.focus();
@@ -500,6 +627,7 @@ function handleCommentSubmit(e) {
     
     if (commentText.length < 3) {
         showCommentFeedback('Comentário deve ter pelo menos 3 caracteres!', 'warning');
+        textarea.focus();
         return;
     }
     
@@ -508,9 +636,12 @@ function handleCommentSubmit(e) {
         return;
     }
     
-    // ✅ Processar envio com Firebase
+    console.log('✅ Validações passaram, processando envio...');
+    
+    // ✅ PROCESSAR ENVIO
     processCommentSubmission(promptId, commentText, submitBtn, textarea, commentsList);
 }
+
 
 /**
  * ✅ VERSÃO ASSÍNCRONA - Processar envio COM FOTO
@@ -526,7 +657,8 @@ async function processCommentSubmission(promptId, commentText, submitBtn, textar
         const result = await saveCommentToFirebase(promptId, commentText);
         
         // ✅ CRIAR ELEMENTO DO COMENTÁRIO COM FOTO (assíncrono)
-        const commentElement = await createCommentElement(commentText, promptId, result.author, result.photoURL);
+        const commentElement = await createCommentElement(commentText, promptId, result.author, result.photoURL, result.id);
+
         
         // Remover mensagem "sem comentários"
         const noComments = commentsList.querySelector('.no-comments, .text-center');
@@ -574,9 +706,13 @@ async function processCommentSubmission(promptId, commentText, submitBtn, textar
 /**
  * ✅ VERSÃO ATUALIZADA - Criar elemento HTML do comentário COM FOTO
  */
-async function createCommentElement(commentText, promptId, author = 'Você', photoURL = null) {
+async function createCommentElement(commentText, promptId, author = 'Você', photoURL = null, commentId = null) {
     const commentElement = document.createElement('div');
     commentElement.className = 'comment-item border-bottom pb-3 mb-3';
+    
+    // ✅ LINHA ADICIONADA AQUI:
+    commentElement.setAttribute('data-comment-id', commentId || 'temp_' + Date.now());
+    
     commentElement.style.animation = 'fadeIn 0.5s ease-in';
     
     const timestamp = COMMENTS_CONFIG.showTimestamp ?
@@ -623,6 +759,7 @@ async function createCommentElement(commentText, promptId, author = 'Você', pho
     
     return commentElement;
 }
+
 
 /**
  * Manipular input de comentário (contador de caracteres)
@@ -738,23 +875,225 @@ function replyToComment(button) {
     showCommentFeedback('Funcionalidade de resposta em desenvolvimento!', 'info');
 }
 
-function deleteComment(button) {
-    if (confirm('Tem certeza que deseja excluir este comentário?')) {
-        const commentItem = button.closest('.comment-item');
-        const commentId = commentItem.getAttribute('data-comment-id');
+/**
+ * ✅ EXCLUIR COMENTÁRIO PERMANENTEMENTE - VERSÃO CORRIGIDA
+ */
+async function deleteComment(button) {
+    if (!confirm('Tem certeza que deseja excluir este comentário? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    
+    console.log('🗑️ Iniciando exclusão de comentário...');
+    
+    const commentItem = button.closest('.comment-item');
+    
+// ✅ BUSCAR ID DE VÁRIAS FORMAS
+let commentId = commentItem.getAttribute('data-comment-id');
+
+// Se não encontrou, tentar outras formas
+if (!commentId) {
+    commentId = commentItem.id;
+}
+if (!commentId) {
+    commentId = commentItem.querySelector('[data-id]')?.getAttribute('data-id');
+}
+if (!commentId) {
+    // Gerar ID temporário baseado no conteúdo
+    const commentText = commentItem.querySelector('.comment-text')?.textContent?.trim();
+    if (commentText) {
+        commentId = 'temp_' + btoa(commentText.substring(0, 20)).replace(/[^a-zA-Z0-9]/g, '');
+    }
+}
+
+// Buscar promptId de várias formas
+let promptId = button.closest('[data-prompt-id]')?.getAttribute('data-prompt-id');
+if (!promptId) {
+    const commentsSection = button.closest('[id^="comments-"]');
+    if (commentsSection) {
+        promptId = commentsSection.id.replace('comments-', '');
+    }
+}
+
+console.log('🔍 Dados da exclusão:', { 
+    commentId, 
+    promptId,
+    commentItem: commentItem,
+    hasDataId: commentItem.hasAttribute('data-comment-id')
+});
+
+if (!commentId) {
+    console.error('❌ ID do comentário não encontrado de forma alguma');
+    
+    // ✅ EXCLUSÃO FORÇADA SEM ID
+    if (confirm('ID não encontrado. Excluir apenas visualmente?')) {
+        commentItem.style.transition = 'all 0.3s ease-out';
+        commentItem.style.opacity = '0';
+        commentItem.style.transform = 'translateX(-100%)';
         
-        commentItem.style.animation = 'fadeOut 0.3s ease-out';
         setTimeout(() => {
             commentItem.remove();
-            showCommentFeedback('Comentário excluído!', 'success');
+            showCommentFeedback('Comentário removido visualmente', 'warning');
+        }, 300);
+    }
+    return;
+}
+
+    
+    // Desabilitar botão durante exclusão
+    const originalHTML = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    try {
+        // ✅ 1. EXCLUIR DO FIREBASE (se não for local)
+        if (!commentId.startsWith('local_') && !commentId.startsWith('temp_')) {
+            console.log('🔥 Excluindo do Firebase...');
+            await deleteCommentFromFirebase(commentId);
+            console.log('✅ Excluído do Firebase');
+        } else {
+            console.log('📱 Comentário local, pulando Firebase');
+        }
+        
+        // ✅ 2. EXCLUIR DO LOCALSTORAGE
+        console.log('💾 Excluindo do LocalStorage...');
+        deleteCommentFromLocalStorage(commentId, promptId);
+        console.log('✅ Excluído do LocalStorage');
+        
+        // ✅ 3. ANIMAÇÃO DE SAÍDA
+        commentItem.style.transition = 'all 0.3s ease-out';
+        commentItem.style.transform = 'translateX(-100%)';
+        commentItem.style.opacity = '0';
+        commentItem.style.height = '0px';
+        commentItem.style.marginBottom = '0px';
+        commentItem.style.paddingBottom = '0px';
+        
+        setTimeout(() => {
+            // ✅ 4. REMOVER DO DOM
+            commentItem.remove();
             
-            // ✅ Excluir do Firebase se não for local
-            if (commentId && !commentId.startsWith('local_')) {
-                deleteCommentFromFirebase(commentId);
+            // ✅ 5. ATUALIZAR CONTADOR
+            updateCommentsCounterAfterDelete(promptId);
+            
+            // ✅ 6. VERIFICAR SE FICOU VAZIO
+            checkIfCommentsEmpty(promptId);
+            
+            console.log('✅ Comentário excluído completamente');
+            showCommentFeedback('Comentário excluído com sucesso!', 'success');
+            
+        }, 300);
+        
+    } catch (error) {
+        console.error('❌ Erro ao excluir comentário:', error);
+        showCommentFeedback('Erro ao excluir comentário. Tente novamente.', 'danger');
+        
+        // Restaurar botão
+        button.disabled = false;
+        button.innerHTML = originalHTML;
+    }
+}
+
+/**
+ * ✅ EXCLUIR COMENTÁRIO DO LOCALSTORAGE - NOVA FUNÇÃO
+ */
+function deleteCommentFromLocalStorage(commentId, promptId) {
+    try {
+        console.log('💾 Removendo do LocalStorage:', { commentId, promptId });
+        
+        const localComments = JSON.parse(localStorage.getItem('promptComments') || '{}');
+        console.log('📋 Comentários antes da exclusão:', localComments[promptId]?.length || 0);
+        
+        if (localComments[promptId]) {
+            // Filtrar comentário específico
+            const originalLength = localComments[promptId].length;
+            localComments[promptId] = localComments[promptId].filter(comment => {
+                const keep = comment.id !== commentId;
+                if (!keep) {
+                    console.log('🗑️ Removendo comentário:', comment.id);
+                }
+                return keep;
+            });
+            
+            const newLength = localComments[promptId].length;
+            console.log('📊 Comentários removidos:', originalLength - newLength);
+            
+            // Se não sobrou nenhum comentário, remover a chave
+            if (localComments[promptId].length === 0) {
+                delete localComments[promptId];
+                console.log('🧹 Removendo chave vazia do prompt');
             }
+            
+            // Salvar de volta
+            localStorage.setItem('promptComments', JSON.stringify(localComments));
+            console.log('✅ LocalStorage atualizado');
+        } else {
+            console.log('⚠️ Nenhum comentário encontrado para este prompt no LocalStorage');
+        }
+        
+    } catch (error) {
+        console.error('❌ Erro ao remover do LocalStorage:', error);
+        throw error;
+    }
+}
+
+/**
+ * ✅ ATUALIZAR CONTADOR APÓS EXCLUSÃO
+ */
+function updateCommentsCounterAfterDelete(promptId) {
+    // Buscar botão toggle de várias formas
+    let toggleButton = document.querySelector(`[data-bs-target="#comments-${promptId}"]`);
+    if (!toggleButton) {
+        toggleButton = document.querySelector(`[data-target="#comments-${promptId}"]`);
+    }
+    if (!toggleButton) {
+        toggleButton = document.querySelector(`[data-prompt-id="${promptId}"].toggle-comments`);
+    }
+    
+    if (!toggleButton) {
+        console.log('⚠️ Botão toggle não encontrado para atualizar contador');
+        return;
+    }
+    
+    const countSpan = toggleButton.querySelector('.comment-count') || 
+                     toggleButton.querySelector('[class*="count"]');
+    
+    if (countSpan) {
+        const currentCount = parseInt(countSpan.textContent) || 0;
+        const newCount = Math.max(0, currentCount - 1);
+        countSpan.textContent = newCount;
+        
+        console.log('📊 Contador atualizado:', currentCount, '->', newCount);
+        
+        // Animar mudança
+        countSpan.style.animation = 'pulse 0.3s ease';
+        setTimeout(() => {
+            countSpan.style.animation = '';
         }, 300);
     }
 }
+
+/**
+ * ✅ VERIFICAR SE LISTA FICOU VAZIA
+ */
+function checkIfCommentsEmpty(promptId) {
+    const commentsList = document.querySelector(`#comments-${promptId} .comments-list`);
+    if (!commentsList) return;
+    
+    const remainingComments = commentsList.querySelectorAll('.comment-item');
+    
+    if (remainingComments.length === 0) {
+        console.log('📝 Lista de comentários ficou vazia, mostrando mensagem');
+        
+        // Mostrar mensagem de lista vazia
+        commentsList.innerHTML = `
+            <div class="no-comments text-center text-muted py-3">
+                <i class="fas fa-comments fa-2x mb-2"></i>
+                <p>Nenhum comentário restante.</p>
+                <p><small>Todos os comentários foram removidos.</small></p>
+            </div>
+        `;
+    }
+}
+
 
 /**
  * ✅ EXCLUIR COMENTÁRIO DO FIREBASE
@@ -786,7 +1125,7 @@ function escapeHtml(text) {
 }
 
 /**
- * ✅ CSS ATUALIZADO para avatares e animações
+ * ✅ CSS ATUALIZADO para avatares e animações - VERSÃO CORRIGIDA
  */
 function addCommentsCSS() {
     if (document.getElementById('comments-css')) return;
@@ -804,23 +1143,39 @@ function addCommentsCSS() {
             to { opacity: 0; transform: translateY(-10px); }
         }
         
+        /* ✅ CORREÇÃO PRINCIPAL - COMENTÁRIOS TOGGLE */
         .comments-content {
-            transition: all 0.3s ease;
+            transition: all 0.3s ease-in-out;
             overflow: hidden;
         }
         
+        /* ✅ ESTADO FECHADO - FORÇAR FECHAMENTO COMPLETO */
         .comments-content:not(.show) {
-            max-height: 0;
-            opacity: 0;
+            max-height: 0 !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            display: none !important;
         }
         
+        /* ✅ ESTADO ABERTO - GARANTIR VISIBILIDADE */
         .comments-content.show {
-            max-height: none;
-            opacity: 1;
+            max-height: none !important;
+            opacity: 1 !important;
+            display: block !important;
+            overflow: visible !important;
+            padding-top: inherit !important;
+            padding-bottom: inherit !important;
+            margin-top: inherit !important;
+            margin-bottom: inherit !important;
         }
         
         .comment-item {
             transition: all 0.3s ease;
+            animation: fadeIn 0.4s ease-out;
         }
         
         .comment-item:hover {
@@ -903,6 +1258,36 @@ function addCommentsCSS() {
             opacity: 1;
         }
         
+        /* ✅ FOTO DO USUÁRIO NO CABEÇALHO */
+        .user-header-photo {
+            width: 32px !important;
+            height: 32px !important;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3) !important;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-header-photo:hover {
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* ✅ FOTO DO USUÁRIO NOS COMENTÁRIOS */
+        .user-photo {
+            width: 40px !important;
+            height: 40px !important;
+            object-fit: cover;
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .user-photo:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
         /* ✅ LOADING STATE PARA AVATARES */
         .avatar-loading {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -935,8 +1320,36 @@ function addCommentsCSS() {
             background-color: #007bff;
         }
         
+        /* ✅ ANIMAÇÃO DO BOTÃO TOGGLE */
+        .toggle-comments, .comments-toggle {
+            transition: all 0.2s ease;
+        }
+        
+        .toggle-comments:hover, .comments-toggle:hover {
+            transform: translateY(-1px);
+        }
+        
+        /* ✅ ÍCONE CHEVRON */
+        .toggle-icon, .fa-chevron-up, .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-comments[aria-expanded="true"] .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
         /* ✅ RESPONSIVIDADE */
-        @media (max-width: 576px) {
+        @media (max-width: 768px) {
+            .user-photo {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            .user-header-photo {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            
             .avatar-md {
                 width: 40px;
                 height: 40px;
@@ -961,6 +1374,7 @@ function addCommentsCSS() {
     `;
     document.head.appendChild(style);
 }
+
 
 /**
  * ✅ FUNÇÃO PARA SINCRONIZAR COMENTÁRIOS LOCAIS COM FIREBASE

@@ -15,7 +15,6 @@ generateCommentsSection(promptId, commentCount = 0) {
             <div class="comments-header d-flex justify-content-between align-items-center mb-2">
                 <button class="btn btn-sm btn-outline-info comments-toggle"
                         type="button"
-                        data-bs-toggle="collapse"
                         data-bs-target="#comments-${promptId}"
                         aria-expanded="false"
                         aria-controls="comments-${promptId}">
@@ -36,7 +35,8 @@ generateCommentsSection(promptId, commentCount = 0) {
             </div>
             
             <!-- Container dos comentários (colapsável) -->
-            <div id="comments-${promptId}" class="collapse comments-container">
+            <div id="comments-${promptId}" class="comments-container" style="display: none;">
+
                 
                 <!-- Formulário para novo comentário -->
                 <div class="comment-form card bg-light mb-3">
