@@ -348,10 +348,7 @@ async function createLoadedCommentElement(comment) {
         }
     }
     
-    // Indicador se é local ou do Firebase
-    const sourceIndicator = comment.isLocal ?
-        '<small class="badge bg-warning ms-2">Local</small>' :
-        '<small class="badge bg-success ms-2">Sincronizado</small>';
+    
     
     // ✅ CRIAR AVATAR COM FOTO
     const userInfo = {
@@ -368,7 +365,7 @@ async function createLoadedCommentElement(comment) {
             <div class="comment-content flex-grow-1">
                 <div class="comment-header d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <strong class="comment-author text-primary">${escapeHtml(comment.author)}</strong>
+                        <strong class="comment-author text-secondary">${escapeHtml(comment.author)}</strong>
                         ${sourceIndicator}
                         ${comment.authorInfo?.isInstitutional ? '<small class="badge bg-info ms-1">PGE</small>' : ''}
                     </div>
@@ -1999,13 +1996,10 @@ async function createLoadedCommentElement(comment) {
     }
     
     // Indicador se é local ou do Firebase
-    const sourceIndicator = comment.isLocal ?
-        '<small class="badge bg-warning ms-2">Local</small>' :
-        '<small class="badge bg-success ms-2">Sincronizado</small>';
+    const sourceIndicator = '';
     
     // ✅ Badge institucional
-    const institutionalBadge = comment.isInstitutional ?
-        '<small class="badge bg-info ms-1">PGE</small>' : '';
+    const institutionalBadge =  '';
     
     // ✅ CRIAR AVATAR COM FOTO
     const userInfo = {
@@ -2022,7 +2016,7 @@ async function createLoadedCommentElement(comment) {
             <div class="comment-content flex-grow-1">
                 <div class="comment-header d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <strong class="comment-author text-primary">${escapeHtml(comment.author)}</strong>
+                        <strong class="comment-author text-secondary">${escapeHtml(comment.author)}</strong>
                         ${sourceIndicator}
                         ${institutionalBadge}
                     </div>
