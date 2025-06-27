@@ -1718,7 +1718,6 @@ img:hover {
 
 
 
-
 /* ===== SISTEMA DE COMENTÁRIOS - VERSÃO CORRIGIDA ===== */
 /* Seguindo exatamente o padrão visual da aplicação */
 
@@ -1751,29 +1750,103 @@ img:hover {
     gap: 0.5rem;
 }
 
+/* ✅ BOTÃO DE TOGGLE MELHORADO - MANTENDO COMPATIBILIDADE */
 .toggle-comments {
-    background: none;
-    border: none;
-    color: #6c757d;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #0dcaf0;
+    color: #0dcaf0;
     font-size: 0.85rem;
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(13, 202, 240, 0.1);
+    min-width: 120px;
+    justify-content: center;
+}
+
+.toggle-comments::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(13, 202, 240, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.toggle-comments:hover::before {
+    left: 100%;
 }
 
 .toggle-comments:hover {
-    background-color: #e9ecef;
-    color: #495057;
+    background: linear-gradient(135deg, #0dcaf0 0%, #0bb5d6 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 202, 240, 0.3);
+    border-color: #0bb5d6;
+}
+
+.toggle-comments:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(13, 202, 240, 0.2);
+}
+
+.toggle-comments:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 202, 240, 0.25);
 }
 
 .toggle-comments i {
-    transition: transform 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9rem;
 }
 
 .toggle-comments.expanded i {
     transform: rotate(180deg);
 }
+
+.toggle-comments:hover i {
+    transform: scale(1.1);
+}
+
+.toggle-comments.expanded:hover i {
+    transform: rotate(180deg) scale(1.1);
+}
+
+/* ✅ Efeito especial para o ícone de comentários */
+.toggle-comments .fa-comments {
+    position: relative;
+}
+
+.toggle-comments .fa-comments::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 6px;
+    height: 6px;
+    background: #0dcaf0;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.toggle-comments:hover .fa-comments::after {
+    opacity: 1;
+    transform: scale(1);
+    background: white;
+}
+
+/* ✅ RESTO DO CSS MANTIDO EXATAMENTE IGUAL */
 
 /* ✅ Conteúdo dos comentários */
 .comments-content {
@@ -1984,10 +2057,16 @@ img:hover {
     background-color: rgba(220, 53, 69, 0.1);
 }
 
-/* ✅ Responsividade */
+/* ✅ Responsividade - ATUALIZADA PARA O NOVO BOTÃO */
 @media (max-width: 768px) {
     .comments-header {
         padding: 0.5rem 0.75rem;
+    }
+    
+    .toggle-comments {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        min-width: 100px;
     }
     
     .comment-form {
@@ -2034,7 +2113,9 @@ img:hover {
     }
     
     .toggle-comments {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        padding: 0.35rem 0.6rem;
+        min-width: 90px;
     }
     
     .comment-text {
@@ -2093,13 +2174,11 @@ img:hover {
 }
 
 /* ✅ Melhorias de acessibilidade */
-.toggle-comments:focus,
 .submit-comment:focus,
 .comment-like-btn:focus {
     outline: 2px solid #0d6efd;
     outline-offset: 2px;
 }
-
 
 /* ✅ Integração com cards Bootstrap */
 .suggestion-item .comments-section {

@@ -578,15 +578,11 @@ function createPromptElement(doc) {
     return suggestionElement;
 }
 
-
 /**
- * ✅ Gera HTML do prompt - VERSÃO CORRIGIDA SIMPLES
- * Apenas move os comentários para fora do card
+ * ✅ Gera HTML do prompt - VERSÃO SEM BOTÃO DE CURTIDAS
+ * Remove o botão de curtidas, mantém apenas copiar e compartilhar
  */
 function generatePromptHTML(data, uniqueId, userLiked, docId) {
-    const likeButtonClass = userLiked ? 'btn-danger' : 'btn-outline-danger';
-    const likeButtonDisabled = userLiked ? 'disabled' : '';
-    
     // ✅ Verificar se usuário já avaliou
     const userRated = hasUserRated(docId);
     const averageRating = data.averageRating || 0;
@@ -689,14 +685,9 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                         </div>
                     </div>
                     
-                    <!-- ✅ Segunda linha: Botões de ação -->
+                    <!-- ✅ Segunda linha: Botões de ação (SEM CURTIDAS) -->
                     <div class="d-flex justify-content-end">
                         <div class="btn-group" role="group">
-                            <button class="btn btn-sm ${likeButtonClass} like-btn" 
-                                data-id="${docId}" title="Curtir" ${likeButtonDisabled}>
-                                <i class="fas fa-heart"></i> 
-                                <span class="like-count">${data.likes || 0}</span>
-                            </button>
                             <button class="btn btn-sm btn-outline-primary copy-btn" 
                                 data-id="${docId}" title="Copiar prompt">
                                 <i class="fas fa-copy"></i> 
@@ -766,6 +757,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
 
     `;
 }
+
 
 
 /**
