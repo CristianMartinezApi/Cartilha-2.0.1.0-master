@@ -1716,273 +1716,246 @@ img:hover {
 }
 
 
-
-
-/* ===== SISTEMA DE COMENTÁRIOS - VERSÃO CORRIGIDA ===== */
-/* Seguindo exatamente o padrão visual da aplicação */
+/* ===== SISTEMA DE COMENTÁRIOS - VERSÃO LIMPA E CORRIGIDA ===== */
 
 /* ✅ Seção principal de comentários */
 .comments-section {
     background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
     margin-top: 1rem;
     overflow: hidden;
-}
-
-/* ✅ Header dos comentários */
-.comments-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-    padding: 0.75rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.comments-title {
-    color: #495057;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* ✅ BOTÃO DE TOGGLE MELHORADO - MANTENDO COMPATIBILIDADE */
-.toggle-comments {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 2px solid #0dcaf0;
-    color: #0dcaf0;
-    font-size: 0.85rem;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(13, 202, 240, 0.1);
-    min-width: 120px;
-    justify-content: center;
-}
-
-.toggle-comments::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(13, 202, 240, 0.1), transparent);
-    transition: left 0.5s;
 }
 
-.toggle-comments:hover::before {
-    left: 100%;
+.comments-section-wrapper {
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
 }
 
-.toggle-comments:hover {
-    background: linear-gradient(135deg, #0dcaf0 0%, #0bb5d6 100%);
+/* ✅ BOTÃO DE TOGGLE - SEM CONFLITOS */
+.toggle-comments-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.toggle-comments-btn:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.toggle-comments-btn .comments-count {
+    background-color: #6c757d;
     color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(13, 202, 240, 0.3);
-    border-color: #0bb5d6;
+    font-size: 0.7rem;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
 }
 
-.toggle-comments:active {
-    transform: translateY(0);
-    box-shadow: 0 3px 10px rgba(13, 202, 240, 0.2);
+.toggle-comments-btn .comments-count.has-comments {
+    background-color: #0d6efd;
 }
 
-.toggle-comments:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(13, 202, 240, 0.25);
-}
-
-.toggle-comments i {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.9rem;
-}
-
-.toggle-comments.expanded i {
-    transform: rotate(180deg);
-}
-
-.toggle-comments:hover i {
-    transform: scale(1.1);
-}
-
-.toggle-comments.expanded:hover i {
-    transform: rotate(180deg) scale(1.1);
-}
-
-/* ✅ Efeito especial para o ícone de comentários */
-.toggle-comments .fa-comments {
-    position: relative;
-}
-
-.toggle-comments .fa-comments::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    width: 6px;
-    height: 6px;
-    background: #0dcaf0;
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.3s ease;
-}
-
-.toggle-comments:hover .fa-comments::after {
-    opacity: 1;
-    transform: scale(1);
-    background: white;
-}
-
-/* ✅ RESTO DO CSS MANTIDO EXATAMENTE IGUAL */
-
-/* ✅ Conteúdo dos comentários */
-.comments-content {
-    display: none;
-    background-color: #ffffff;
-}
-
-.comments-content.show {
-    display: block;
-}
-
-/* ✅ Formulário de comentário */
-.comment-form {
-    padding: 1rem;
+/* ✅ FORMULÁRIO - LIMPO */
+.comment-form-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     border-bottom: 1px solid #dee2e6;
-    background-color: #ffffff;
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+.comment-form-wrapper {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+.comment-form-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-form-title i {
+    color: #0d6efd;
+}
+
+.comment-form-layout {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.comment-form-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ✅ AVATAR */
+.user-avatar,
+.comment-avatar {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+}
+
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+}
+
+/* ✅ CAMPO DE TEXTO */
 .comment-input {
     width: 100%;
     min-height: 80px;
-    padding: 0.75rem;
     border: 1px solid #ced4da;
-    border-radius: 0.375rem;
+    border-radius: 6px;
+    padding: 0.75rem;
     font-size: 0.9rem;
-    font-family: inherit;
+    line-height: 1.5;
+    transition: border-color 0.15s ease;
     resize: vertical;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-sizing: border-box;
 }
 
 .comment-input:focus {
-    border-color: #0d6efd;
+    border-color: #86b7fe;
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
 }
 
 .comment-input::placeholder {
     color: #6c757d;
-    font-style: italic;
+    font-style: normal;
 }
 
-.comment-actions {
+/* ✅ BOTÕES DO FORMULÁRIO - PADRONIZADOS */
+.comment-form-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 0.75rem;
 }
 
-.comment-char-count {
-    font-size: 0.8rem;
+.comment-form-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* TODOS OS BOTÕES COM MESMO TAMANHO - SEM CONFLITOS */
+.clear-comment-btn,
+.submit-comment-btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 500;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.clear-comment-btn {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
     color: #6c757d;
 }
 
-.comment-char-count.warning {
-    color: #fd7e14;
+.clear-comment-btn:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
 }
 
-.comment-char-count.danger {
-    color: #dc3545;
-}
-
-.submit-comment {
+.submit-comment-btn {
     background-color: #0d6efd;
+    border-color: #0d6efd;
     color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.15s ease-in-out;
 }
 
-.submit-comment:hover:not(:disabled) {
+.submit-comment-btn:hover:not(:disabled) {
     background-color: #0b5ed7;
+    border-color: #0a58ca;
 }
 
-.submit-comment:disabled {
+.submit-comment-btn:disabled {
     background-color: #6c757d;
-    cursor: not-allowed;
+    border-color: #6c757d;
+    opacity: 0.65;
 }
 
-/* ✅ Lista de comentários */
+/* ✅ LISTA DE COMENTÁRIOS */
+.comments-list-section {
+    background-color: #ffffff;
+    padding: 1rem;
+}
+
 .comments-list {
     max-height: 400px;
     overflow-y: auto;
-    background-color: #ffffff;
+    border-radius: 6px;
 }
 
-.comments-empty {
-    padding: 2rem;
-    text-align: center;
-    color: #6c757d;
-    font-style: italic;
+.comments-container {
+    width: 100%;
 }
 
-/* ✅ Item de comentário individual */
+/* ✅ COMENTÁRIOS INDIVIDUAIS */
 .comment-item {
-    padding: 1rem;
-    border-bottom: 1px solid #f1f3f4;
     background-color: #ffffff;
-    transition: background-color 0.2s ease;
-}
-
-.comment-item:hover {
-    background-color: #f8f9fa;
+    border: 1px solid #f1f3f4;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .comment-item:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .comment-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 0.5rem;
-}
-
-.comment-avatar {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, #0d6efd, #6610f2);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-}
-
-.comment-author {
-    flex-grow: 1;
-    min-width: 0;
+    margin-bottom: 0.75rem;
 }
 
 .comment-author-name {
@@ -1996,86 +1969,197 @@ img:hover {
     font-size: 0.8rem;
     color: #6c757d;
     margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .comment-date {
-    background-color: #e9ecef;
-    color: #495057;
+    background-color: #f8f9fa;
+    color: #6c757d;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     font-size: 0.75rem;
     white-space: nowrap;
+    margin-left: auto;
 }
 
 .comment-text {
     background-color: #f8f9fa;
-    border-left: 3px solid #0d6efd;
+    border-left: 3px solid #dee2e6;
     padding: 0.75rem;
-    border-radius: 0.375rem;
-    margin: 0.5rem 0;
+    border-radius: 4px;
     font-size: 0.9rem;
-    line-height: 1.5;
+    line-height: 1.6;
     color: #212529;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 
+/* ✅ AÇÕES DO COMENTÁRIO - SEM CONFLITOS */
 .comment-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
 }
 
+/* REMOVER REGRAS CONFLITANTES ANTIGAS */
 .comment-like-btn {
     background: none;
-    border: none;
+    border: 1px solid #dee2e6;
     color: #6c757d;
     font-size: 0.8rem;
-    cursor: pointer;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease;
+    border-radius: 4px;
+    transition: all 0.15s ease;
     display: flex;
     align-items: center;
     gap: 0.25rem;
 }
 
 .comment-like-btn:hover {
-    background-color: #e9ecef;
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
     color: #495057;
 }
 
 .comment-like-btn.liked {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* ✅ ESTADOS ESPECIAIS */
+.comments-loading,
+.comments-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.comments-loading .spinner-border {
+    width: 2rem;
+    height: 2rem;
+    border-width: 0.2em;
+}
+
+.char-counter {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.char-counter.warning {
+    color: #fd7e14;
+}
+
+.char-counter.danger {
     color: #dc3545;
 }
 
-.comment-like-btn.liked:hover {
-    background-color: rgba(220, 53, 69, 0.1);
+/* ✅ SCROLLBAR */
+.comments-list::-webkit-scrollbar {
+    width: 6px;
 }
 
-/* ✅ Responsividade - ATUALIZADA PARA O NOVO BOTÃO */
+.comments-list::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 3px;
+}
+
+.comments-list::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* ✅ FOCO ACESSÍVEL */
+.toggle-comments-btn:focus,
+.submit-comment-btn:focus,
+.clear-comment-btn:focus,
+.comment-like-btn:focus {
+    outline: 2px solid #86b7fe;
+    outline-offset: 2px;
+}
+
+/* ✅ ANIMAÇÃO */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ✅ RESPONSIVIDADE */
 @media (max-width: 768px) {
-    .comments-header {
-        padding: 0.5rem 0.75rem;
+    .comment-form-section {
+        padding: 1rem;
     }
     
-    .toggle-comments {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-        min-width: 100px;
-    }
-    
-    .comment-form {
+    .comment-form-wrapper {
         padding: 0.75rem;
+    }
+    
+    .comment-form-layout {
+        gap: 0.75rem;
+    }
+    
+    .comment-input {
+        min-height: 70px;
+        font-size: 16px; /* Evita zoom no iOS */
+    }
+    
+    .user-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9rem;
+    }
+    
+    .comment-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .comment-form-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+    
+    .comment-form-buttons {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .comment-form-section {
+        padding: 0.75rem;
+    }
+    
+    .comment-form-wrapper {
+        padding: 0.5rem;
+    }
+    
+    .comment-form-layout {
+        gap: 0.5rem;
     }
     
     .comment-input {
         min-height: 60px;
-        font-size: 16px; /* Evita zoom no iOS */
+    }
+    
+    .comment-form-buttons {
+        flex-direction: column;
+    }
+    
+    .clear-comment-btn,
+    .submit-comment-btn {
+        width: 100%;
+        justify-content: center;
     }
     
     .comment-item {
@@ -2086,182 +2170,7 @@ img:hover {
         gap: 0.5rem;
     }
     
-    .comment-avatar {
-        width: 28px;
-        height: 28px;
-        font-size: 0.7rem;
-    }
-    
     .comment-author-email {
         display: none;
-    }
-    
-    .comment-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: stretch;
-    }
-    
-    .submit-comment {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .comments-title {
-        font-size: 0.85rem;
-    }
-    
-    .toggle-comments {
-        font-size: 0.75rem;
-        padding: 0.35rem 0.6rem;
-        min-width: 90px;
-    }
-    
-    .comment-text {
-        padding: 0.5rem;
-        font-size: 0.85rem;
-    }
-    
-    .comment-date {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.4rem;
-    }
-}
-
-/* ✅ Estados de carregamento */
-.comment-form.loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.submit-comment.loading {
-    position: relative;
-}
-
-.submit-comment.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* ✅ Estados de erro */
-.comment-input.error {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-}
-
-.comment-error-message {
-    color: #dc3545;
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-/* ✅ Melhorias de acessibilidade */
-.submit-comment:focus,
-.comment-like-btn:focus {
-    outline: 2px solid #0d6efd;
-    outline-offset: 2px;
-}
-
-/* ✅ Integração com cards Bootstrap */
-.suggestion-item .comments-section {
-    border-top: none;
-    border-radius: 0;
-    margin-top: 0;
-}
-
-.suggestion-item:last-child .comments-section {
-    border-bottom-left-radius: 0.375rem;
-    border-bottom-right-radius: 0.375rem;
-}
-
-/* ✅ Scrollbar personalizada para lista de comentários */
-.comments-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.comments-list::-webkit-scrollbar-track {
-    background: #f1f3f4;
-}
-
-.comments-list::-webkit-scrollbar-thumb {
-    background: #ced4da;
-    border-radius: 3px;
-}
-
-.comments-list::-webkit-scrollbar-thumb:hover {
-    background: #adb5bd;
-}
-
-/* ✅ Animação suave para mostrar/ocultar */
-.comments-content {
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.comments-content:not(.show) {
-    max-height: 0;
-    opacity: 0;
-}
-
-.comments-content.show {
-    max-height: 600px;
-    opacity: 1;
-}
-
-/* ✅ Badge de contagem de comentários */
-.comments-count {
-    background-color: #6c757d;
-    color: white;
-    font-size: 0.7rem;
-    padding: 0.15rem 0.4rem;
-    border-radius: 0.75rem;
-    font-weight: 500;
-    min-width: 1.2rem;
-    text-align: center;
-}
-
-.comments-count.has-comments {
-    background-color: #0d6efd;
-}
-
-/* ✅ Melhorias para impressão */
-@media print {
-    .comments-section {
-        box-shadow: none;
-        border: 1px solid #000;
-    }
-    
-    .comment-form,
-    .comment-like-btn,
-    .toggle-comments {
-        display: none;
-    }
-    
-    .comments-content {
-        display: block !important;
-        max-height: none !important;
-    }
-    
-    .comment-item {
-        break-inside: avoid;
-        border-bottom: 1px solid #ccc;
     }
 }

@@ -577,19 +577,18 @@ function createPromptElement(doc) {
     
     return suggestionElement;
 }
-
 /**
- * ✅ Gera HTML do prompt - VERSÃO SEM BOTÃO DE CURTIDAS
- * Remove o botão de curtidas, mantém apenas copiar e compartilhar
+ * ✅ NOVA VERSÃO - Comentários organizados e limpos
+ * Substitui a implementação atual por uma versão mais clara
  */
 function generatePromptHTML(data, uniqueId, userLiked, docId) {
-    // ✅ Verificar se usuário já avaliou
     const userRated = hasUserRated(docId);
     const averageRating = data.averageRating || 0;
     const totalRatings = data.totalRatings || 0;
     
     return `
         <div class="card mb-2">
+            <!-- HEADER DO PROMPT -->
             <div class="card-header p-0">
                 <button class="btn btn-link w-100 p-3 text-decoration-none accordion-toggle border-0" 
                         type="button" 
@@ -603,7 +602,6 @@ function generatePromptHTML(data, uniqueId, userLiked, docId) {
                                 <i class="fas fa-file-alt text-primary"></i>
                                 ${escapeHtml(data.title || 'Sem título')}
                             </h6>
-                            <!-- ✅ Resumo das estrelas no header -->
                             <div class="d-flex align-items-center gap-2 mt-1">
                                 <div class="stars-summary">
                                     ${generateStarsDisplay(averageRating)}
@@ -624,14 +622,16 @@ function generatePromptHTML(data, uniqueId, userLiked, docId) {
                 </button>
             </div>
             
+            <!-- CONTEÚDO DO PROMPT -->
             <div id="prompt-${uniqueId}" class="collapse" data-bs-parent="#suggestions-accordion">
                 <div class="card-body">
+                    <!-- Aviso importante -->
                     <div class="alert alert-warning border-warning mb-3" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Importante:</strong> Sempre valide e adapte este prompt às suas necessidades específicas antes de usar. 
-                        Verifique se o conteúdo está adequado ao seu contexto e objetivos.
+                        <strong>Importante:</strong> Sempre valide e adapte este prompt às suas necessidades específicas antes de usar.
                     </div>
 
+                    <!-- Texto do prompt -->
                     <div class="mb-3">
                         <h6 class="text-primary mb-2">
                             <i class="fas fa-pen me-1"></i> Texto do Prompt:
@@ -641,6 +641,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                         </div>
                     </div>
                     
+                    <!-- Comentário do autor (se existir) -->
                     ${data.comment && data.comment !== 'Sem comentário' ? `
                     <div class="mb-3">
                         <h6 class="text-info mb-2">
@@ -653,9 +654,10 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                     ` : ''}
                 </div>
                 
-                <div class="card-footer">
-                    <!-- ✅ Primeira linha: Informações do prompt -->
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                <!-- FOOTER COM INFORMAÇÕES E AÇÕES -->
+                <div class="card-footer bg-light">
+                    <!-- Linha 1: Informações do prompt -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center gap-3 flex-wrap">
                             <small class="text-muted">
                                 <i class="fas fa-calendar-alt me-1"></i>
@@ -673,7 +675,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                             }
                         </div>
                         
-                        <!-- ✅ Avaliação interativa com estrelas clicáveis -->
+                        <!-- Avaliação com estrelas -->
                         <div class="rating-display d-flex align-items-center">
                             <div class="stars-container me-2" data-prompt-id="${docId}" data-user-rated="${userRated}">
                                 ${generateStarsHTML(averageRating, userRated, docId)}
@@ -685,8 +687,8 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                         </div>
                     </div>
                     
-                    <!-- ✅ Segunda linha: Botões de ação (SEM CURTIDAS) -->
-                    <div class="d-flex justify-content-end">
+                    <!-- Linha 2: Botões de ação -->
+                    <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group" role="group">
                             <button class="btn btn-sm btn-outline-primary copy-btn" 
                                 data-id="${docId}" title="Copiar prompt">
@@ -699,64 +701,139 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                                 <span class="d-none d-md-inline ms-1">Compartilhar</span>
                             </button>
                         </div>
+                        
+                        <!-- Botão de comentários separado e destacado -->
+                        <button class="btn btn-sm btn-outline-info toggle-comments-btn" 
+                                type="button"
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#comments-${docId}"
+                                aria-expanded="false" 
+                                aria-controls="comments-${docId}"
+                                data-prompt-id="${docId}">
+                            <i class="fas fa-comments me-1"></i>
+                            <span class="d-none d-sm-inline">Comentários</span>
+                            <span class="badge bg-info ms-1 comments-count">0</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- ✅ COMENTÁRIOS CORRIGIDOS -->
-<div class="comments-section" data-prompt-id="${docId}">
-    <div class="comments-header">
-        <button class="toggle-comments"
-                type="button"
-                data-prompt-id="${docId}"
-                data-bs-toggle="collapse"
-                data-bs-target="#comments-${docId}"
-                aria-expanded="false"
-                aria-controls="comments-${docId}">
-            <i class="fas fa-comments me-2"></i>
-            <span class="comments-title">Comentários</span>
-            <span class="comments-count">(0)</span>
-            <i class="fas fa-chevron-down ms-auto"></i>
-        </button>
-    </div>
-    
-    <div id="comments-${docId}" class="collapse comments-content">
-        <div class="comments-list">
-            <div class="no-comments text-center">
-                <i class="fas fa-comment-slash"></i>
-                <p class="mb-0">Nenhum comentário ainda.</p>
-                <small class="text-muted">Seja o primeiro a comentar!</small>
-            </div>
+        <!-- ✅ SEÇÃO DE COMENTÁRIOS SEPARADA E ORGANIZADA -->
+        <div id="comments-${docId}" class="collapse comments-section-wrapper">
+            ${generateCleanCommentsSection(docId)}
         </div>
-        
-        <div class="comment-form">
-            <div class="comment-form-header">
-                <h6 class="mb-2">
-                    <i class="fas fa-plus-circle me-1"></i>
-                    Adicionar Comentário
-                </h6>
-            </div>
-            
-            <div class="comment-form-body">
-                <textarea class="comment-input"
-                          placeholder="Compartilhe sua experiência com este prompt, dicas de uso ou sugestões de melhoria..."
-                          maxlength="500"
-                          rows="3"></textarea>
-                <div class="comment-form-footer">
-                    <small class="char-counter text-muted">0/500</small>
-                    <button class="submit-comment" data-prompt-id="${docId}">
-                        <i class="fas fa-paper-plane me-1"></i>
-                        Comentar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
     `;
 }
+
+/**
+ * ✅ FUNÇÃO CORRIGIDA - Seção de comentários limpa e simples
+ */
+function generateCleanCommentsSection(promptId) {
+    return `
+        <div class="comments-section" data-prompt-id="${promptId}">
+            <div class="comments-container card">
+                
+                <!-- ✅ ÁREA DE NOVO COMENTÁRIO - SIMPLIFICADA -->
+                <div class="comment-form-section">
+                    <h6 class="comment-form-title">
+                        <i class="fas fa-plus-circle"></i>
+                        Adicionar Comentário
+                    </h6>
+                    
+                    <div class="comment-form-wrapper">
+                        <div class="comment-form-layout">
+                            <!-- Avatar simples -->
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            
+                            <!-- Área do formulário -->
+                            <div class="comment-form-content">
+                                <textarea class="comment-input" 
+                                          placeholder="Compartilhe sua experiência com este prompt..."
+                                          rows="3"
+                                          maxlength="500"
+                                          data-prompt-id="${promptId}"></textarea>
+                                
+                                <div class="comment-form-footer">
+                                    <span class="char-counter">0/500</span>
+                                    
+                                    <div class="comment-form-buttons">
+                                        <button type="button" class="clear-comment-btn">
+                                            <i class="fas fa-eraser"></i>
+                                            Limpar
+                                        </button>
+                                        <button type="button" class="submit-comment-btn" data-prompt-id="${promptId}">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Enviar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ✅ LISTA DE COMENTÁRIOS - SIMPLIFICADA -->
+                <div class="comments-list-section">
+                    <div class="comments-list">
+                        <div class="comments-loading">
+                            <div class="spinner-border" role="status"></div>
+                            <p>Carregando comentários...</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * ✅ FUNÇÃO PARA GERAR COMENTÁRIO INDIVIDUAL - LIMPA
+ */
+function generateCommentHTML(comment, commentId) {
+    const userInfo = comment.userInfo || {};
+    const userName = userInfo.userName || 'Usuário Anônimo';
+    const userEmail = userInfo.userEmail || '';
+    const timestamp = comment.timestamp;
+    const likes = comment.likes || 0;
+    
+    // Formatar data
+    let dateStr = 'Agora';
+    if (timestamp && timestamp.toDate) {
+        dateStr = formatDate(timestamp);
+    }
+    
+    // Avatar - primeira letra do nome
+    const avatarLetter = userName.charAt(0).toUpperCase();
+    
+    return `
+        <div class="comment-item" data-comment-id="${commentId}">
+            <div class="comment-header">
+                <div class="comment-avatar">${avatarLetter}</div>
+                
+                <div class="comment-author">
+                    <div class="comment-author-name">${escapeHtml(userName)}</div>
+                    ${userEmail ? `<div class="comment-author-email">${escapeHtml(userEmail)}</div>` : ''}
+                </div>
+                
+                <div class="comment-date">${dateStr}</div>
+            </div>
+            
+            <div class="comment-text">${escapeHtml(comment.text)}</div>
+            
+            <div class="comment-footer">
+                <button class="comment-like-btn" data-comment-id="${commentId}">
+                    <i class="fas fa-thumbs-up"></i>
+                    <span class="like-count">${likes}</span>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
 
 
 
