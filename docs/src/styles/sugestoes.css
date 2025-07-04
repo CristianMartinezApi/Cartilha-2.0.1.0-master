@@ -1739,36 +1739,35 @@ img:hover {
 
 /* ✅ BOTÃO DE TOGGLE - SEM CONFLITOS */
 .toggle-comments-btn {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    color: #495057;
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    position: relative;
+    transition: all 0.3s ease;
+    border-width: 1px;
     font-weight: 500;
 }
 
-.toggle-comments-btn:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
-    color: #495057;
-}
-
-.toggle-comments-btn .comments-count {
-    background-color: #6c757d;
+/* ✅ Hover states uniformes */
+.copy-btn:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
     color: white;
-    font-size: 0.7rem;
-    min-width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9px;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
 }
 
-.toggle-comments-btn .comments-count.has-comments {
-    background-color: #0d6efd;
+.share-btn:hover {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+.toggle-comments-btn:hover {
+    background-color: var(--bs-info);
+    border-color: var(--bs-info);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(13, 202, 240, 0.3);
 }
 
 /* ✅ FORMULÁRIO - LIMPO */

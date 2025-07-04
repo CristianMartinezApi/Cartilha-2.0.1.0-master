@@ -687,33 +687,39 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                         </div>
                     </div>
                     
-                    <!-- Linha 2: Botões de ação -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group" role="group">
+                    <!-- ✅ LINHA 2: BOTÕES DE AÇÃO - TODOS UNIFORMES -->
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="btn-group w-100" role="group" aria-label="Ações do prompt">
+                            <!-- Botão Copiar -->
                             <button class="btn btn-sm btn-outline-primary copy-btn" 
-                                data-id="${docId}" title="Copiar prompt">
-                                <i class="fas fa-copy"></i> 
-                                <span class="d-none d-md-inline ms-1">Copiar</span>
+                                    data-id="${docId}" 
+                                    title="Copiar prompt">
+                                <i class="fas fa-copy me-1"></i>
+                                <span class="d-none d-sm-inline">Copiar</span>
                             </button>
+                            
+                            <!-- Botão Compartilhar -->
                             <button class="btn btn-sm btn-outline-secondary share-btn" 
-                                data-id="${docId}" title="Compartilhar">
-                                <i class="fas fa-share-alt"></i> 
-                                <span class="d-none d-md-inline ms-1">Compartilhar</span>
+                                    data-id="${docId}" 
+                                    title="Compartilhar">
+                                <i class="fas fa-share-alt me-1"></i>
+                                <span class="d-none d-sm-inline">Compartilhar</span>
+                            </button>
+                            
+                            <!-- Botão Comentários -->
+                            <button class="btn btn-sm btn-outline-info toggle-comments-btn" 
+                                    type="button"
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#comments-${docId}"
+                                    aria-expanded="false" 
+                                    aria-controls="comments-${docId}"
+                                    data-prompt-id="${docId}"
+                                    title="Ver comentários">
+                                <i class="fas fa-comments me-1"></i>
+                                <span class="d-none d-sm-inline">Comentários</span>
+                                <span class="badge bg-info ms-1 comments-count">0</span>
                             </button>
                         </div>
-                        
-                        <!-- Botão de comentários separado e destacado -->
-                        <button class="btn btn-sm btn-outline-info toggle-comments-btn" 
-                                type="button"
-                                data-bs-toggle="collapse" 
-                                data-bs-target="#comments-${docId}"
-                                aria-expanded="false" 
-                                aria-controls="comments-${docId}"
-                                data-prompt-id="${docId}">
-                            <i class="fas fa-comments me-1"></i>
-                            <span class="d-none d-sm-inline">Comentários</span>
-                            <span class="badge bg-info ms-1 comments-count">0</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -789,6 +795,7 @@ function generateCleanCommentsSection(promptId) {
         </div>
     `;
 }
+
 
 /**
  * ✅ FUNÇÃO PARA GERAR COMENTÁRIO INDIVIDUAL - LIMPA
