@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sugestões e Interações - Guia de Uso Seguro da IA na PGE-SC</title>
@@ -34,9 +33,8 @@
     
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="./src/styles/sugestoes.css" />
-    
-    
 </head>
+
 <style>
 /* ✅ ESTILOS PARA O CARD DE INFORMAÇÕES DO USUÁRIO */
 .user-info-card {
@@ -52,7 +50,6 @@
 .user-info-card:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
-    /* Removido: background: rgba(255, 255, 255, 1) !important; */
 }
 
 /* Avatar do usuário */
@@ -153,7 +150,6 @@
 }
 </style>
 
-
 <body>
     <div class="container py-4">
       <!-- ✅ SEÇÃO DE INFORMAÇÕES DO USUÁRIO -->
@@ -236,7 +232,7 @@
               <div class="d-flex gap-2">
                 <!-- ✅ Campo de busca -->
                 <div class="input-group" style="max-width: 200px;">
-                  <input type="text" class="form-control form-control-sm" 
+                  <input type="text" class="form-control form-control-sm"
                          id="search-input" placeholder="Buscar...">
                   <span class="input-group-text">
                     <i class="fas fa-search"></i>
@@ -386,7 +382,7 @@
       </div>
     </div>
 
-       <!-- ✅ SCRIPTS - ORDEM OTIMIZADA -->
+        <!-- ✅ SCRIPTS NA ORDEM CORRETA -->
     
     <!-- 1. Firebase Core -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -396,141 +392,240 @@
     <!-- 2. Firebase Inicialização -->
     <script src="./src/scripts/firebase-init.js"></script>
     
-    <!-- 3. Bootstrap JS -->
+    <!-- ✅ 3. SISTEMA DE AUTENTICAÇÃO - ADICIONADO AQUI -->
+    <script src="./src/scripts/sugestoes-auth.js"></script>
+    
+    <!-- 4. Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-    <!-- 4. Sistema de Comentários -->
+    
+    <!-- 5. Sistema de Comentários -->
     <script src="./src/scripts/comments-utils.js"></script>
     <script src="./src/scripts/comments-ui.js"></script>
     <script src="./src/scripts/comments-system.js"></script>
     
-    <!-- ✅ 5. Verificação de Autenticação Simples -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('🔍 Verificando autenticação...');
-        
-        const waitForFirebase = () => {
-            return new Promise((resolve) => {
-                const check = () => {
-                    if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
-                        resolve();
-                    } else {
-                        setTimeout(check, 100);
-                    }
-                };
-                check();
-            });
-        };
-        
-        waitForFirebase().then(() => {
-            console.log('✅ Firebase carregado');
-            
-            firebase.auth().onAuthStateChanged(user => {
-                if (!user) {
-                    console.log('❌ Usuário não logado');
-                    showAuthError('Você precisa estar logado para acessar esta página.');
-                    setTimeout(() => {
-                        window.location.href = 'sugestoes-login.html';
-                    }, 2000);
-                } else if (!user.email.endsWith('@pge.sc.gov.br')) {
-                    console.log('❌ Conta não institucional:', user.email);
-                    showAuthError('Apenas contas @pge.sc.gov.br são permitidas.');
-                    firebase.auth().signOut();
-                    setTimeout(() => {
-                        window.location.href = 'sugestoes-login.html';
-                    }, 2000);
-                } else {
-                    console.log('✅ Usuário autorizado:', user.email);
-                    updateUserDisplay(user);
-                    setupLogout();
-                }
-            });
-        });
-        
-        function showAuthError(message) {
-            const container = document.querySelector('.container');
-            if (container) {
-                const alert = document.createElement('div');
-                alert.className = 'alert alert-warning alert-dismissible fade show';
-                alert.innerHTML = `
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Acesso Restrito:</strong> ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
-                container.insertBefore(alert, container.firstChild);
-            }
-        }
-        
-        async function updateUserDisplay(user) {
-    const displayName = document.getElementById('user-display-name');
-    const displayEmail = document.getElementById('user-display-email');
-    const loading = document.getElementById('user-loading-display');
-    const userInfo = document.getElementById('user-info-display');
-    const avatarContainer = document.querySelector('.user-avatar'); // ✅ NOVO
-    
-    if (displayName) displayName.textContent = user.displayName || 'Usuário';
-    if (displayEmail) displayEmail.textContent = user.email;
-    if (loading) loading.style.display = 'none';
-    if (userInfo) userInfo.style.display = 'block';
-    
-    // ✅ ATUALIZAR AVATAR COM FOTO
-    if (avatarContainer) {
-        try {
-            // Tentar obter foto do usuário
-            let photoURL = user.photoURL; // Foto do Firebase Auth
-            
-            // Se não tiver foto no Firebase Auth, tentar capturar do sistema
-            if (!photoURL && typeof captureUserInfo === 'function') {
-                const userDetails = await captureUserInfo();
-                photoURL = userDetails.photoURL || userDetails.profilePhoto || userDetails.avatar;
-            }
-            
-            if (photoURL) {
-                avatarContainer.innerHTML = `
-                    <img src="${photoURL}" 
-                         alt="Foto do usuário"
-                         class="user-header-photo rounded-circle"
-                         style="width: 32px; height: 32px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"
-                         onload="console.log('✅ Foto do cabeçalho carregada')">
-                    <i class="fas fa-user-circle fa-lg backup-header-avatar" style="display: none; color: #667eea;"></i>
-                `;
-            } else {
-                // Manter ícone padrão se não houver foto
-                avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
-            }
-            
-        } catch (error) {
-            console.error('Erro ao carregar foto do cabeçalho:', error);
-            // Manter ícone padrão em caso de erro
-            avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
-        }
-    }
-}
-
-        
-        function setupLogout() {
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    if (confirm('Deseja realmente sair?')) {
-                        firebase.auth().signOut().then(() => {
-                            localStorage.removeItem('lastLoginTime');
-                            window.location.href = 'sugestoes-login.html';
-                        });
-                    }
-                });
-            }
-        }
-    });
-    </script>
-    
-    <!-- <script src="./src/scripts/user-display.js"></script> -->
-    
     <!-- 6. Lógica Principal da Página -->
     <script src="./src/scripts/sugestoes.js"></script>
     
-    <!-- ✅ 7. Script de Inicialização Final -->
+    <!-- ✅ 7. Verificação com DEBUG TOTAL -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🔍 === INICIANDO DEBUG COMPLETO ===');
+    
+    const waitForFirebase = () => {
+        return new Promise((resolve) => {
+            const check = () => {
+                if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
+                    console.log('✅ Firebase carregado');
+                    resolve();
+                } else {
+                    console.log('⏳ Aguardando Firebase...');
+                    setTimeout(check, 100);
+                }
+            };
+            check();
+        });
+    };
+    
+    waitForFirebase().then(() => {
+        console.log('🚀 Firebase pronto, iniciando verificação...');
+        
+        firebase.auth().onAuthStateChanged(async (user) => {
+            console.log('🔄 === AUTH STATE CHANGED ===');
+            
+            if (!user) {
+                console.log('❌ Nenhum usuário logado');
+                showAuthError('Você precisa estar logado para acessar esta página.');
+                setTimeout(() => {
+                    console.log('🔄 Redirecionando para login...');
+                    window.location.href = 'sugestoes-login.html';
+                }, 2000);
+                return;
+            }
+            
+            console.log('👤 === USUÁRIO DETECTADO ===');
+            console.log('📧 Email:', user.email);
+            console.log('🆔 UID:', user.uid);
+            console.log('👤 DisplayName:', user.displayName);
+            console.log('🔗 PhotoURL:', user.photoURL);
+            console.log('🏢 Provider:', user.providerData[0]?.providerId);
+            
+            // ✅ VERIFICAR DOMÍNIO
+            const email = user.email;
+            const domain = email.split('@')[1];
+            
+            console.log('🔍 === VERIFICAÇÃO DE DOMÍNIO ===');
+            console.log('📧 Email completo:', email);
+            console.log('🌐 Domínio extraído:', domain);
+            console.log('✅ Domínio esperado: pge.sc.gov.br');
+            console.log('🔍 Domínio válido?', domain === 'pge.sc.gov.br');
+            
+            if (domain !== 'pge.sc.gov.br') {
+                console.log('❌ DOMÍNIO INVÁLIDO!');
+                console.log('❌ Esperado: pge.sc.gov.br');
+                console.log('❌ Recebido:', domain);
+                
+                showAuthError('Acesso não autorizado. Apenas contas @pge.sc.gov.br são permitidas.');
+                
+                setTimeout(async () => {
+                    console.log('🚪 Fazendo logout por domínio inválido...');
+                    await firebase.auth().signOut();
+                    window.location.href = 'sugestoes-login.html';
+                }, 2000);
+                return;
+            }
+            
+            console.log('✅ DOMÍNIO VÁLIDO!');
+            
+            // ✅ VERIFICAR SE É ADMIN (só para info)
+            try {
+                console.log('🔍 === VERIFICANDO SE É ADMIN ===');
+                const adminDoc = await window.db.collection('admins').doc(user.uid).get();
+                
+                if (adminDoc.exists) {
+                    console.log('👑 É ADMIN:', adminDoc.data());
+                } else {
+                    console.log('👤 NÃO é admin (usuário normal)');
+                }
+            } catch (error) {
+                console.log('⚠️ Erro ao verificar admin:', error);
+            }
+            
+            // ✅ SALVAR DADOS DO USUÁRIO
+            try {
+                console.log('💾 === SALVANDO DADOS DO USUÁRIO ===');
+                
+                const userData = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    domain: domain,
+                    department: 'PGE-SC',
+                    role: 'user',
+                    permissions: ['comment', 'suggest', 'like', 'rate'],
+                    isInstitutional: true,
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    authProvider: user.providerData[0]?.providerId,
+                    isActive: true,
+                    sessionType: 'permanent'
+                };
+                
+                await window.db
+                    .collection('sugestoes_users')
+                    .doc(user.uid)
+                    .set(userData, { merge: true });
+                
+                console.log('✅ Dados salvos com sucesso!');
+                
+            } catch (error) {
+                console.error('⚠️ Erro ao salvar dados:', error);
+            }
+            
+            // ✅ ATUALIZAR INTERFACE
+            console.log('🎨 === ATUALIZANDO INTERFACE ===');
+            updateUserDisplay(user);
+            setupLogout();
+            
+            console.log('🎉 === USUÁRIO AUTORIZADO COM SUCESSO! ===');
+            console.log('✅ Usuário pode usar a página de sugestões');
+        });
+    });
+    
+    function showAuthError(message) {
+        console.log('⚠️ Mostrando erro:', message);
+        const container = document.querySelector('.container');
+        if (container) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-warning alert-dismissible fade show';
+            alert.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Acesso Restrito:</strong> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            container.insertBefore(alert, container.firstChild);
+        }
+    }
+    
+    function updateUserDisplay(user) {
+        console.log('🎨 Atualizando display do usuário...');
+        
+        const displayName = document.getElementById('user-display-name');
+        const displayEmail = document.getElementById('user-display-email');
+        const loading = document.getElementById('user-loading-display');
+        const userInfo = document.getElementById('user-info-display');
+        const avatarContainer = document.querySelector('.user-avatar');
+        
+        const userName = user.displayName || user.email.split('@')[0];
+        
+        if (displayName) {
+            displayName.textContent = userName;
+            console.log('✅ Nome atualizado:', userName);
+        }
+        
+        if (displayEmail) {
+            displayEmail.textContent = user.email;
+            console.log('✅ Email atualizado:', user.email);
+        }
+        
+        if (loading) {
+            loading.style.display = 'none';
+            console.log('✅ Loading ocultado');
+        }
+        
+        if (userInfo) {
+            userInfo.style.display = 'block';
+            console.log('✅ Info do usuário mostrada');
+        }
+        
+        if (avatarContainer) {
+            try {
+                if (user.photoURL) {
+                    avatarContainer.innerHTML = `
+                        <img src="${user.photoURL}"
+                             alt="Foto do usuário"
+                             class="user-header-photo rounded-circle"
+                             style="width: 32px; height: 32px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                        <i class="fas fa-user-circle fa-lg backup-header-avatar" style="display: none; color: #667eea;"></i>
+                    `;
+                    console.log('✅ Avatar com foto carregado');
+                } else {
+                    avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
+                    console.log('✅ Avatar padrão carregado');
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar avatar:', error);
+                avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
+            }
+        }
+        
+        console.log('✅ Interface atualizada completamente');
+    }
+    
+    function setupLogout() {
+        console.log('🚪 Configurando logout...');
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Deseja realmente sair?')) {
+                    console.log('🚪 Logout confirmado pelo usuário');
+                    firebase.auth().signOut().then(() => {
+                        console.log('✅ Logout realizado');
+                        window.location.href = 'sugestoes-login.html';
+                    });
+                }
+            });
+            console.log('✅ Logout configurado');
+        } else {
+            console.log('⚠️ Botão de logout não encontrado');
+        }
+    }
+});
+</script>
+
+    
+    <!-- ✅ 8. Script de Inicialização Final -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         console.log('🚀 Página totalmente carregada');
@@ -541,9 +636,14 @@
           } else {
             console.warn('⚠️ Sistema de comentários não carregado');
           }
+          
+          if (typeof SugestoesAuth !== 'undefined') {
+            console.log('✅ Sistema de autenticação disponível');
+          } else {
+            console.warn('⚠️ Sistema de autenticação não carregado');
+          }
         }, 1000);
       });
     </script>
   </body>
 </html>
-

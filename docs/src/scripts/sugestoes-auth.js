@@ -40,11 +40,11 @@ const SugestoesAuth = {
     },
 
     /**
-     * ✅ Verificar autenticação SEM TIMEOUT
+     * ✅ Verificar autenticação SEM TIMEOUT - COM DEBUG COMPLETO
      */
     async checkAuthentication() {
         try {
-            console.log('🔍 Verificando autenticação (SEM TIMEOUT)...');
+            console.log('🔍 Verificando autenticação para USUÁRIOS GERAIS...');
             
             if (typeof firebase === 'undefined' || !firebase.auth) {
                 throw new Error('Firebase não está inicializado');
@@ -65,31 +65,63 @@ const SugestoesAuth = {
                         return;
                     }
 
+                    console.log('👤 USUÁRIO DETECTADO:');
+                    console.log('📧 Email:', user.email);
+                    console.log('🆔 UID:', user.uid);
+                    console.log('👤 DisplayName:', user.displayName);
+
                     try {
-                        const profile = await this.getUserProfile(user);
+                        // ✅ VERIFICAR APENAS DOMÍNIO (não admin)
+                        const email = user.email;
+                        const domain = email.split('@')[1];
                         
-                        if (!profile.isAuthorized) {
-                            console.log('❌ Usuário não autorizado:', user.email);
+                        console.log('🔍 VERIFICAÇÃO DE DOMÍNIO:');
+                        console.log('- Email completo:', email);
+                        console.log('- Domínio extraído:', domain);
+                        console.log('- Domínios permitidos:', this.config.allowedDomains);
+                        console.log('- Domínio válido?', this.config.allowedDomains.includes(domain));
+                        
+                        if (!this.config.allowedDomains.includes(domain)) {
+                            console.log('❌ Domínio não autorizado:', email);
                             await firebase.auth().signOut();
                             resolve({
                                 isAuthenticated: false,
                                 user: null,
                                 profile: null,
-                                reason: 'not_authorized'
+                                reason: 'domain_not_allowed'
                             });
                             return;
                         }
 
-                        // ✅ REMOVER VERIFICAÇÃO DE TIMEOUT
-                        console.log('✅ Usuário autenticado (SESSÃO PERMANENTE):', user.email);
+                        // ✅ USUÁRIO AUTORIZADO (qualquer @pge.sc.gov.br)
+                        console.log('✅ Usuário autorizado (domínio válido):', email);
                         
-                        // ✅ NÃO ATUALIZAR TIMESTAMP (não precisamos mais)
+                        const profile = await this.getUserProfile(user);
+                        
+                        console.log('📊 PERFIL GERADO:');
+                        console.log('- isAuthorized:', profile.isAuthorized);
+                        console.log('- isAdmin:', profile.isAdmin);
+                        console.log('- role:', profile.role);
+                        console.log('- permissions:', profile.permissions);
+                        
+                        if (!profile.isAuthorized) {
+                            console.log('❌ Perfil não autorizado:', profile.reason);
+                            resolve({
+                                isAuthenticated: false,
+                                user: null,
+                                profile: null,
+                                reason: profile.reason
+                            });
+                            return;
+                        }
+                        
+                        console.log('✅ AUTENTICAÇÃO COMPLETA - SESSÃO PERMANENTE ATIVA');
                         
                         resolve({
                             isAuthenticated: true,
                             user: user,
                             profile: profile,
-                            reason: 'authenticated_permanent'
+                            reason: 'authenticated_domain'
                         });
 
                     } catch (error) {
@@ -116,24 +148,53 @@ const SugestoesAuth = {
     },
 
     /**
-     * ✅ Obter perfil do usuário
+     * ✅ Obter perfil do usuário - COM DEBUG COMPLETO
      */
     async getUserProfile(user) {
         try {
+            console.log('🔍 GERANDO PERFIL DO USUÁRIO...');
+            
             const email = user.email;
             const domain = email.split('@')[1];
             
+            console.log('📧 Email:', email);
+            console.log('🌐 Domínio:', domain);
+            
+            // ✅ VERIFICAR APENAS DOMÍNIO
             const isAuthorized = this.config.allowedDomains.includes(domain);
             
+            console.log('✅ Domínio autorizado?', isAuthorized);
+            
             if (!isAuthorized) {
+                console.log('❌ DOMÍNIO NÃO AUTORIZADO');
                 return {
                     isAuthorized: false,
                     reason: 'domain_not_allowed'
                 };
             }
 
+            // ✅ VERIFICAR SE É ADMIN (opcional, não obrigatório)
+            let isAdmin = false;
+            let adminData = {};
+            
+            try {
+                console.log('🔍 Verificando se é admin...');
+                const adminDoc = await window.db.collection('admins').doc(user.uid).get();
+                if (adminDoc.exists) {
+                    isAdmin = true;
+                    adminData = adminDoc.data();
+                    console.log('👑 É ADMIN:', adminData);
+                } else {
+                    console.log('👤 NÃO é admin (usuário normal)');
+                }
+            } catch (error) {
+                console.log('ℹ️ Erro ao verificar admin (não é problema):', error.message);
+            }
+
+            // ✅ DADOS ADICIONAIS DO USUÁRIO
             let additionalData = {};
             try {
+                console.log('🔍 Buscando dados adicionais...');
                 const userDoc = await window.db
                     .collection('sugestoes_users')
                     .doc(user.uid)
@@ -141,29 +202,56 @@ const SugestoesAuth = {
                 
                 if (userDoc.exists) {
                     additionalData = userDoc.data();
+                    console.log('📊 Dados adicionais encontrados:', additionalData);
+                } else {
+                    console.log('ℹ️ Nenhum dado adicional encontrado');
                 }
             } catch (error) {
-                console.log('ℹ️ Dados adicionais não encontrados');
+                console.log('ℹ️ Erro ao buscar dados adicionais:', error.message);
             }
 
-            return {
+            // ✅ DETECTAR PROVEDOR
+            let authProvider = 'unknown';
+            if (user.providerData && user.providerData.length > 0) {
+                const providerId = user.providerData[0].providerId;
+                switch (providerId) {
+                    case 'google.com': authProvider = 'google'; break;
+                    case 'microsoft.com': authProvider = 'microsoft'; break;
+                    case 'password': authProvider = 'email'; break;
+                    default: authProvider = providerId;
+                }
+            }
+
+            const finalProfile = {
                 isAuthorized: true,
                 uid: user.uid,
                 email: email,
                 displayName: user.displayName || additionalData.displayName || email.split('@')[0],
                 photoURL: user.photoURL || additionalData.photoURL || null,
                 domain: domain,
-                department: additionalData.department || 'PGE-SC',
-                role: additionalData.role || 'user',
-                permissions: additionalData.permissions || ['comment', 'suggest', 'like', 'rate'],
+                department: additionalData.department || adminData.department || 'PGE-SC',
+                role: isAdmin ? 'admin' : 'user',
+                permissions: isAdmin ? 
+                    ['comment', 'suggest', 'like', 'rate', 'approve', 'manage'] : 
+                    ['comment', 'suggest', 'like', 'rate'],
                 isInstitutional: true,
+                isAdmin: isAdmin,
                 lastLogin: new Date().toISOString(),
-                authProvider: user.providerData[0]?.providerId || 'unknown',
-                sessionType: 'permanent' // ✅ MARCAR COMO PERMANENTE
+                authProvider: authProvider,
+                sessionType: 'permanent'
             };
 
+            console.log('✅ PERFIL FINAL GERADO:');
+            console.log('- isAuthorized:', finalProfile.isAuthorized);
+            console.log('- isAdmin:', finalProfile.isAdmin);
+            console.log('- role:', finalProfile.role);
+            console.log('- permissions:', finalProfile.permissions);
+            console.log('- displayName:', finalProfile.displayName);
+
+            return finalProfile;
+
         } catch (error) {
-            console.error('Erro ao obter perfil:', error);
+            console.error('❌ ERRO CRÍTICO ao obter perfil:', error);
             return {
                 isAuthorized: false,
                 reason: 'profile_error'
@@ -199,7 +287,6 @@ const SugestoesAuth = {
 
             await this.saveUserData(user);
             
-            // ✅ NÃO SALVAR TIMESTAMP (sessão permanente)
             console.log('🔒 Sessão permanente estabelecida');
             
             return {
@@ -289,6 +376,8 @@ const SugestoesAuth = {
      */
     async saveUserData(user) {
         try {
+            console.log('💾 Salvando dados do usuário...');
+            
             const userData = {
                 uid: user.uid,
                 email: user.email,
@@ -303,7 +392,7 @@ const SugestoesAuth = {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 authProvider: user.providerData[0]?.providerId,
                 isActive: true,
-                sessionType: 'permanent' // ✅ MARCAR COMO PERMANENTE
+                sessionType: 'permanent'
             };
 
             await window.db
@@ -374,10 +463,13 @@ const SugestoesAuth = {
         this.checkAuthentication().then(auth => {
             if (!auth.isAuthenticated) {
                 console.log('🔄 Usuário não autenticado, redirecionando...');
+                console.log('🔄 Motivo:', auth.reason);
                 window.location.href = this.config.redirectAfterLogout;
             } else {
                 console.log('✅ Usuário autenticado - SESSÃO PERMANENTE ATIVA');
                 console.log('🔒 Tipo de sessão:', auth.profile?.sessionType || 'permanent');
+                console.log('👤 Usuário:', auth.user?.email);
+                console.log('🎭 Role:', auth.profile?.role);
             }
         }).catch(error => {
             console.error('❌ Erro na inicialização:', error);
@@ -401,6 +493,11 @@ function initSugestoesAuth() {
         return false;
     }
     
+    if (typeof window.db === 'undefined') {
+        console.log('⏳ Firestore não carregado ainda...');
+        return false;
+    }
+    
     console.log('✅ Firebase disponível, inicializando sessão permanente...');
     SugestoesAuth.init();
     return true;
@@ -420,12 +517,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             console.log(`🔄 Tentativa ${index + 2} após ${delay}ms...`);
             if (initSugestoesAuth()) {
-                              console.log('✅ Sistema de autenticação permanente inicializado!');
+                console.log('✅ Sistema de autenticação permanente inicializado!');
             } else if (index === delays.length - 1) {
                 console.error('❌ Falha na inicialização após múltiplas tentativas');
                 console.error('🔍 Diagnóstico:', {
                     firebase: typeof firebase,
                     auth: typeof firebase !== 'undefined' ? !!firebase.auth : 'N/A',
+                    db: typeof window.db,
                     location: window.location.href
                 });
             }
@@ -451,6 +549,13 @@ if (typeof window !== 'undefined') {
             likedPrompts: localStorage.getItem('likedPrompts'),
             ratedPrompts: localStorage.getItem('ratedPrompts')
         });
+        
+        // ✅ TESTE COMPLETO
+        if (firebase.auth().currentUser) {
+            SugestoesAuth.checkAuthentication().then(result => {
+                console.log('- Resultado da verificação:', result);
+            });
+        }
     };
     
     // ✅ Função para forçar logout
@@ -477,24 +582,27 @@ setInterval(() => {
 /**
  * ✅ INTERCEPTAR TENTATIVAS DE LOGOUT AUTOMÁTICO
  */
-const originalSignOut = firebase.auth().signOut;
-firebase.auth().signOut = function() {
-    console.warn('🚨 TENTATIVA DE LOGOUT DETECTADA!');
-    console.trace('Stack trace do logout:');
-    
-    // ✅ PERMITIR APENAS LOGOUT MANUAL
-    const stack = new Error().stack;
-    if (stack.includes('forceLogout') || stack.includes('logout')) {
-        console.log('✅ Logout manual autorizado');
-        return originalSignOut.call(this);
-    } else {
-        console.error('❌ LOGOUT AUTOMÁTICO BLOQUEADO!');
-        console.log('🔒 Mantendo sessão ativa');
-        return Promise.resolve(); // Não fazer logout
+setTimeout(() => {
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        const originalSignOut = firebase.auth().signOut;
+        firebase.auth().signOut = function() {
+            console.warn('🚨 TENTATIVA DE LOGOUT DETECTADA!');
+            console.trace('Stack trace do logout:');
+            
+            // ✅ PERMITIR APENAS LOGOUT MANUAL
+            const stack = new Error().stack;
+            if (stack.includes('forceLogout') || stack.includes('logout')) {
+                console.log('✅ Logout manual autorizado');
+                return originalSignOut.call(this);
+            } else {
+                console.error('❌ LOGOUT AUTOMÁTICO BLOQUEADO!');
+                console.log('🔒 Mantendo sessão ativa');
+                return Promise.resolve(); // Não fazer logout
+            }
+        };
     }
-};
+}, 1000);
 
 console.log('🔒 Sistema de autenticação permanente carregado!');
 console.log('⚠️ ATENÇÃO: Sessões nunca expiram automaticamente');
 console.log('🚪 Use window.forceLogout() para sair manualmente');
-  
