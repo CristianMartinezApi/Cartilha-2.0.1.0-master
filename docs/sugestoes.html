@@ -382,7 +382,7 @@
       </div>
     </div>
 
-        <!-- ✅ SCRIPTS NA ORDEM CORRETA -->
+    <!-- ✅ SCRIPTS NA ORDEM CORRETA COM AUTO-REGISTRO -->
     
     <!-- 1. Firebase Core -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -392,64 +392,64 @@
     <!-- 2. Firebase Inicialização -->
     <script src="./src/scripts/firebase-init.js"></script>
     
-    <!-- ✅ 3. SISTEMA DE AUTENTICAÇÃO - ADICIONADO AQUI -->
+    <!-- ✅ 3. AUTO-REGISTRO DE ADMINS CORPORATIVOS -->
+    <script src="./src/scripts/auto-admin-register.js"></script>
+    
+    <!-- 4. Sistema de Autenticação -->
     <script src="./src/scripts/sugestoes-auth.js"></script>
     
-    <!-- 4. Bootstrap JS -->
+    <!-- 5. Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- 5. Sistema de Comentários -->
+    <!-- 6. Sistema de Comentários -->
     <script src="./src/scripts/comments-utils.js"></script>
     <script src="./src/scripts/comments-ui.js"></script>
     <script src="./src/scripts/comments-system.js"></script>
     
-    <!-- 6. Lógica Principal da Página -->
+    <!-- 7. Lógica Principal da Página -->
     <script src="./src/scripts/sugestoes.js"></script>
     
-    <!-- ✅ 7. Verificação com DEBUG TOTAL -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🔍 === INICIANDO DEBUG COMPLETO ===');
-    
-    const waitForFirebase = () => {
-        return new Promise((resolve) => {
+    <!-- ✅ 8. Verificação com AUTO-REGISTRO -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('🔍 === INICIANDO VERIFICAÇÃO COM AUTO-REGISTRO ===');
+        
+        const waitForFirebase = () => {
+          return new Promise((resolve) => {
             const check = () => {
-                if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
-                    console.log('✅ Firebase carregado');
-                    resolve();
-                } else {
-                    console.log('⏳ Aguardando Firebase...');
-                    setTimeout(check, 100);
-                }
+              if (typeof firebase !== 'undefined' && firebase.auth && window.db) {
+                console.log('✅ Firebase carregado');
+                resolve();
+              } else {
+                console.log('⏳ Aguardando Firebase...');
+                setTimeout(check, 100);
+              }
             };
             check();
-        });
-    };
-    
-    waitForFirebase().then(() => {
-        console.log('🚀 Firebase pronto, iniciando verificação...');
+          });
+        };
         
-        firebase.auth().onAuthStateChanged(async (user) => {
+        waitForFirebase().then(() => {
+          console.log('🚀 Firebase pronto, iniciando verificação...');
+          
+          firebase.auth().onAuthStateChanged(async (user) => {
             console.log('🔄 === AUTH STATE CHANGED ===');
             
             if (!user) {
-                console.log('❌ Nenhum usuário logado');
-                showAuthError('Você precisa estar logado para acessar esta página.');
-                setTimeout(() => {
-                    console.log('🔄 Redirecionando para login...');
-                    window.location.href = 'sugestoes-login.html';
-                }, 2000);
-                return;
+              console.log('❌ Nenhum usuário logado');
+              showAuthError('Você precisa estar logado para acessar esta página.');
+              setTimeout(() => {
+                console.log('🔄 Redirecionando para login...');
+                window.location.href = 'sugestoes-login.html';
+              }, 2000);
+              return;
             }
             
             console.log('👤 === USUÁRIO DETECTADO ===');
             console.log('📧 Email:', user.email);
             console.log('🆔 UID:', user.uid);
-            console.log('👤 DisplayName:', user.displayName);
-            console.log('🔗 PhotoURL:', user.photoURL);
-            console.log('🏢 Provider:', user.providerData[0]?.providerId);
             
-            // ✅ VERIFICAR DOMÍNIO
+            // ✅ VERIFICAR DOMÍNIO CORPORATIVO
             const email = user.email;
             const domain = email.split('@')[1];
             
@@ -460,66 +460,72 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('🔍 Domínio válido?', domain === 'pge.sc.gov.br');
             
             if (domain !== 'pge.sc.gov.br') {
-                console.log('❌ DOMÍNIO INVÁLIDO!');
-                console.log('❌ Esperado: pge.sc.gov.br');
-                console.log('❌ Recebido:', domain);
-                
-                showAuthError('Acesso não autorizado. Apenas contas @pge.sc.gov.br são permitidas.');
-                
-                setTimeout(async () => {
-                    console.log('🚪 Fazendo logout por domínio inválido...');
-                    await firebase.auth().signOut();
-                    window.location.href = 'sugestoes-login.html';
-                }, 2000);
-                return;
+              console.log('❌ DOMÍNIO INVÁLIDO!');
+              showAuthError('Acesso não autorizado. Apenas contas @pge.sc.gov.br são permitidas.');
+              
+              setTimeout(async () => {
+                console.log('🚪 Fazendo logout por domínio inválido...');
+                await firebase.auth().signOut();
+                window.location.href = 'sugestoes-login.html';
+              }, 2000);
+              return;
             }
             
-            console.log('✅ DOMÍNIO VÁLIDO!');
+            console.log('✅ DOMÍNIO CORPORATIVO VÁLIDO!');
             
-            // ✅ VERIFICAR SE É ADMIN (só para info)
+            // ✅ AUTO-REGISTRO COMO ADMIN
             try {
-                console.log('🔍 === VERIFICANDO SE É ADMIN ===');
-                const adminDoc = await window.db.collection('admins').doc(user.uid).get();
+              console.log('🔧 === INICIANDO AUTO-REGISTRO COMO ADMIN ===');
+              
+              if (typeof window.autoRegisterCorporateAdmin === 'function') {
+                const isRegistered = await window.autoRegisterCorporateAdmin(user);
                 
-                if (adminDoc.exists) {
-                    console.log('👑 É ADMIN:', adminDoc.data());
+                if (isRegistered) {
+                  console.log('🎉 AUTO-REGISTRO COMO ADMIN CONCLUÍDO!');
+                  console.log('✅ Usuário agora tem acesso completo ao sistema');
                 } else {
-                    console.log('👤 NÃO é admin (usuário normal)');
+                  console.log('⚠️ Erro no auto-registro, mas continuando...');
                 }
+              } else {
+                console.log('⚠️ Função de auto-registro não encontrada');
+              }
+              
             } catch (error) {
-                console.log('⚠️ Erro ao verificar admin:', error);
+              console.error('❌ Erro no auto-registro:', error);
+              console.log('⚠️ Continuando mesmo com erro no auto-registro...');
             }
             
             // ✅ SALVAR DADOS DO USUÁRIO
             try {
-                console.log('💾 === SALVANDO DADOS DO USUÁRIO ===');
-                
-                const userData = {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    photoURL: user.photoURL,
-                    domain: domain,
-                    department: 'PGE-SC',
-                    role: 'user',
-                    permissions: ['comment', 'suggest', 'like', 'rate'],
-                    isInstitutional: true,
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    authProvider: user.providerData[0]?.providerId,
-                    isActive: true,
-                    sessionType: 'permanent'
-                };
-                
-                await window.db
-                    .collection('sugestoes_users')
-                    .doc(user.uid)
-                    .set(userData, { merge: true });
-                
-                console.log('✅ Dados salvos com sucesso!');
-                
+              console.log('💾 === SALVANDO DADOS DO USUÁRIO ===');
+              
+              const userData = {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                domain: domain,
+                department: 'PGE-SC',
+                role: 'admin', // Todos corporativos são admins agora
+                permissions: ['comment', 'suggest', 'like', 'rate', 'approve', 'manage'],
+                isInstitutional: true,
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                authProvider: user.providerData[0]?.providerId,
+                isActive: true,
+                sessionType: 'corporate-admin',
+                autoRegistered: true
+              };
+              
+              await window.db
+                .collection('sugestoes_users')
+                .doc(user.uid)
+                .set(userData, { merge: true });
+              
+              console.log('✅ Dados salvos com sucesso!');
+              
             } catch (error) {
-                console.error('⚠️ Erro ao salvar dados:', error);
+              console.error('⚠️ Erro ao salvar dados:', error);
             }
             
             // ✅ ATUALIZAR INTERFACE
@@ -527,15 +533,15 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUserDisplay(user);
             setupLogout();
             
-            console.log('🎉 === USUÁRIO AUTORIZADO COM SUCESSO! ===');
-            console.log('✅ Usuário pode usar a página de sugestões');
+            console.log('🎉 === USUÁRIO CORPORATIVO AUTORIZADO COM SUCESSO! ===');
+            console.log('✅ Usuário registrado como admin e pode usar todas as funcionalidades');
+          });
         });
-    });
-    
-    function showAuthError(message) {
-        console.log('⚠️ Mostrando erro:', message);
-        const container = document.querySelector('.container');
-        if (container) {
+        
+        function showAuthError(message) {
+          console.log('⚠️ Mostrando erro:', message);
+          const container = document.querySelector('.container');
+          if (container) {
             const alert = document.createElement('div');
             alert.className = 'alert alert-warning alert-dismissible fade show';
             alert.innerHTML = `
@@ -544,91 +550,90 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
             container.insertBefore(alert, container.firstChild);
+          }
         }
-    }
-    
-    function updateUserDisplay(user) {
-        console.log('🎨 Atualizando display do usuário...');
         
-        const displayName = document.getElementById('user-display-name');
-        const displayEmail = document.getElementById('user-display-email');
-        const loading = document.getElementById('user-loading-display');
-        const userInfo = document.getElementById('user-info-display');
-        const avatarContainer = document.querySelector('.user-avatar');
-        
-        const userName = user.displayName || user.email.split('@')[0];
-        
-        if (displayName) {
+        function updateUserDisplay(user) {
+          console.log('🎨 Atualizando display do usuário...');
+          
+          const displayName = document.getElementById('user-display-name');
+          const displayEmail = document.getElementById('user-display-email');
+          const loading = document.getElementById('user-loading-display');
+          const userInfo = document.getElementById('user-info-display');
+          const avatarContainer = document.querySelector('.user-avatar');
+          
+          const userName = user.displayName || user.email.split('@')[0];
+          
+          if (displayName) {
             displayName.textContent = userName;
             console.log('✅ Nome atualizado:', userName);
-        }
-        
-        if (displayEmail) {
+          }
+          
+          if (displayEmail) {
             displayEmail.textContent = user.email;
             console.log('✅ Email atualizado:', user.email);
-        }
-        
-        if (loading) {
+          }
+          
+          if (loading) {
             loading.style.display = 'none';
             console.log('✅ Loading ocultado');
-        }
-        
-        if (userInfo) {
+          }
+          
+          if (userInfo) {
             userInfo.style.display = 'block';
             console.log('✅ Info do usuário mostrada');
-        }
-        
-        if (avatarContainer) {
+          }
+          
+          if (avatarContainer) {
             try {
-                if (user.photoURL) {
-                    avatarContainer.innerHTML = `
-                        <img src="${user.photoURL}"
-                             alt="Foto do usuário"
-                             class="user-header-photo rounded-circle"
-                             style="width: 32px; height: 32px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                        <i class="fas fa-user-circle fa-lg backup-header-avatar" style="display: none; color: #667eea;"></i>
-                    `;
-                    console.log('✅ Avatar com foto carregado');
-                } else {
-                    avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
-                    console.log('✅ Avatar padrão carregado');
-                }
-            } catch (error) {
-                console.error('❌ Erro ao carregar avatar:', error);
+              if (user.photoURL) {
+                avatarContainer.innerHTML = `
+                    <img src="${user.photoURL}"
+                         alt="Foto do usuário"
+                         class="user-header-photo rounded-circle"
+                         style="width: 32px; height: 32px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <i class="fas fa-user-circle fa-lg backup-header-avatar" style="display: none; color: #667eea;"></i>
+                `;
+                console.log('✅ Avatar com foto carregado');
+              } else {
                 avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
+                console.log('✅ Avatar padrão carregado');
+              }
+            } catch (error) {
+              console.error('❌ Erro ao carregar avatar:', error);
+              avatarContainer.innerHTML = `<i class="fas fa-user-circle fa-lg" style="color: #667eea;"></i>`;
             }
+          }
+          
+          console.log('✅ Interface atualizada completamente');
         }
         
-        console.log('✅ Interface atualizada completamente');
-    }
-    
-    function setupLogout() {
-        console.log('🚪 Configurando logout...');
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
+        function setupLogout() {
+          console.log('🚪 Configurando logout...');
+          const logoutBtn = document.getElementById('logout-btn');
+          if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
-                if (confirm('Deseja realmente sair?')) {
-                    console.log('🚪 Logout confirmado pelo usuário');
-                    firebase.auth().signOut().then(() => {
-                        console.log('✅ Logout realizado');
-                        window.location.href = 'sugestoes-login.html';
-                    });
-                }
+              if (confirm('Deseja realmente sair?')) {
+                console.log('🚪 Logout confirmado pelo usuário');
+                firebase.auth().signOut().then(() => {
+                  console.log('✅ Logout realizado');
+                  window.location.href = 'sugestoes-login.html';
+                });
+              }
             });
             console.log('✅ Logout configurado');
-        } else {
-            console.log('⚠️ Botão de logout não encontrado');
+          } else {
+                        console.log('⚠️ Botão de logout não encontrado');
+          }
         }
-    }
-});
-</script>
-
+      });
+    </script>
     
-    <!-- ✅ 8. Script de Inicialização Final -->
+    <!-- ✅ 9. Script de Inicialização Final -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        console.log('🚀 Página totalmente carregada');
+        console.log('🚀 Página totalmente carregada com auto-registro');
         
         setTimeout(() => {
           if (typeof CommentsSystem !== 'undefined') {
@@ -642,8 +647,15 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             console.warn('⚠️ Sistema de autenticação não carregado');
           }
+          
+          if (typeof window.autoRegisterCorporateAdmin === 'function') {
+            console.log('✅ Sistema de auto-registro disponível');
+          } else {
+            console.warn('⚠️ Sistema de auto-registro não carregado');
+          }
         }, 1000);
       });
     </script>
   </body>
 </html>
+

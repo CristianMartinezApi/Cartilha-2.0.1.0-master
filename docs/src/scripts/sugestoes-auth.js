@@ -1,6 +1,3 @@
-/**
- * ✅ SISTEMA DE AUTENTICAÇÃO SEM TIMEOUT - VERSÃO PERMANENTE
- */
 
 const SugestoesAuth = {
     config: {
@@ -22,7 +19,7 @@ const SugestoesAuth = {
         if (pathname.includes('/Cartilha-2.0.1.0-master/')) {
             this.config.redirectAfterLogin = '/Cartilha-2.0.1.0-master/sugestoes.html';
             this.config.redirectAfterLogout = '/Cartilha-2.0.1.0-master/sugestoes-login.html';
-            console.log('🐙 Ambiente: GitHub Pages');
+            console.log('🌐 Ambiente: GitHub Pages');
         } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
             this.config.redirectAfterLogin = '/docs/sugestoes.html';
             this.config.redirectAfterLogout = '/docs/sugestoes-login.html';
@@ -30,7 +27,7 @@ const SugestoesAuth = {
         } else {
             this.config.redirectAfterLogin = './sugestoes.html';
             this.config.redirectAfterLogout = './sugestoes-login.html';
-            console.log('🌐 Ambiente: Outros');
+            console.log('🌍 Ambiente: Outros');
         }
         
         console.log('✅ URLs configuradas:', {
@@ -40,11 +37,11 @@ const SugestoesAuth = {
     },
 
     /**
-     * ✅ Verificar autenticação SEM TIMEOUT - COM DEBUG COMPLETO
+     * ✅ Verificar autenticação APENAS POR DOMÍNIO - SEM VERIFICAÇÃO DE ADMIN
      */
     async checkAuthentication() {
         try {
-            console.log('🔍 Verificando autenticação para USUÁRIOS GERAIS...');
+            console.log('🔍 Verificando autenticação para USUÁRIOS GERAIS (sem admin)...');
             
             if (typeof firebase === 'undefined' || !firebase.auth) {
                 throw new Error('Firebase não está inicializado');
@@ -71,7 +68,7 @@ const SugestoesAuth = {
                     console.log('👤 DisplayName:', user.displayName);
 
                     try {
-                        // ✅ VERIFICAR APENAS DOMÍNIO (não admin)
+                        // ✅ VERIFICAR APENAS DOMÍNIO (sem admin)
                         const email = user.email;
                         const domain = email.split('@')[1];
                         
@@ -80,7 +77,7 @@ const SugestoesAuth = {
                         console.log('- Domínio extraído:', domain);
                         console.log('- Domínios permitidos:', this.config.allowedDomains);
                         console.log('- Domínio válido?', this.config.allowedDomains.includes(domain));
-                        
+
                         if (!this.config.allowedDomains.includes(domain)) {
                             console.log('❌ Domínio não autorizado:', email);
                             await firebase.auth().signOut();
@@ -100,10 +97,9 @@ const SugestoesAuth = {
                         
                         console.log('📊 PERFIL GERADO:');
                         console.log('- isAuthorized:', profile.isAuthorized);
-                        console.log('- isAdmin:', profile.isAdmin);
                         console.log('- role:', profile.role);
                         console.log('- permissions:', profile.permissions);
-                        
+
                         if (!profile.isAuthorized) {
                             console.log('❌ Perfil não autorizado:', profile.reason);
                             resolve({
@@ -114,9 +110,8 @@ const SugestoesAuth = {
                             });
                             return;
                         }
-                        
+
                         console.log('✅ AUTENTICAÇÃO COMPLETA - SESSÃO PERMANENTE ATIVA');
-                        
                         resolve({
                             isAuthenticated: true,
                             user: user,
@@ -148,23 +143,22 @@ const SugestoesAuth = {
     },
 
     /**
-     * ✅ Obter perfil do usuário - COM DEBUG COMPLETO
+     * ✅ Obter perfil do usuário - SEM VERIFICAÇÃO DE ADMIN
      */
     async getUserProfile(user) {
         try {
-            console.log('🔍 GERANDO PERFIL DO USUÁRIO...');
+            console.log('🔍 GERANDO PERFIL DO USUÁRIO (sem verificação de admin)...');
             
             const email = user.email;
             const domain = email.split('@')[1];
             
             console.log('📧 Email:', email);
-            console.log('🌐 Domínio:', domain);
-            
+            console.log('🌍 Domínio:', domain);
+
             // ✅ VERIFICAR APENAS DOMÍNIO
             const isAuthorized = this.config.allowedDomains.includes(domain);
-            
             console.log('✅ Domínio autorizado?', isAuthorized);
-            
+
             if (!isAuthorized) {
                 console.log('❌ DOMÍNIO NÃO AUTORIZADO');
                 return {
@@ -173,25 +167,7 @@ const SugestoesAuth = {
                 };
             }
 
-            // ✅ VERIFICAR SE É ADMIN (opcional, não obrigatório)
-            let isAdmin = false;
-            let adminData = {};
-            
-            try {
-                console.log('🔍 Verificando se é admin...');
-                const adminDoc = await window.db.collection('admins').doc(user.uid).get();
-                if (adminDoc.exists) {
-                    isAdmin = true;
-                    adminData = adminDoc.data();
-                    console.log('👑 É ADMIN:', adminData);
-                } else {
-                    console.log('👤 NÃO é admin (usuário normal)');
-                }
-            } catch (error) {
-                console.log('ℹ️ Erro ao verificar admin (não é problema):', error.message);
-            }
-
-            // ✅ DADOS ADICIONAIS DO USUÁRIO
+            // ✅ BUSCAR DADOS ADICIONAIS DO USUÁRIO (opcional)
             let additionalData = {};
             try {
                 console.log('🔍 Buscando dados adicionais...');
@@ -222,6 +198,7 @@ const SugestoesAuth = {
                 }
             }
 
+            // ✅ PERFIL FINAL - TODOS SÃO USUÁRIOS NORMAIS
             const finalProfile = {
                 isAuthorized: true,
                 uid: user.uid,
@@ -229,13 +206,10 @@ const SugestoesAuth = {
                 displayName: user.displayName || additionalData.displayName || email.split('@')[0],
                 photoURL: user.photoURL || additionalData.photoURL || null,
                 domain: domain,
-                department: additionalData.department || adminData.department || 'PGE-SC',
-                role: isAdmin ? 'admin' : 'user',
-                permissions: isAdmin ? 
-                    ['comment', 'suggest', 'like', 'rate', 'approve', 'manage'] : 
-                    ['comment', 'suggest', 'like', 'rate'],
+                department: additionalData.department || 'PGE-SC',
+                role: 'user', // ✅ SEMPRE USER (não verificamos admin)
+                permissions: ['comment', 'suggest', 'like', 'rate'], // ✅ PERMISSÕES BÁSICAS
                 isInstitutional: true,
-                isAdmin: isAdmin,
                 lastLogin: new Date().toISOString(),
                 authProvider: authProvider,
                 sessionType: 'permanent'
@@ -243,7 +217,6 @@ const SugestoesAuth = {
 
             console.log('✅ PERFIL FINAL GERADO:');
             console.log('- isAuthorized:', finalProfile.isAuthorized);
-            console.log('- isAdmin:', finalProfile.isAdmin);
             console.log('- role:', finalProfile.role);
             console.log('- permissions:', finalProfile.permissions);
             console.log('- displayName:', finalProfile.displayName);
@@ -264,12 +237,11 @@ const SugestoesAuth = {
      */
     async loginWithGoogle() {
         try {
-            console.log('🔐 Iniciando login com Google...');
+            console.log('🔍 Iniciando login com Google...');
             
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('email');
             provider.addScope('profile');
-            
             provider.setCustomParameters({
                 prompt: 'select_account',
                 hd: 'pge.sc.gov.br'
@@ -279,16 +251,15 @@ const SugestoesAuth = {
             const user = result.user;
             
             console.log('✅ Login com Google realizado:', user.email);
-            
+
             if (!user.email.includes('@pge.sc.gov.br')) {
                 await firebase.auth().signOut();
                 throw new Error('Por favor, use sua conta institucional @pge.sc.gov.br');
             }
 
             await this.saveUserData(user);
-            
             console.log('🔒 Sessão permanente estabelecida');
-            
+
             return {
                 success: true,
                 user: user,
@@ -306,7 +277,7 @@ const SugestoesAuth = {
             } else if (error.message.includes('institucional')) {
                 message = error.message;
             }
-            
+
             return {
                 success: false,
                 error: error,
@@ -320,12 +291,11 @@ const SugestoesAuth = {
      */
     async loginWithMicrosoft() {
         try {
-            console.log('🔐 Iniciando login com Microsoft...');
+            console.log('🔍 Iniciando login com Microsoft...');
             
             const provider = new firebase.auth.OAuthProvider('microsoft.com');
             provider.addScope('email');
             provider.addScope('profile');
-            
             provider.setCustomParameters({
                 prompt: 'select_account',
                 tenant: 'pge.sc.gov.br'
@@ -335,16 +305,15 @@ const SugestoesAuth = {
             const user = result.user;
             
             console.log('✅ Login com Microsoft realizado:', user.email);
-            
+
             if (!user.email.includes('@pge.sc.gov.br')) {
                 await firebase.auth().signOut();
                 throw new Error('Por favor, use sua conta institucional @pge.sc.gov.br');
             }
 
             await this.saveUserData(user);
-            
             console.log('🔒 Sessão permanente estabelecida');
-            
+
             return {
                 success: true,
                 user: user,
@@ -362,7 +331,7 @@ const SugestoesAuth = {
             } else if (error.message.includes('institucional')) {
                 message = error.message;
             }
-            
+
             return {
                 success: false,
                 error: error,
@@ -385,8 +354,8 @@ const SugestoesAuth = {
                 photoURL: user.photoURL,
                 domain: user.email.split('@')[1],
                 department: 'PGE-SC',
-                role: 'user',
-                permissions: ['comment', 'suggest', 'like', 'rate'],
+                role: 'user', // ✅ SEMPRE USER
+                permissions: ['comment', 'suggest', 'like', 'rate'], // ✅ PERMISSÕES BÁSICAS
                 isInstitutional: true,
                 lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -413,16 +382,13 @@ const SugestoesAuth = {
     async logout() {
         try {
             console.log('🚪 Realizando logout MANUAL...');
-            
             await firebase.auth().signOut();
             
             // Limpar dados locais
             localStorage.clear();
             
             console.log('✅ Logout manual realizado com sucesso');
-            
             window.location.href = this.config.redirectAfterLogout;
-            
         } catch (error) {
             console.error('❌ Erro no logout:', error);
             window.location.href = this.config.redirectAfterLogout;
@@ -449,10 +415,9 @@ const SugestoesAuth = {
      * ✅ Inicialização SEM VERIFICAÇÃO DE TIMEOUT
      */
     init() {
-        console.log('🚀 Inicializando sistema de autenticação PERMANENTE...');
-        
+        console.log('🚀 Inicializando sistema de autenticação PERMANENTE (sem admin)...');
         this.detectEnvironment();
-        
+
         // ✅ PERMITIR ACESSO LIVRE À PÁGINA DE LOGIN
         if (window.location.pathname.includes('sugestoes-login.html')) {
             console.log('📄 Página de login - acesso livre');
@@ -462,8 +427,8 @@ const SugestoesAuth = {
         // ✅ VERIFICAR AUTENTICAÇÃO SEM TIMEOUT
         this.checkAuthentication().then(auth => {
             if (!auth.isAuthenticated) {
-                console.log('🔄 Usuário não autenticado, redirecionando...');
-                console.log('🔄 Motivo:', auth.reason);
+                console.log('📄 Usuário não autenticado, redirecionando...');
+                console.log('📄 Motivo:', auth.reason);
                 window.location.href = this.config.redirectAfterLogout;
             } else {
                 console.log('✅ Usuário autenticado - SESSÃO PERMANENTE ATIVA');
@@ -481,7 +446,7 @@ const SugestoesAuth = {
  * ✅ Sistema de inicialização
  */
 function initSugestoesAuth() {
-    console.log('🔄 Inicializando SugestoesAuth (versão permanente)...');
+    console.log('📄 Inicializando SugestoesAuth (versão permanente sem admin)...');
     
     if (typeof firebase === 'undefined') {
         console.log('⏳ Firebase não carregado ainda...');
@@ -497,7 +462,7 @@ function initSugestoesAuth() {
         console.log('⏳ Firestore não carregado ainda...');
         return false;
     }
-    
+
     console.log('✅ Firebase disponível, inicializando sessão permanente...');
     SugestoesAuth.init();
     return true;
@@ -507,15 +472,14 @@ function initSugestoesAuth() {
  * ✅ Inicialização com múltiplas tentativas
  */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📄 DOM carregado - iniciando sistema permanente...');
+    console.log('📄 DOM carregado - iniciando sistema permanente (sem admin)...');
     
     if (initSugestoesAuth()) return;
-    
+
     const delays = [500, 1000, 2000, 3000];
-    
     delays.forEach((delay, index) => {
         setTimeout(() => {
-            console.log(`🔄 Tentativa ${index + 2} após ${delay}ms...`);
+            console.log(`📄 Tentativa ${index + 2} após ${delay}ms...`);
             if (initSugestoesAuth()) {
                 console.log('✅ Sistema de autenticação permanente inicializado!');
             } else if (index === delays.length - 1) {
@@ -573,9 +537,11 @@ if (typeof window !== 'undefined') {
  * ✅ MONITORAMENTO CONTÍNUO (OPCIONAL)
  */
 setInterval(() => {
-    const user = firebase.auth().currentUser;
-    if (user) {
-        console.log('🔒 Sessão permanente ativa para:', user.email);
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        const user = firebase.auth().currentUser;
+        if (user) {
+            console.log('🔒 Sessão permanente ativa para:', user.email);
+        }
     }
 }, 5 * 60 * 1000); // Log a cada 5 minutos para confirmar que está funcionando
 
@@ -603,6 +569,7 @@ setTimeout(() => {
     }
 }, 1000);
 
-console.log('🔒 Sistema de autenticação permanente carregado!');
+console.log('🔒 Sistema de autenticação permanente carregado (SEM VERIFICAÇÃO DE ADMIN)!');
 console.log('⚠️ ATENÇÃO: Sessões nunca expiram automaticamente');
 console.log('🚪 Use window.forceLogout() para sair manualmente');
+console.log('✅ REMOVIDA: Verificação da coleção "admins" do Firebase');
