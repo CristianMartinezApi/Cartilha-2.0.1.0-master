@@ -2173,3 +2173,72 @@ img:hover {
         display: none;
     }
 }
+
+/* ✅ ESTILOS PARA O DISCLAIMER */
+.disclaimer-banner {
+    background: #151616;
+    border-left: 4px solid #ffc107;
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.disclaimer-banner:hover {
+    background: #e9ecef;
+    border-left-color: #e0a800;
+}
+
+.disclaimer-banner i {
+    font-size: 0.9rem;
+    color: #ffc107 !important;
+}
+
+.disclaimer-banner small {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #495057 !important;
+    margin-bottom: 0;
+}
+
+.disclaimer-banner strong {
+    color: #212529 !important;
+    font-weight: 600;
+}
+
+/* Responsividade para o disclaimer */
+@media (max-width: 768px) {
+    .disclaimer-banner {
+        padding: 10px 12px;
+        border-left-width: 3px;
+    }
+    
+    .disclaimer-banner small {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+    
+    .disclaimer-banner i {
+        font-size: 0.85rem;
+    }
+}
+
+/* Tema escuro para o disclaimer */
+@media (prefers-color-scheme: dark) {
+    .disclaimer-banner {
+        background: #343a40;
+        border-left-color: #ffc107;
+        border-bottom-color: #495057;
+    }
+    
+    .disclaimer-banner:hover {
+        background: #495057;
+    }
+    
+    .disclaimer-banner small {
+        color: #3a3e42 !important;
+    }
+    
+    .disclaimer-banner strong {
+        color: #0a0a0a !important;
+    }
+}
