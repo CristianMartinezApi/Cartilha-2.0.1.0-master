@@ -586,6 +586,14 @@ function generatePromptHTML(data, uniqueId, userLiked, docId) {
     const averageRating = data.averageRating || 0;
     const totalRatings = data.totalRatings || 0;
     
+    // Definir informação do autor, se disponível
+    const authorInfo = data.userInfo && data.userInfo.userName 
+        ? `<small class="text-muted">
+                <i class="fas fa-user me-1"></i>
+                Autor: ${escapeHtml(data.userInfo.userName)}
+            </small>` 
+        : '';
+    
     return `
         <div class="card mb-2">
             <!-- HEADER DO PROMPT -->
@@ -667,6 +675,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                                 <i class="fas fa-eye me-1"></i>
                                 <span class="view-count">${data.views || 0}</span> visualizações
                             </small>
+                            ${authorInfo}
                             ${data.aiUsed && data.aiUsed !== 'Não informado' ? 
                                 `<small class="text-info">
                                     <i class="fas fa-robot me-1"></i>
@@ -687,7 +696,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
                         </div>
                     </div>
                     
-                    <!-- ✅ LINHA 2: BOTÕES DE AÇÃO - TODOS UNIFORMES -->
+                    <!-- LINHA 2: BOTÕES DE AÇÃO - TODOS UNIFORMES -->
                     <div class="d-flex justify-content-center align-items-center">
                         <div class="btn-group w-100" role="group" aria-label="Ações do prompt">
                             <!-- Botão Copiar -->
@@ -725,7 +734,7 @@ ${escapeHtml(data.text || 'Sem conteúdo')}
             </div>
         </div>
         
-        <!-- ✅ SEÇÃO DE COMENTÁRIOS SEPARADA E ORGANIZADA -->
+        <!-- SEÇÃO DE COMENTÁRIOS SEPARADA E ORGANIZADA -->
         <div id="comments-${docId}" class="collapse comments-section-wrapper">
             ${generateCleanCommentsSection(docId)}
         </div>
