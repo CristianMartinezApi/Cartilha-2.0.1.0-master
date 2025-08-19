@@ -179,3 +179,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+/* script popup */
+  const popup = document.getElementById("popup");
+  const okBtn = document.getElementById("ok-btn");
+  const dontShowAgain = document.getElementById("dontShowAgain");
+
+  // Verifica se já foi marcado para não exibir
+  if (localStorage.getItem("hidePopup") === "true") {
+    popup.style.display = "none";
+  }
+
+  okBtn.addEventListener("click", () => {
+    if (dontShowAgain.checked) {
+      localStorage.setItem("hidePopup", "true");
+    }
+    popup.style.display = "none";
+  });
